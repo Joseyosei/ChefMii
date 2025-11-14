@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/chefme-logo.jpg";
 
 const Footer = () => {
   return (
@@ -10,7 +9,9 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <img src={logo} alt="ChefMe" className="h-12 w-auto mb-4" />
+            <span className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-4 inline-block">
+              ChefMe
+            </span>
             <p className="text-background/80 text-sm">
               Connecting you with exceptional chefs for every occasion, anywhere in the world.
             </p>
