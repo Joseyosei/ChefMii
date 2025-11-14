@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import logo from "@/assets/chefme-logo.jpg";
+import logo from "@/assets/chefme-logo-new.png";
 
 const Navbar = () => {
   const navLinks = [
@@ -19,7 +19,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logo} alt="ChefMe" className="h-10 w-auto invert brightness-0" />
+            <img src={logo} alt="ChefMe" className="h-8 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
