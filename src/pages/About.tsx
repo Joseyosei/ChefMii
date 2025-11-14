@@ -129,7 +129,7 @@ const About = () => {
             <Link to="/register">
               <Button size="lg" variant="secondary">Find a Chef</Button>
             </Link>
-            <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">
+            <Button size="lg" variant="secondary" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
               Become a Chef
             </Button>
           </div>
