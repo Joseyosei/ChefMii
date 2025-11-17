@@ -336,7 +336,7 @@ const Index = () => {
               <Button size="lg" variant="secondary">Get Started Now</Button>
             </Link>
             <Link to="/chefs">
-              <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10">
+              <Button size="lg" className="bg-foreground text-background hover:bg-foreground/90">
                 Browse Chefs
               </Button>
             </Link>
