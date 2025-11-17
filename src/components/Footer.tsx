@@ -2,10 +2,8 @@ import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
 const Footer = () => {
-  return (
-    <footer className="bg-foreground text-background py-12">
+  return <footer className="bg-foreground text-background py-12">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
@@ -43,11 +41,7 @@ const Footer = () => {
               Get the latest updates and exclusive offers.
             </p>
             <div className="flex gap-2">
-              <Input 
-                type="email" 
-                placeholder="Your email" 
-                className="bg-background/10 border-background/20 text-background placeholder:text-background/50"
-              />
+              <Input type="email" placeholder="Your email" className="bg-background/10 border-background/20 text-background placeholder:text-background/50" />
               <Button variant="secondary">Subscribe</Button>
             </div>
           </div>
@@ -55,7 +49,7 @@ const Footer = () => {
 
         <div className="border-t border-background/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-background/60 text-sm">
-            © 2024 ChefMe. All rights reserved.
+            © 2026ChefMe. All rights reserved.
           </p>
           <div className="flex gap-4">
             <a href="#" className="text-background/60 hover:text-background transition-colors">
@@ -73,8 +67,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
