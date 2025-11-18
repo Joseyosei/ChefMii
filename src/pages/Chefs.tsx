@@ -3,13 +3,21 @@ import Footer from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Star, MapPin, ChefHat } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Star, MapPin, ChefHat, Search, Calendar as CalendarIcon, DollarSign, Award } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { format } from "date-fns";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 import chef1 from "@/assets/chef-1.jpg";
 import chef2 from "@/assets/chef-2.jpg";
 import chef3 from "@/assets/chef-3.jpg";
 
 const Chefs = () => {
+  const [date, setDate] = useState<Date>();
+  
   const chefs = [
     {
       name: "Emma Thompson",
@@ -87,30 +95,144 @@ const Chefs = () => {
           </div>
 
           {/* Search and Filters */}
-          <Card className="p-6 max-w-5xl mx-auto glass-card">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Input placeholder="Search by name or cuisine" className="md:col-span-2" />
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Cuisine Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="italian">Italian</SelectItem>
-                  <SelectItem value="asian">Asian</SelectItem>
-                  <SelectItem value="french">French</SelectItem>
-                  <SelectItem value="mediterranean">Mediterranean</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Price Range" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="budget">Under £75</SelectItem>
-                  <SelectItem value="mid">£75-£150</SelectItem>
-                  <SelectItem value="premium">£150+</SelectItem>
-                </SelectContent>
-              </Select>
+          <Card className="p-8 max-w-6xl mx-auto glass-card shadow-xl rounded-3xl border-accent/20">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Search Input */}
+              <div className="space-y-2 lg:col-span-2">
+                <Label htmlFor="search" className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Search className="h-4 w-4" />
+                  Search by name or cuisine
+                </Label>
+                <Input 
+                  id="search"
+                  placeholder="e.g. Chef Antonio, Sushi, BBQ" 
+                  className="rounded-xl border-accent/30 bg-background/50 focus:bg-background transition-colors"
+                />
+              </div>
+
+              {/* Location */}
+              <div className="space-y-2">
+                <Label htmlFor="location" className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  City or Country
+                </Label>
+                <Input 
+                  id="location"
+                  placeholder="Enter city or country" 
+                  className="rounded-xl border-accent/30 bg-background/50 focus:bg-background transition-colors"
+                />
+              </div>
+
+              {/* Cuisine Type */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <ChefHat className="h-4 w-4" />
+                  Cuisine Type
+                </Label>
+                <Select>
+                  <SelectTrigger className="rounded-xl border-accent/30 bg-background/50">
+                    <SelectValue placeholder="All Cuisines" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background">
+                    <SelectItem value="italian">Italian</SelectItem>
+                    <SelectItem value="french">French</SelectItem>
+                    <SelectItem value="indian">Indian</SelectItem>
+                    <SelectItem value="chinese">Chinese</SelectItem>
+                    <SelectItem value="japanese">Japanese</SelectItem>
+                    <SelectItem value="thai">Thai</SelectItem>
+                    <SelectItem value="korean">Korean</SelectItem>
+                    <SelectItem value="african">African</SelectItem>
+                    <SelectItem value="caribbean">Caribbean</SelectItem>
+                    <SelectItem value="vegan">Vegan</SelectItem>
+                    <SelectItem value="halal">Halal</SelectItem>
+                    <SelectItem value="kosher">Kosher</SelectItem>
+                    <SelectItem value="gluten-free">Gluten-Free</SelectItem>
+                    <SelectItem value="fine-dining">Fine Dining</SelectItem>
+                    <SelectItem value="street-food">Street Food</SelectItem>
+                    <SelectItem value="fusion">Fusion</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Price Range */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" />
+                  Price Range
+                </Label>
+                <Select>
+                  <SelectTrigger className="rounded-xl border-accent/30 bg-background/50">
+                    <SelectValue placeholder="Any Price" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background">
+                    <SelectItem value="under-50">Under £50</SelectItem>
+                    <SelectItem value="50-150">£50–£150</SelectItem>
+                    <SelectItem value="150-500">£150–£500</SelectItem>
+                    <SelectItem value="500-plus">£500+</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Date Picker */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <CalendarIcon className="h-4 w-4" />
+                  Available On
+                </Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal rounded-xl border-accent/30 bg-background/50",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "PPP") : <span>Select a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      initialFocus
+                      className={cn("pointer-events-auto rounded-xl")}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              {/* Chef Tier */}
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Award className="h-4 w-4" />
+                  Experience Level
+                </Label>
+                <Select>
+                  <SelectTrigger className="rounded-xl border-accent/30 bg-background/50">
+                    <SelectValue placeholder="All Levels" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background">
+                    <SelectItem value="home-cook">Home Cook</SelectItem>
+                    <SelectItem value="restaurant-chef">Restaurant Chef</SelectItem>
+                    <SelectItem value="michelin-trained">Michelin-Trained</SelectItem>
+                    <SelectItem value="vip-only">VIP-Only</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Search Button */}
+              <div className="lg:col-span-3 pt-2">
+                <Button 
+                  size="lg" 
+                  className="w-full rounded-xl bg-foreground text-background hover:bg-foreground/90 shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  <Search className="mr-2 h-5 w-5" />
+                  Search Chefs
+                </Button>
+              </div>
             </div>
           </Card>
         </div>
