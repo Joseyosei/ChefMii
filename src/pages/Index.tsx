@@ -7,9 +7,9 @@ import { Link } from "react-router-dom";
 import { Search, Calendar, Users, ChefHat, Clock, Award, Shield, Star, ChevronRight } from "lucide-react";
 import heroImage from "@/assets/hero-chef.jpg";
 import gourmetPlate from "@/assets/gourmet-plate.jpg";
-import chef1 from "@/assets/chef-1.jpg";
-import chef2 from "@/assets/chef-2.jpg";
-import chef3 from "@/assets/chef-3.jpg";
+import chefHome1 from "@/assets/chef-home-1.jpg";
+import chefHome2 from "@/assets/chef-home-2.jpg";
+import chefHome3 from "@/assets/chef-home-3.jpg";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const Index = () => {
@@ -172,9 +172,9 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { name: "Emma Thompson", cuisine: "Italian Cuisine", rate: "£85", img: chef1 },
-              { name: "David Rodriguez", cuisine: "Asian Fusion", rate: "£95", img: chef2 },
-              { name: "Maria Santos", cuisine: "Mediterranean", rate: "£100", img: chef3 },
+              { name: "Gordon Harrison", cuisine: "Contemporary European", rate: "£200", img: chefHome1 },
+              { name: "Sophie Laurent", cuisine: "French Pastry & Desserts", rate: "£150", img: chefHome2 },
+              { name: "Marco Ricci", cuisine: "Modern Italian", rate: "£180", img: chefHome3 },
             ].map((chef, i) => (
               <Card key={i} className="overflow-hidden hover-lift">
                 <div className="aspect-square relative overflow-hidden bg-muted">

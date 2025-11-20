@@ -7,7 +7,7 @@ import logo from "@/assets/chefme-logo.jpg";
 
 const Login = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-accent/30 to-background">
+    <div className="min-h-screen bg-gradient-to-br from-cream via-ivory to-terracotta/20">
       <Navbar />
       
       <div className="container mx-auto px-4 py-20">

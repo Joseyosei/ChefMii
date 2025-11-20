@@ -11,9 +11,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { format } from "date-fns";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import chef1 from "@/assets/chef-1.jpg";
-import chef2 from "@/assets/chef-2.jpg";
-import chef3 from "@/assets/chef-3.jpg";
+import chefEmma from "@/assets/chef-emma.jpg";
+import chefDavid from "@/assets/chef-david.jpg";
+import chefMaria from "@/assets/chef-maria.jpg";
+import chefJames from "@/assets/chef-james.jpg";
+import chefSofia from "@/assets/chef-sofia.jpg";
+import chefOliver from "@/assets/chef-oliver.jpg";
 
 const Chefs = () => {
   const [date, setDate] = useState<Date>();
@@ -26,7 +29,7 @@ const Chefs = () => {
       rate: "£85",
       rating: 4.9,
       reviews: 127,
-      img: chef1,
+      img: chefEmma,
       specialties: ["Pasta Making", "Regional Italian", "Wine Pairing"]
     },
     {
@@ -36,7 +39,7 @@ const Chefs = () => {
       rate: "£95",
       rating: 5.0,
       reviews: 98,
-      img: chef2,
+      img: chefDavid,
       specialties: ["Sushi", "Thai", "Modern Asian"]
     },
     {
@@ -46,7 +49,7 @@ const Chefs = () => {
       rate: "£100",
       rating: 4.8,
       reviews: 156,
-      img: chef3,
+      img: chefMaria,
       specialties: ["Greek", "Spanish Tapas", "Healthy Cooking"]
     },
     {
@@ -56,7 +59,7 @@ const Chefs = () => {
       rate: "£150",
       rating: 4.9,
       reviews: 89,
-      img: chef1,
+      img: chefJames,
       specialties: ["Classic French", "Pastry", "Michelin Experience"]
     },
     {
@@ -66,7 +69,7 @@ const Chefs = () => {
       rate: "£90",
       rating: 4.7,
       reviews: 112,
-      img: chef2,
+      img: chefSofia,
       specialties: ["Chinese", "Korean BBQ", "Dim Sum"]
     },
     {
@@ -76,7 +79,7 @@ const Chefs = () => {
       rate: "£110",
       rating: 4.9,
       reviews: 94,
-      img: chef3,
+      img: chefOliver,
       specialties: ["Farm-to-Table", "Seasonal Menus", "Gastropub"]
     }
   ];
