@@ -2,174 +2,66 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Check, DollarSign } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Packages = () => {
-  const packages = [
+  const pricingCategories = [
     {
-      title: "Student Survival Meals",
-      price: "£50-£100",
-      period: "/week",
-      description: "Affordable, nutritious home-cooked meals for busy students",
-      features: [
-        "3-5 meals per week",
-        "Budget-friendly ingredients",
-        "Meal prep instructions",
-        "Dietary accommodations",
-        "Easy reheating guidance"
-      ]
-    },
-    {
-      title: "Family Chef Plan",
-      price: "£200-£400",
-      period: "/week",
-      description: "Weekly meal preparation for busy families",
-      features: [
-        "Full week meal prep",
-        "Customized family menu",
-        "Fresh, local ingredients",
-        "Kid-friendly options",
-        "Storage instructions",
-        "Nutrition consultation"
+      icon: "🍽️",
+      title: "Lifestyle & Daily",
+      packages: [
+        { name: "Daily Meal Prep Chefs", range: "£30 – £150 per day" },
+        { name: "Family Chef Plan", range: "£400 – £1,200 per week" },
+        { name: "Meal Plans for Seniors", range: "£150 – £600 per week" },
+        { name: "Student Survival Meals", range: "£15 – £50 per meal" },
+        { name: "Couple's Culinary Nights", range: "£120 – £500 per evening" },
       ],
-      popular: true
     },
     {
-      title: "Senior Care Dining",
-      price: "£150-£300",
-      period: "/week",
-      description: "Nutritious meals tailored for seniors' dietary needs",
-      features: [
-        "Specialized dietary planning",
-        "Easy-to-digest meals",
-        "Health-conscious menus",
-        "Portion control",
-        "Medical diet compliance"
-      ]
+      icon: "🎉",
+      title: "Events & Celebrations",
+      packages: [
+        { name: "Birthday Bash Packages", range: "£300 – £1,500 per event" },
+        { name: "Wedding Feast Packages", range: "£2,000 – £10,000 per event" },
+        { name: "Bridal Shower / Bachelor Party Chefs", range: "£500 – £2,000 per event" },
+        { name: "Funeral/Remembrance Catering", range: "£800 – £3,000 per event" },
+        { name: "Baby Shower Brunch Packages", range: "£400 – £1,200 per event" },
+      ],
     },
     {
-      title: "Romantic Dinner",
-      price: "£250-£500",
-      period: "/event",
-      description: "Intimate dining experience for special occasions",
-      features: [
-        "Custom 3-5 course menu",
-        "Table setting assistance",
-        "Wine pairing suggestions",
-        "Professional service",
-        "Cleanup included"
-      ]
+      icon: "🏢",
+      title: "Business & Institutions",
+      packages: [
+        { name: "Office Lunch Subscriptions", range: "£800 – £3,500 per month" },
+        { name: "Conference Chef Services", range: "£1,500 – £8,000 per conference" },
+        { name: "School Meal Chefs", range: "£500 – £2,000 per week (per school/contract)" },
+        { name: "Military Mess Hall Chefs", range: "£3,000 – £12,000 per month" },
+        { name: "Flight Chef Experiences", range: "£1,500 – £5,000 per flight" },
+      ],
     },
     {
-      title: "Event Catering",
-      price: "£500-£1,500",
-      period: "/event",
-      description: "Professional catering for parties and gatherings",
-      features: [
-        "Menu for 10-50 guests",
-        "Buffet or plated service",
-        "Professional staff",
-        "Equipment rental",
-        "Full setup & cleanup",
-        "Dietary accommodations"
-      ]
+      icon: "👑",
+      title: "Luxury, Custom & VIP",
+      packages: [
+        { name: "Royalty-In-Residence Service", range: "£10,000 – £40,000 per month" },
+        { name: "Global Travel Chef Companion", range: "£2,000 – £10,000 per trip" },
+        { name: "Michelin-at-Home Experience", range: "£1,000 – £5,000 per night" },
+        { name: "Celebrity Wellness Meal Plans", range: "£2,000 – £8,000 per month" },
+        { name: "Presidential Chef Detail", range: "£15,000 – £50,000 per month" },
+      ],
     },
     {
-      title: "Wedding Services",
-      price: "£2,000-£8,000",
-      period: "/event",
-      description: "Make your special day unforgettable with premium catering",
-      features: [
-        "Unlimited guests",
-        "Bespoke menu creation",
-        "Tasting session",
-        "Professional service team",
-        "Complete event coordination",
-        "Backup chef guarantee"
-      ]
+      icon: "🎥",
+      title: "Unique & Entertainment",
+      packages: [
+        { name: "On-Set Chef Services", range: "£500 – £3,000 per day" },
+        { name: "Podcast or Live Show Chefs", range: "£250 – £1,000 per session" },
+        { name: "Festival/Event Booth Chefs", range: "£1,000 – £6,000 per event" },
+        { name: "ChefMe Kids Club", range: "£300 – £800 per session" },
+        { name: "Holiday Feast Packages", range: "£500 – £2,500 per event" },
+      ],
     },
-    {
-      title: "Corporate Events",
-      price: "£1,000-£5,000",
-      period: "/event",
-      description: "Impress clients and employees with professional catering",
-      features: [
-        "Business lunch/dinner service",
-        "Conference catering",
-        "Team building cooking classes",
-        "Branded presentation",
-        "Dietary accommodations",
-        "Invoice & documentation"
-      ]
-    },
-    {
-      title: "VIP Chef Experience",
-      price: "£3,000+",
-      period: "/event",
-      description: "Luxury dining with celebrity and Michelin-starred chefs",
-      features: [
-        "Celebrity chef selection",
-        "Fully customized experience",
-        "Premium ingredients",
-        "Sommelier service available",
-        "Photography options",
-        "Personalized menus",
-        "24/7 concierge support"
-      ]
-    },
-    {
-      title: "Holiday Feast",
-      price: "£500-£1,200",
-      period: "/event",
-      description: "Stress-free holiday celebrations with traditional or modern menus",
-      features: [
-        "Traditional holiday meals",
-        "Family-style service",
-        "All dietary needs met",
-        "Leftover packaging",
-        "Kitchen cleanup"
-      ]
-    },
-    {
-      title: "Cooking Classes",
-      price: "£80-£200",
-      period: "/session",
-      description: "Learn from professional chefs in hands-on cooking sessions",
-      features: [
-        "2-3 hour sessions",
-        "All ingredients included",
-        "Take-home recipes",
-        "Small group or private",
-        "Certificate of completion"
-      ]
-    },
-    {
-      title: "Meal Prep Coaching",
-      price: "£150-£350",
-      period: "/month",
-      description: "Learn to meal prep like a pro with personalized coaching",
-      features: [
-        "Weekly meal plans",
-        "Shopping lists",
-        "Prep techniques training",
-        "Recipe customization",
-        "Ongoing support"
-      ]
-    },
-    {
-      title: "Global Travel Chef",
-      price: "£500+",
-      period: "/day",
-      description: "Personal chef companion for international travel and yachts",
-      features: [
-        "Travel accommodation",
-        "Local ingredient sourcing",
-        "Multi-cuisine expertise",
-        "Flexible scheduling",
-        "Health & safety certified"
-      ]
-    }
   ];
 
   return (
@@ -179,47 +71,44 @@ const Packages = () => {
       <section className="py-20 bg-gradient-to-b from-accent/30 to-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center fade-in">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">Chef Packages</h1>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">Chef Packages & Pricing</h1>
             <p className="text-xl text-muted-foreground">
-              Find the perfect chef service for any occasion, from student meals to luxury events
+              Transparent pricing for every occasion. From daily meals to luxury events.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="py-20">
+      {/* Pricing Categories */}
+      <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {packages.map((pkg, i) => (
-              <Card 
-                key={i} 
-                className={`p-8 hover-lift relative ${pkg.popular ? 'border-primary shadow-lg' : ''}`}
-              >
-                {pkg.popular && (
-                  <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-4 py-1 text-sm font-semibold rounded-bl-lg rounded-tr-lg">
-                    Popular
-                  </div>
-                )}
-                <h3 className="text-2xl font-bold mb-2">{pkg.title}</h3>
-                <div className="mb-4">
-                  <span className="text-4xl font-bold text-primary">{pkg.price}</span>
-                  <span className="text-muted-foreground">{pkg.period}</span>
+          <div className="space-y-16">
+            {pricingCategories.map((category, idx) => (
+              <div key={idx} className="animate-fade-in">
+                <div className="flex items-center gap-3 mb-8">
+                  <span className="text-4xl">{category.icon}</span>
+                  <h2 className="text-3xl font-bold">{category.title}</h2>
                 </div>
-                <p className="text-muted-foreground mb-6">{pkg.description}</p>
-                <ul className="space-y-3 mb-8">
-                  {pkg.features.map((feature, j) => (
-                    <li key={j} className="flex items-start gap-2">
-                      <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                      <span className="text-sm">{feature}</span>
-                    </li>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {category.packages.map((pkg, pkgIdx) => (
+                    <Card 
+                      key={pkgIdx} 
+                      className="p-6 hover:shadow-lg transition-all duration-300 hover-lift border-border/40"
+                    >
+                      <h3 className="text-lg font-semibold mb-3 text-foreground">
+                        {pkg.name}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="w-5 h-5 text-primary" />
+                        <p className="text-muted-foreground font-medium">
+                          {pkg.range}
+                        </p>
+                      </div>
+                    </Card>
                   ))}
-                </ul>
-                <Link to="/chefs">
-                  <Button className="w-full" variant={pkg.popular ? "default" : "outline"}>
-                    Book Now
-                  </Button>
-                </Link>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         </div>
