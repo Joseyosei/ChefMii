@@ -7,7 +7,7 @@ import logo from "@/assets/chefme-logo.jpg";
 
 const Register = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-accent/30 to-background">
+    <div className="min-h-screen bg-gradient-to-br from-terracotta/20 via-ivory to-cream">
       <Navbar />
       
       <div className="container mx-auto px-4 py-20">
