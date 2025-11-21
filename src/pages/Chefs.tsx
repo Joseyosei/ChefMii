@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { format } from "date-fns";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 import chefEmma from "@/assets/chef-emma.jpg";
 import chefDavid from "@/assets/chef-david.jpg";
 import chefMaria from "@/assets/chef-maria.jpg";
@@ -23,6 +24,7 @@ const Chefs = () => {
   
   const chefs = [
     {
+      id: "emma-thompson",
       name: "Emma Thompson",
       cuisine: "Italian Cuisine",
       location: "London, UK",
@@ -33,6 +35,7 @@ const Chefs = () => {
       specialties: ["Pasta Making", "Regional Italian", "Wine Pairing"]
     },
     {
+      id: "david-rodriguez",
       name: "David Rodriguez",
       cuisine: "Asian Fusion",
       location: "Manchester, UK",
@@ -43,6 +46,7 @@ const Chefs = () => {
       specialties: ["Sushi", "Thai", "Modern Asian"]
     },
     {
+      id: "maria-santos",
       name: "Maria Santos",
       cuisine: "Mediterranean",
       location: "Birmingham, UK",
@@ -53,6 +57,7 @@ const Chefs = () => {
       specialties: ["Greek", "Spanish Tapas", "Healthy Cooking"]
     },
     {
+      id: "james-wilson",
       name: "James Wilson",
       cuisine: "French Fine Dining",
       location: "Edinburgh, UK",
@@ -63,6 +68,7 @@ const Chefs = () => {
       specialties: ["Classic French", "Pastry", "Michelin Experience"]
     },
     {
+      id: "sofia-chen",
       name: "Sofia Chen",
       cuisine: "Pan-Asian",
       location: "Bristol, UK",
@@ -73,6 +79,7 @@ const Chefs = () => {
       specialties: ["Chinese", "Korean BBQ", "Dim Sum"]
     },
     {
+      id: "oliver-martinez",
       name: "Oliver Martinez",
       cuisine: "Modern British",
       location: "Leeds, UK",
@@ -92,9 +99,15 @@ const Chefs = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center fade-in mb-8">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">Find Your Perfect Chef</h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-xl text-muted-foreground mb-6">
               Browse our curated selection of professional chefs from around the world
             </p>
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-terracotta to-terracotta-dark hover:opacity-90 text-white shadow-2xl animate-pulse hover:animate-none text-lg px-8 py-6 h-auto"
+            >
+              🔥 Book Your Dream Chef Today - Limited Spots Available!
+            </Button>
           </div>
 
           {/* Search and Filters */}
@@ -245,10 +258,11 @@ const Chefs = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {chefs.map((chef, i) => (
-              <Card key={i} className="overflow-hidden hover-lift">
-                <div className="aspect-square relative overflow-hidden bg-muted">
-                  <img src={chef.img} alt={chef.name} className="object-cover w-full h-full" />
-                </div>
+              <Link to={`/chef/${chef.id}`} key={i}>
+                <Card className="overflow-hidden hover-lift cursor-pointer">
+                  <div className="aspect-square relative overflow-hidden bg-muted">
+                    <img src={chef.img} alt={chef.name} className="object-cover w-full h-full" />
+                  </div>
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-2">
                     <div>
@@ -286,10 +300,11 @@ const Chefs = () => {
                       <p className="text-sm text-muted-foreground">Starting at</p>
                       <p className="text-2xl font-bold text-primary">{chef.rate}</p>
                     </div>
-                    <Button>Book Chef</Button>
-                  </div>
+                  <Button>View Profile</Button>
                 </div>
-              </Card>
+              </div>
+            </Card>
+              </Link>
             ))}
           </div>
         </div>
@@ -299,7 +314,7 @@ const Chefs = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-6">Are You a Professional Chef?</h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Join ChefMe and connect with clients looking for your culinary expertise
+            Join ChefMe Global and connect with clients looking for your culinary expertise
           </p>
           <Button size="lg" variant="secondary">Apply to Become a Chef</Button>
         </div>

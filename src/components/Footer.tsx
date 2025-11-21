@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
             <span className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-4 inline-block">
-              ChefMe
+              ChefMe Global
             </span>
             <p className="text-background/80 text-sm">
               Connecting you with exceptional chefs for every occasion, anywhere in the world.
@@ -29,8 +29,8 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Support</h3>
             <ul className="space-y-2">
               <li><Link to="/contact" className="text-background/80 hover:text-background text-sm">Contact Us</Link></li>
-              <li><a href="#" className="text-background/80 hover:text-background text-sm">Privacy Policy</a></li>
-              <li><a href="#" className="text-background/80 hover:text-background text-sm">Terms of Service</a></li>
+              <li><Link to="/privacy-policy" className="text-background/80 hover:text-background text-sm">Privacy Policy</Link></li>
+              <li><Link to="/terms-of-service" className="text-background/80 hover:text-background text-sm">Terms of Service</Link></li>
               <li><a href="#" className="text-background/80 hover:text-background text-sm">Become a Chef</a></li>
             </ul>
           </div>
@@ -49,7 +49,7 @@ const Footer = () => {
 
         <div className="border-t border-background/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-background/60 text-sm">
-            © 2026ChefMe. All rights reserved.
+            © 2025 ChefMe Global. All rights reserved.
           </p>
           <div className="flex gap-4">
             <a href="#" className="text-background/60 hover:text-background transition-colors">
