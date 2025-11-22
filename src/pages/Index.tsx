@@ -19,14 +19,16 @@ const Index = () => {
       
       {/* Hero Section */}
       <section className="relative h-[90vh] flex items-center overflow-hidden">
-        <div 
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `linear-gradient(to right, rgba(254, 245, 231, 0.95) 50%, rgba(254, 245, 231, 0.6) 100%), url(${heroImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        >
+          <source src="https://assets.mixkit.co/videos/preview/mixkit-chef-preparing-sushi-rolls-45572-large.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 z-0 bg-gradient-to-r from-background/95 via-background/80 to-background/60" />
         <div className="container mx-auto px-4 z-10 relative">
           <div className="max-w-2xl fade-in">
             <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight">
@@ -45,7 +47,7 @@ const Index = () => {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Date</label>
-                  <Input type="date" />
+                  <Input type="date" min={new Date().toISOString().split('T')[0]} />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Guests</label>
