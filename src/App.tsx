@@ -27,8 +27,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       <ChatBot />
-      <CookieBanner />
       <BrowserRouter>
+        <CookieBanner />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
