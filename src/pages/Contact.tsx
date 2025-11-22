@@ -138,7 +138,17 @@ const Contact = () => {
             <p className="text-muted-foreground mb-8">
               Our support team is available for instant messaging during business hours
             </p>
-            <Button size="lg">Start Live Chat</Button>
+            <Button 
+              size="lg"
+              onClick={() => {
+                const chatButton = document.querySelector('[data-chat-trigger]') as HTMLElement;
+                if (chatButton) {
+                  chatButton.click();
+                }
+              }}
+            >
+              Start Live Chat
+            </Button>
           </div>
         </div>
       </section>

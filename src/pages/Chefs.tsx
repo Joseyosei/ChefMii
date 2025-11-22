@@ -8,6 +8,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Star, MapPin, ChefHat, Search, Calendar as CalendarIcon, DollarSign, Award } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cuisineTypes, priceRanges } from "@/data/cuisines";
 import { format } from "date-fns";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -102,12 +103,14 @@ const Chefs = () => {
             <p className="text-xl text-muted-foreground mb-6">
               Browse our curated selection of professional chefs from around the world
             </p>
-            <Button 
-              size="lg" 
-              className="bg-gradient-to-r from-terracotta to-terracotta-dark hover:opacity-90 text-white shadow-2xl animate-pulse hover:animate-none text-lg px-8 py-6 h-auto"
-            >
-              🔥 Book Your Dream Chef Today - Limited Spots Available!
-            </Button>
+            <Link to="/register">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-terracotta to-terracotta-dark hover:opacity-90 text-white shadow-2xl animate-pulse hover:animate-none text-lg px-8 py-6 h-auto"
+              >
+                🔥 Book Your Dream Chef Today - Limited Spots Available!
+              </Button>
+            </Link>
           </div>
 
           {/* Search and Filters */}
@@ -149,23 +152,12 @@ const Chefs = () => {
                   <SelectTrigger className="rounded-xl border-accent/30 bg-background/50">
                     <SelectValue placeholder="All Cuisines" />
                   </SelectTrigger>
-                  <SelectContent className="bg-background">
-                    <SelectItem value="italian">Italian</SelectItem>
-                    <SelectItem value="french">French</SelectItem>
-                    <SelectItem value="indian">Indian</SelectItem>
-                    <SelectItem value="chinese">Chinese</SelectItem>
-                    <SelectItem value="japanese">Japanese</SelectItem>
-                    <SelectItem value="thai">Thai</SelectItem>
-                    <SelectItem value="korean">Korean</SelectItem>
-                    <SelectItem value="african">African</SelectItem>
-                    <SelectItem value="caribbean">Caribbean</SelectItem>
-                    <SelectItem value="vegan">Vegan</SelectItem>
-                    <SelectItem value="halal">Halal</SelectItem>
-                    <SelectItem value="kosher">Kosher</SelectItem>
-                    <SelectItem value="gluten-free">Gluten-Free</SelectItem>
-                    <SelectItem value="fine-dining">Fine Dining</SelectItem>
-                    <SelectItem value="street-food">Street Food</SelectItem>
-                    <SelectItem value="fusion">Fusion</SelectItem>
+                  <SelectContent className="bg-background max-h-[300px] overflow-y-auto">
+                    {cuisineTypes.map((cuisine) => (
+                      <SelectItem key={cuisine.toLowerCase().replace(/\s+/g, '-')} value={cuisine.toLowerCase()}>
+                        {cuisine}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -180,11 +172,12 @@ const Chefs = () => {
                   <SelectTrigger className="rounded-xl border-accent/30 bg-background/50">
                     <SelectValue placeholder="Any Price" />
                   </SelectTrigger>
-                  <SelectContent className="bg-background">
-                    <SelectItem value="under-50">Under £50</SelectItem>
-                    <SelectItem value="50-150">£50–£150</SelectItem>
-                    <SelectItem value="150-500">£150–£500</SelectItem>
-                    <SelectItem value="500-plus">£500+</SelectItem>
+                  <SelectContent className="bg-background max-h-[300px] overflow-y-auto">
+                    {priceRanges.map((range) => (
+                      <SelectItem key={range.toLowerCase().replace(/[^a-z0-9]+/g, '-')} value={range.toLowerCase()}>
+                        {range}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -213,6 +206,7 @@ const Chefs = () => {
                       mode="single"
                       selected={date}
                       onSelect={setDate}
+                      disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                       initialFocus
                       className={cn("pointer-events-auto rounded-xl")}
                     />
