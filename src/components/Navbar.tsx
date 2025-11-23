@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, User } from "lucide-react";
+import { Menu, User, Moon, Sun } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
@@ -8,8 +8,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const Navbar = () => {
+  const { isDarkMode, toggleTheme } = useTheme();
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/packages", label: "Packages" },
@@ -42,6 +44,17 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-accent transition-colors"
+              aria-label="Toggle theme"
+            >
+              {isDarkMode ? (
+                <Sun className="h-5 w-5 text-foreground" />
+              ) : (
+                <Moon className="h-5 w-5 text-foreground" />
+              )}
+            </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
@@ -74,6 +87,13 @@ const Navbar = () => {
             </SheetTrigger>
             <SheetContent>
               <div className="flex flex-col gap-4 mt-8">
+                <button
+                  onClick={toggleTheme}
+                  className="flex items-center gap-2 text-lg font-medium text-foreground/80 hover:text-primary transition-colors"
+                >
+                  {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                  {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+                </button>
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
