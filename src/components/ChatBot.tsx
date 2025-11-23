@@ -29,6 +29,14 @@ const ChatBot = () => {
     }
   }, [messages]);
 
+  const systemMessage = `You are the ChefMe Global virtual assistant. Help users with:
+- Chef services (lifestyle, events, business, luxury, entertainment)
+- Booking process and pricing
+- Chef profiles and specialties
+- Platform features
+
+Be friendly, concise, and helpful. Guide users to relevant pages when appropriate.`;
+
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 

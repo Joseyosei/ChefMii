@@ -18,6 +18,9 @@ import NotFound from "./pages/NotFound";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ChefDetail from "./pages/ChefDetail";
+import UserDashboard from "./pages/UserDashboard";
+import ChefDashboard from "./pages/ChefDashboard";
+import Messages from "./pages/Messages";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +45,9 @@ const App = () => (
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/chef/:chefId" element={<ChefDetail />} />
+          <Route path="/user-dashboard" element={<UserDashboard />} />
+          <Route path="/chef-dashboard" element={<ChefDashboard />} />
+          <Route path="/messages" element={<Messages />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
