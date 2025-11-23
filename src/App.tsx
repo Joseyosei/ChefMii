@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ChatBot from "@/components/ChatBot";
 import CookieBanner from "@/components/CookieBanner";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Packages from "./pages/Packages";
@@ -27,12 +28,13 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <ChatBot />
-      <BrowserRouter>
-        <CookieBanner />
-        <Routes>
+      <ThemeProvider>
+        <Toaster />
+        <Sonner />
+        <ChatBot />
+        <BrowserRouter>
+          <CookieBanner />
+          <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
           <Route path="/packages" element={<Packages />} />
@@ -52,6 +54,7 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

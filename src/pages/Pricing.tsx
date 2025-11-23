@@ -1,10 +1,10 @@
-import { useState } from 'react';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Moon, Sun } from "lucide-react";
+import { Check } from "lucide-react";
 import { Link } from 'react-router-dom';
+import { useTheme } from "@/contexts/ThemeContext";
 
 const pricingPlans = [
   {
@@ -45,31 +45,12 @@ const pricingPlans = [
 ];
 
 const Pricing = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle('dark');
-  };
+  const { isDarkMode } = useTheme();
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-950' : 'bg-gradient-to-b from-cream via-ivory to-cream'}`}>
       <Navbar />
       <main className="container mx-auto px-4 py-16">
-        {/* Theme Toggle */}
-        <div className="flex justify-end items-center gap-4 mb-12">
-          <span className={`text-sm font-medium ${!isDarkMode ? 'text-gray-900' : 'text-gray-400'}`}>Light</span>
-          <button
-            onClick={toggleTheme}
-            className={`relative w-14 h-7 rounded-full transition-colors ${isDarkMode ? 'bg-primary' : 'bg-gray-300'}`}
-          >
-            <div className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${isDarkMode ? 'translate-x-7' : ''} flex items-center justify-center`}>
-              {isDarkMode ? <Moon className="w-3 h-3" /> : <Sun className="w-3 h-3" />}
-            </div>
-          </button>
-          <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-100' : 'text-gray-400'}`}>Dark</span>
-        </div>
-
         {/* Hero Section */}
         <div className="text-center mb-16 animate-fade-in">
           <h1 className={`text-5xl md:text-6xl font-bold mb-6 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
@@ -87,7 +68,7 @@ const Pricing = () => {
               key={index}
               className={`glass-card hover-lift transition-all duration-300 relative ${
                 plan.popular ? 'border-2 border-green-500' : plan.elite ? 'border-2 border-purple-500 bg-gray-900 text-white' : ''
-              } ${isDarkMode ? 'bg-gray-900/50 border-gray-800' : 'bg-white/80'}`}
+              } ${isDarkMode ? 'bg-gray-900/90 border-gray-700 text-gray-100' : 'bg-white/95 border-gray-200'}`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
@@ -113,7 +94,7 @@ const Pricing = () => {
                   <span className={`text-5xl font-bold ${plan.elite ? 'text-primary' : isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
                     {plan.price}
                   </span>
-                  <span className={`text-lg ${plan.elite ? 'text-gray-300' : isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <span className={`text-lg ${plan.elite ? 'text-gray-300' : isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {plan.period}
                   </span>
                 </div>
@@ -133,7 +114,7 @@ const Pricing = () => {
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
                       <Check className={`w-5 h-5 mt-0.5 flex-shrink-0 ${plan.elite ? 'text-green-400' : 'text-green-500'}`} />
-                      <span className={`text-sm ${plan.elite ? 'text-gray-300' : isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <span className={`text-sm font-medium ${plan.elite ? 'text-gray-300' : isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                         {feature}
                       </span>
                     </li>
