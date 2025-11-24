@@ -14,7 +14,12 @@ import chefMaria from "@/assets/chef-maria.jpg";
 import chefJames from "@/assets/chef-james.jpg";
 import chefSofia from "@/assets/chef-sofia.jpg";
 import chefOliver from "@/assets/chef-oliver.jpg";
-import gourmetPlate from "@/assets/gourmet-plate.jpg";
+import italianPasta from "@/assets/food-italian-pasta.jpg";
+import italianRisotto from "@/assets/food-italian-risotto.jpg";
+import asianSushi from "@/assets/food-asian-sushi.jpg";
+import asianThai from "@/assets/food-asian-thai.jpg";
+import medMezze from "@/assets/food-mediterranean-mezze.jpg";
+import medTapas from "@/assets/food-mediterranean-tapas.jpg";
 
 const ChefDetail = () => {
   const { chefId } = useParams();
@@ -41,7 +46,7 @@ const ChefDetail = () => {
         { name: "Pasta Experience", price: "£350", description: "Fresh handmade pasta with choice of sauces", serves: "4-6 people" },
         { name: "Tuscan Feast", price: "£500", description: "5-course Tuscan-inspired dinner", serves: "6-8 people" },
       ],
-      foodImages: [gourmetPlate, gourmetPlate, gourmetPlate, gourmetPlate],
+      foodImages: [italianPasta, italianRisotto, italianPasta, italianRisotto],
       availability: ["2025-01-15", "2025-01-16", "2025-01-20", "2025-01-22"],
       customerReviews: [
         { name: "Sarah M.", rating: 5, comment: "Emma created an unforgettable dining experience! The pasta was exceptional.", date: "Nov 2024" },
@@ -68,7 +73,7 @@ const ChefDetail = () => {
         { name: "Thai Fusion Dinner", price: "£380", description: "Modern Thai-inspired 4-course meal", serves: "4-6 people" },
         { name: "Pan-Asian Tasting", price: "£520", description: "6-course journey across Asia", serves: "6-8 people" },
       ],
-      foodImages: [gourmetPlate, gourmetPlate, gourmetPlate, gourmetPlate],
+      foodImages: [asianSushi, asianThai, asianSushi, asianThai],
       availability: ["2025-01-17", "2025-01-19", "2025-01-24", "2025-01-26"],
       customerReviews: [
         { name: "Tom R.", rating: 5, comment: "David's sushi skills are incredible. Best private dining experience!", date: "Dec 2024" },
@@ -94,7 +99,7 @@ const ChefDetail = () => {
         { name: "Spanish Tapas Night", price: "£380", description: "Authentic Spanish tapas experience", serves: "4-6 people" },
         { name: "Mediterranean Wellness", price: "£450", description: "Healthy Mediterranean 4-course dinner", serves: "4-6 people" },
       ],
-      foodImages: [gourmetPlate, gourmetPlate, gourmetPlate, gourmetPlate],
+      foodImages: [medMezze, medTapas, medMezze, medTapas],
       availability: ["2025-01-18", "2025-01-21", "2025-01-25", "2025-01-28"],
       customerReviews: [
         { name: "David W.", rating: 5, comment: "Maria's Greek food is authentic and delicious!", date: "Dec 2024" },

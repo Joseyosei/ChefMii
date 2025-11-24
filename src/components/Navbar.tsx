@@ -17,6 +17,9 @@ const Navbar = () => {
     { href: "/packages", label: "Packages" },
     { href: "/chefs", label: "Find Chefs" },
     { href: "/pricing", label: "Pricing" },
+    { href: "/academy", label: "Academy" },
+    { href: "/marketplace", label: "Marketplace" },
+    { href: "/shop", label: "Shop" },
     { href: "/contact", label: "Contact" },
   ];
 
@@ -26,7 +29,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
             <span className="text-2xl font-bold bg-gradient-to-r from-terracotta via-terracotta-dark to-terracotta bg-clip-text text-transparent hover:opacity-80 transition-opacity">
-              ChefMe Global
+              ChefMii
             </span>
           </Link>
 
