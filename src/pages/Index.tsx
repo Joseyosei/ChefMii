@@ -35,7 +35,7 @@ const Index = () => {
               Hire a Chef for Any Occasion
             </h1>
             <p className="text-xl text-foreground/80 mb-8">
-              From home dinners to presidential banquets, ChefMe connects you with top chefs globally.
+              From home dinners to presidential banquets, ChefMii connects you with top chefs globally.
             </p>
             
             {/* Search Box */}
@@ -54,9 +54,11 @@ const Index = () => {
                   <Input type="number" placeholder="Number of guests" />
                 </div>
               </div>
-              <Button className="w-full mt-4" size="lg">
-                <Search className="mr-2 h-4 w-4" /> Search Chefs
-              </Button>
+              <Link to="/chefs" className="w-full">
+                <Button className="w-full mt-4" size="lg">
+                  <Search className="mr-2 h-4 w-4" /> Search Chefs
+                </Button>
+              </Link>
             </Card>
 
             {/* Service Categories */}
@@ -251,7 +253,7 @@ const Index = () => {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">Our Mission</h2>
             <p className="text-xl text-muted-foreground leading-relaxed">
-              At ChefMe, our mission is to make exceptional dining experiences accessible to everyone. 
+              At ChefMii, our mission is to make exceptional dining experiences accessible to everyone. 
               We believe that whether you're a student looking for home-cooked meals or planning a presidential 
               banquet, everyone deserves access to world-class culinary talent. We've built a platform that 
               connects passionate chefs with people who appreciate great food for any occasion.
@@ -331,7 +333,7 @@ const Index = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Find Your Perfect Chef?</h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Join thousands of satisfied clients who have elevated their dining experiences with ChefMe
+            Join thousands of satisfied clients who have elevated their dining experiences with ChefMii
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register">

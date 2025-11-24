@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
             <span className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-4 inline-block">
-              ChefMe Global
+              ChefMii
             </span>
             <p className="text-background/80 text-sm">
               Connecting you with exceptional chefs for every occasion, anywhere in the world.
@@ -49,7 +49,7 @@ const Footer = () => {
 
         <div className="border-t border-background/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-background/60 text-sm">
-            © 2025 ChefMe Global. All rights reserved.
+            © 2025 ChefMii. All rights reserved.
           </p>
           <div className="flex gap-4">
             <a href="#" className="text-background/60 hover:text-background transition-colors">
