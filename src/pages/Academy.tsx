@@ -95,7 +95,9 @@ const Academy = () => {
               Join a global community of culinary enthusiasts.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg">Browse Courses</Button>
+              <Link to="/academy">
+                <Button size="lg">Browse Courses</Button>
+              </Link>
               <Button size="lg" variant="outline">
                 <Play className="mr-2 h-5 w-5" />
                 Watch Preview
@@ -204,7 +206,9 @@ const Academy = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-2xl font-bold text-primary">{course.price}</p>
-                    <Button>Enroll Now</Button>
+                    <Link to="/register">
+                      <Button>Enroll Now</Button>
+                    </Link>
                   </div>
                 </div>
               </Card>
@@ -223,9 +227,11 @@ const Academy = () => {
               Upon completion, receive industry-recognized certifications that showcase 
               your culinary expertise to employers and clients worldwide.
             </p>
-            <Button size="lg" variant="secondary">
-              View Certification Programs
-            </Button>
+            <Link to="/academy">
+              <Button size="lg" variant="secondary">
+                View Certification Programs
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

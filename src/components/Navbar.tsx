@@ -13,14 +13,12 @@ import { useTheme } from "@/contexts/ThemeContext";
 const Navbar = () => {
   const { isDarkMode, toggleTheme } = useTheme();
   const navLinks = [
-    { href: "/", label: "Home" },
     { href: "/packages", label: "Packages" },
     { href: "/chefs", label: "Find Chefs" },
     { href: "/pricing", label: "Pricing" },
     { href: "/academy", label: "Academy" },
     { href: "/marketplace", label: "Marketplace" },
     { href: "/shop", label: "Shop" },
-    { href: "/contact", label: "Contact" },
   ];
 
   return (
@@ -73,6 +71,12 @@ const Navbar = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/about" className="cursor-pointer">About</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/" className="cursor-pointer">Home</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/contact" className="cursor-pointer">Contact</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
