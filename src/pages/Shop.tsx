@@ -6,6 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, ShoppingCart, Heart, Sparkles, Gift, Shirt } from "lucide-react";
+import { Link } from "react-router-dom";
+import productChefApron from "@/assets/product-chef-apron.jpg";
+import productChefJacket from "@/assets/product-chef-jacket.jpg";
+import productCuttingBoard from "@/assets/product-cutting-board.jpg";
+import productUtensils from "@/assets/product-utensils.jpg";
+import productChefHat from "@/assets/product-chef-hat.jpg";
+import productGiftSet from "@/assets/product-gift-set.jpg";
 
 const Shop = () => {
   const products = [
@@ -15,7 +22,7 @@ const Shop = () => {
       price: "£59.99",
       rating: 4.9,
       reviews: 234,
-      image: "https://images.unsplash.com/photo-1556909172-54557c7e4fb7?w=800&q=80",
+      image: productChefApron,
       colors: ["Black", "White", "Navy"],
       sizes: ["S", "M", "L", "XL"],
       endorsed: "Chef Emma Thompson"
@@ -26,7 +33,7 @@ const Shop = () => {
       price: "£89.99",
       rating: 5.0,
       reviews: 456,
-      image: "https://images.unsplash.com/photo-1583394293214-28ded15ee548?w=800&q=80",
+      image: productChefJacket,
       colors: ["White", "Black"],
       sizes: ["XS", "S", "M", "L", "XL", "XXL"],
       endorsed: "Chef Marco Ricci"
@@ -37,7 +44,7 @@ const Shop = () => {
       price: "£45.00",
       rating: 4.8,
       reviews: 678,
-      image: "https://images.unsplash.com/photo-1565183928294-7d22d2c7ab4d?w=800&q=80",
+      image: productCuttingBoard,
       colors: ["Natural"],
       endorsed: "ChefMii Collection"
     },
@@ -47,7 +54,7 @@ const Shop = () => {
       price: "£79.99",
       rating: 4.9,
       reviews: 892,
-      image: "https://images.unsplash.com/photo-1599578703214-56a0f4c8ebb1?w=800&q=80",
+      image: productUtensils,
       colors: ["Silver", "Rose Gold"],
       endorsed: "Professional Grade"
     },
@@ -57,7 +64,7 @@ const Shop = () => {
       price: "£34.99",
       rating: 4.7,
       reviews: 345,
-      image: "https://images.unsplash.com/photo-1543362906-acfc16c67564?w=800&q=80",
+      image: productChefHat,
       colors: ["White"],
       sizes: ["One Size"],
       endorsed: "Traditional Design"
@@ -68,7 +75,7 @@ const Shop = () => {
       price: "£129.99",
       rating: 5.0,
       reviews: 567,
-      image: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800&q=80",
+      image: productGiftSet,
       colors: ["Premium"],
       endorsed: "Perfect for gifting"
     }
@@ -91,14 +98,18 @@ const Shop = () => {
               Curated for professionals and home cooks alike.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg">
-                <Shirt className="mr-2 h-5 w-5" />
-                Shop Chefwear
-              </Button>
-              <Button size="lg" variant="outline">
-                <Gift className="mr-2 h-5 w-5" />
-                Gift Collections
-              </Button>
+              <Link to="/shop">
+                <Button size="lg">
+                  <Shirt className="mr-2 h-5 w-5" />
+                  Shop Chefwear
+                </Button>
+              </Link>
+              <Link to="/shop">
+                <Button size="lg" variant="outline">
+                  <Gift className="mr-2 h-5 w-5" />
+                  Gift Collections
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -115,9 +126,11 @@ const Shop = () => {
                 <p className="text-background/80">Premium Spring/Summer 2025 Line</p>
               </div>
             </div>
-            <Button variant="secondary" size="lg">
-              Explore Now
-            </Button>
+            <Link to="/shop">
+              <Button variant="secondary" size="lg">
+                Explore Now
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -219,10 +232,12 @@ const Shop = () => {
                   )}
                   <div className="flex items-center justify-between">
                     <p className="text-2xl font-bold text-primary">{product.price}</p>
-                    <Button>
-                      <ShoppingCart className="mr-2 h-4 w-4" />
-                      Add
-                    </Button>
+                    <Link to="/register">
+                      <Button>
+                        <ShoppingCart className="mr-2 h-4 w-4" />
+                        Add
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </Card>
@@ -241,9 +256,11 @@ const Shop = () => {
               Curated gift sets for the culinary enthusiast in your life. 
               Beautiful packaging and premium quality guaranteed.
             </p>
-            <Button size="lg">
-              Browse Gift Sets
-            </Button>
+            <Link to="/shop">
+              <Button size="lg">
+                Browse Gift Sets
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

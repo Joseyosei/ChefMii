@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, ShoppingCart, Heart, TrendingUp, Award, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
+import productPastaSauce from "@/assets/product-pasta-sauce.jpg";
+import productSpiceCollection from "@/assets/product-spice-collection.jpg";
+import productCookbook from "@/assets/product-cookbook.jpg";
 
 const Marketplace = () => {
   const products = [
@@ -96,10 +99,12 @@ const Marketplace = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-2xl mx-auto">
               <Input placeholder="Search products..." className="flex-1" />
-              <Button size="lg">
-                <ShoppingCart className="mr-2 h-5 w-5" />
-                Browse All
-              </Button>
+              <Link to="/marketplace">
+                <Button size="lg">
+                  <ShoppingCart className="mr-2 h-5 w-5" />
+                  Browse All
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -212,10 +217,12 @@ const Marketplace = () => {
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-2xl font-bold text-primary">{product.price}</p>
-                    <Button>
-                      <ShoppingCart className="mr-2 h-4 w-4" />
-                      Add to Cart
-                    </Button>
+                    <Link to="/register">
+                      <Button>
+                        <ShoppingCart className="mr-2 h-4 w-4" />
+                        Add to Cart
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </Card>
@@ -235,25 +242,37 @@ const Marketplace = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="p-6">
-              <div className="aspect-square rounded-lg overflow-hidden mb-4 bg-muted" />
+              <div className="aspect-square rounded-lg overflow-hidden mb-4 bg-muted">
+                <img src={productSpiceCollection} alt="Holiday Spice Collection" className="object-cover w-full h-full" />
+              </div>
               <Badge className="mb-2">Limited Edition</Badge>
               <h3 className="text-xl font-semibold mb-2">Holiday Spice Collection</h3>
               <p className="text-muted-foreground mb-4">Exclusive seasonal blend</p>
-              <Button className="w-full">Shop Now</Button>
+              <Link to="/marketplace">
+                <Button className="w-full">Shop Now</Button>
+              </Link>
             </Card>
             <Card className="p-6">
-              <div className="aspect-square rounded-lg overflow-hidden mb-4 bg-muted" />
+              <div className="aspect-square rounded-lg overflow-hidden mb-4 bg-muted">
+                <img src={productCookbook} alt="Asian Fusion Cookbook" className="object-cover w-full h-full" />
+              </div>
               <Badge className="mb-2">New Release</Badge>
               <h3 className="text-xl font-semibold mb-2">Asian Fusion Cookbook</h3>
               <p className="text-muted-foreground mb-4">50 innovative recipes</p>
-              <Button className="w-full">Shop Now</Button>
+              <Link to="/marketplace">
+                <Button className="w-full">Shop Now</Button>
+              </Link>
             </Card>
             <Card className="p-6">
-              <div className="aspect-square rounded-lg overflow-hidden mb-4 bg-muted" />
+              <div className="aspect-square rounded-lg overflow-hidden mb-4 bg-muted">
+                <img src={productPastaSauce} alt="Premium Olive Oil Set" className="object-cover w-full h-full" />
+              </div>
               <Badge className="mb-2">Best Seller</Badge>
               <h3 className="text-xl font-semibold mb-2">Premium Olive Oil Set</h3>
               <p className="text-muted-foreground mb-4">From Italian vineyards</p>
-              <Button className="w-full">Shop Now</Button>
+              <Link to="/marketplace">
+                <Button className="w-full">Shop Now</Button>
+              </Link>
             </Card>
           </div>
         </div>
