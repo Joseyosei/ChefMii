@@ -25,6 +25,7 @@ import Messages from "./pages/Messages";
 import Academy from "./pages/Academy";
 import Marketplace from "./pages/Marketplace";
 import Shop from "./pages/Shop";
+import KidsZone from "./pages/KidsZone";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,7 @@ const App = () => (
           <Route path="/academy" element={<Academy />} />
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/kids-zone" element={<KidsZone />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -26,7 +26,7 @@ const Index = () => {
           playsInline
           className="absolute inset-0 w-full h-full object-cover z-0"
         >
-          <source src="https://assets.mixkit.co/videos/preview/mixkit-chef-preparing-sushi-rolls-45572-large.mp4" type="video/mp4" />
+          <source src="/videos/hero-video.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 z-0 bg-gradient-to-r from-background/95 via-background/80 to-background/60" />
         <div className="container mx-auto px-4 z-10 relative">
