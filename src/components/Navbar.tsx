@@ -14,11 +14,12 @@ const Navbar = () => {
   const { isDarkMode, toggleTheme } = useTheme();
   const navLinks = [
     { href: "/packages", label: "Packages" },
-    { href: "/chefs", label: "Find Chefs" },
+    { href: "/chefs", label: "Find Chefs", isButton: true },
     { href: "/pricing", label: "Pricing" },
     { href: "/academy", label: "Academy" },
     { href: "/marketplace", label: "Marketplace" },
     { href: "/shop", label: "Shop" },
+    { href: "/kids-zone", label: "Kids' Zone" },
   ];
 
   return (
@@ -32,15 +33,26 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
-              >
-                {link.label}
-              </Link>
+              link.isButton ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                >
+                  <Button variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                    {link.label}
+                  </Button>
+                </Link>
+              ) : (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
           </div>
 
@@ -64,19 +76,19 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem asChild>
-                  <Link to="/login" className="cursor-pointer">Login</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/register" className="cursor-pointer">Sign Up</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
                   <Link to="/about" className="cursor-pointer">About</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/contact" className="cursor-pointer">Contact</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/" className="cursor-pointer">Home</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/contact" className="cursor-pointer">Contact</Link>
+                  <Link to="/login" className="cursor-pointer">Login</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/register" className="cursor-pointer">Sign Up</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -102,13 +114,24 @@ const Navbar = () => {
                   {isDarkMode ? 'Light Mode' : 'Dark Mode'}
                 </button>
                 {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors"
-                  >
-                    {link.label}
-                  </Link>
+                  link.isButton ? (
+                    <Link
+                      key={link.href}
+                      to={link.href}
+                    >
+                      <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                        {link.label}
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link
+                      key={link.href}
+                      to={link.href}
+                      className="text-lg font-medium text-foreground/80 hover:text-primary transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  )
                 ))}
                 <div className="flex flex-col gap-2 mt-4">
                   <Link to="/login">

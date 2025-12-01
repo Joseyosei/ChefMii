@@ -51,6 +51,19 @@ All colors MUST be HSL.
     --olive: 45 20% 45%;
     --olive-light: 45 15% 65%;
     
+    /* Kids Zone colors */
+    --mint: 160 60% 75%;
+    --mint-50: 160 60% 97%;
+    --mint-100: 160 55% 92%;
+    --mint-200: 160 50% 85%;
+    --mint-300: 160 50% 75%;
+    --mint-400: 160 55% 60%;
+    --mint-500: 160 55% 45%;
+    --mint-600: 160 55% 35%;
+    --mint-700: 160 55% 28%;
+    --mint-800: 160 55% 20%;
+    --mint-900: 160 55% 12%;
+    
     /* Shadows */
     --shadow-soft: 0 4px 20px -2px hsl(18 78% 50% / 0.08);
     --shadow-medium: 0 8px 30px -4px hsl(18 78% 50% / 0.12);

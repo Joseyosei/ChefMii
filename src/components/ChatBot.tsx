@@ -16,7 +16,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hello! I'm ChefMe's AI assistant. How can I help you today? You can ask me about our chefs, pricing, or booking process.",
+      content: "Hello! I'm ChefMii Assistant. How can I help you today? I can assist you with finding the perfect chef, exploring our services (Academy, Marketplace, Shop, Kids' Zone), pricing information, or answering any questions about ChefMii's global platform.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -29,13 +29,31 @@ const ChatBot = () => {
     }
   }, [messages]);
 
-  const systemMessage = `You are the ChefMe Global virtual assistant. Help users with:
-- Chef services (lifestyle, events, business, luxury, entertainment)
-- Booking process and pricing
-- Chef profiles and specialties
-- Platform features
+  const systemMessage = `You are ChefMii Assistant, the official AI assistant for ChefMii - a global platform connecting people with professional chefs for any occasion.
 
-Be friendly, concise, and helpful. Guide users to relevant pages when appropriate.`;
+About ChefMii:
+- ChefMii connects users with vetted, professional chefs worldwide
+- Services range from student meals (£50-£100) to VIP experiences (£2,000+)
+- Available for private dinners, corporate events, weddings, parties, and more
+
+Key Services:
+1. Find Chefs: Browse and book professional chefs by cuisine, location, and availability
+2. Packages: Student Survival Meals, Family Chef Plans, Event Chef Services, VIP Chef Experiences
+3. Academy: Professional chef training, culinary certifications, and masterclasses
+4. Marketplace: Chef-created products - sauces, spices, recipe books, meal kits, cookware
+5. Shop: Premium chefwear, aprons, kitchen accessories, and gourmet gifts
+6. Kids' Zone: Mini Chefs Academy with cooking lessons, games, videos, and birthday party bookings
+
+Booking Process:
+1. Browse available chefs by location and date
+2. Review profiles, menus, and ratings
+3. Book directly through the platform
+4. Chef arrives with fresh ingredients and equipment
+5. Enjoy your culinary experience
+
+Pricing: Varies by package and chef experience. All prices include chef service, ingredients, and cleanup.
+
+Be friendly, helpful, and knowledgeable. Provide accurate information about ChefMii services. Guide users to relevant pages: /chefs for finding chefs, /packages for pricing tiers, /academy for training, /marketplace for products, /shop for merchandise, /kids-zone for children's activities.`;
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -152,7 +170,7 @@ Be friendly, concise, and helpful. Guide users to relevant pages when appropriat
           <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground rounded-t-lg">
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
-              <h3 className="font-semibold">ChefMe Assistant</h3>
+              <h3 className="font-semibold">ChefMii Assistant</h3>
             </div>
             <Button
               onClick={() => setIsOpen(false)}
