@@ -117,7 +117,7 @@ const Register = () => {
                   <Button type="button" variant={role === "user" ? "default" : "outline"} onClick={() => setRole("user")} disabled={isLoading} className="w-full">
                     User
                   </Button>
-                  <Button type="button" variant={role === "chef" ? "default" : "outline"} onClick={() => setRole("chef")} disabled={isLoading} className="w-full bg-primary-foreground">
+                  <Button type="button" variant={role === "chef" ? "default" : "outline"} onClick={() => setRole("chef")} disabled={isLoading} className="w-full text-black bg-white">
                     Chef
                   </Button>
                 </div>
