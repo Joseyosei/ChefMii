@@ -11,21 +11,13 @@ import chefHome1 from "@/assets/chef-home-1.jpg";
 import chefHome2 from "@/assets/chef-home-2.jpg";
 import chefHome3 from "@/assets/chef-home-3.jpg";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Navbar />
       
       {/* Hero Section */}
       <section className="relative h-[90vh] flex items-center overflow-hidden">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover z-0"
-        >
+        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover z-0">
           <source src="/videos/hero-video.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 z-0 bg-gradient-to-r from-background/95 via-background/80 to-background/60" />
@@ -65,11 +57,9 @@ const Index = () => {
             <div className="mt-8">
               <p className="text-sm font-medium mb-4">Food Worth Hiring For</p>
               <div className="flex flex-wrap gap-2">
-                {["Private Chef Services", "Event Catering", "Cooking Classes", "Corporate Events", "High-Profile Chefs"].map((category) => (
-                  <Button key={category} variant="secondary" size="sm">
+                {["Private Chef Services", "Event Catering", "Cooking Classes", "Corporate Events", "High-Profile Chefs"].map(category => <Button key={category} variant="secondary" size="sm">
                     {category}
-                  </Button>
-                ))}
+                  </Button>)}
               </div>
             </div>
           </div>
@@ -81,9 +71,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <p className="text-center text-muted-foreground mb-8 text-sm uppercase tracking-wider">As Seen In</p>
           <div className="flex flex-wrap justify-center items-center gap-12 opacity-60">
-            {["Forbes", "BBC", "TechCrunch", "The New York Times", "FOOD & WINE"].map((pub) => (
-              <div key={pub} className="text-2xl font-bold text-foreground/60">{pub}</div>
-            ))}
+            {["Forbes", "BBC", "TechCrunch", "The New York Times", "FOOD & WINE"].map(pub => <div key={pub} className="text-2xl font-bold text-foreground/60">{pub}</div>)}
           </div>
         </div>
       </section>
@@ -139,13 +127,23 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { title: "Student Survival Meals", price: "£50-£100", desc: "Affordable home-cooked meals for students" },
-              { title: "Family Chef Plan", price: "£200-£400", desc: "Weekly meal prep for busy families" },
-              { title: "Event Chef Services", price: "£500-£1,500", desc: "Professional catering for special events" },
-              { title: "VIP Chef Experiences", price: "£2,000+", desc: "Luxury dining with celebrity chefs" },
-            ].map((pkg, i) => (
-              <Card key={i} className="p-6 hover-lift">
+            {[{
+            title: "Student Survival Meals",
+            price: "£50-£100",
+            desc: "Affordable home-cooked meals for students"
+          }, {
+            title: "Family Chef Plan",
+            price: "£200-£400",
+            desc: "Weekly meal prep for busy families"
+          }, {
+            title: "Event Chef Services",
+            price: "£500-£1,500",
+            desc: "Professional catering for special events"
+          }, {
+            title: "VIP Chef Experiences",
+            price: "£2,000+",
+            desc: "Luxury dining with celebrity chefs"
+          }].map((pkg, i) => <Card key={i} className="p-6 hover-lift">
                 <h3 className="text-xl font-semibold mb-2">{pkg.title}</h3>
                 <p className="text-2xl font-bold text-primary mb-3">{pkg.price}</p>
                 <p className="text-muted-foreground text-sm mb-4">{pkg.desc}</p>
@@ -154,8 +152,7 @@ const Index = () => {
                     View Details <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
-              </Card>
-            ))}
+              </Card>)}
           </div>
 
           <div className="text-center mt-12">
@@ -175,12 +172,22 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { name: "Gordon Harrison", cuisine: "Contemporary European", rate: "£200", img: chefHome1 },
-              { name: "Sophie Laurent", cuisine: "French Pastry & Desserts", rate: "£150", img: chefHome2 },
-              { name: "Marco Ricci", cuisine: "Modern Italian", rate: "£180", img: chefHome3 },
-            ].map((chef, i) => (
-              <Card key={i} className="overflow-hidden hover-lift">
+            {[{
+            name: "Gordon Harrison",
+            cuisine: "Contemporary European",
+            rate: "£200",
+            img: chefHome1
+          }, {
+            name: "Sophie Laurent",
+            cuisine: "French Pastry & Desserts",
+            rate: "£150",
+            img: chefHome2
+          }, {
+            name: "Marco Ricci",
+            cuisine: "Modern Italian",
+            rate: "£180",
+            img: chefHome3
+          }].map((chef, i) => <Card key={i} className="overflow-hidden hover-lift">
                 <div className="aspect-square relative overflow-hidden bg-muted">
                   <img src={chef.img} alt={chef.name} className="object-cover w-full h-full" />
                 </div>
@@ -188,17 +195,14 @@ const Index = () => {
                   <h3 className="text-2xl font-semibold mb-1">{chef.name}</h3>
                   <p className="text-muted-foreground mb-3">{chef.cuisine}</p>
                   <div className="flex items-center gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-primary text-primary" />
-                    ))}
+                    {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-primary text-primary" />)}
                   </div>
                   <p className="text-lg font-semibold text-primary mb-4">Starting at {chef.rate}/event</p>
                   <Link to="/chefs">
                     <Button className="w-full">View Profile</Button>
                   </Link>
                 </div>
-              </Card>
-            ))}
+              </Card>)}
           </div>
 
           <div className="text-center mt-12">
@@ -210,7 +214,7 @@ const Index = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-foreground text-background">
+      <section className="py-20 bg-foreground text-background border-mint-100">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">What Our Clients Say</h2>
@@ -218,31 +222,24 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {[
-              {
-                quote: "This chef transformed my anniversary into an unforgettable experience. The attention to detail was impeccable.",
-                author: "Sarah M.",
-                role: "Private Client"
-              },
-              {
-                quote: "We hired a chef for our corporate event and the feedback was incredible. Professional, delicious, and stress-free.",
-                author: "James K.",
-                role: "Corporate Event Manager"
-              },
-            ].map((testimonial, i) => (
-              <Card key={i} className="p-8 bg-background/10 backdrop-blur border-background/20">
+            {[{
+            quote: "This chef transformed my anniversary into an unforgettable experience. The attention to detail was impeccable.",
+            author: "Sarah M.",
+            role: "Private Client"
+          }, {
+            quote: "We hired a chef for our corporate event and the feedback was incredible. Professional, delicious, and stress-free.",
+            author: "James K.",
+            role: "Corporate Event Manager"
+          }].map((testimonial, i) => <Card key={i} className="p-8 bg-background/10 backdrop-blur border-background/20 rounded-none shadow opacity-100">
                 <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-primary text-primary" />
-                  ))}
+                  {[...Array(5)].map((_, i) => <Star key={i} className="h-5 w-5 fill-primary text-primary" />)}
                 </div>
                 <p className="text-lg mb-6 text-background/90">"{testimonial.quote}"</p>
                 <div>
-                  <p className="font-semibold">{testimonial.author}</p>
+                  <p className="font-semibold text-primary-foreground">{testimonial.author}</p>
                   <p className="text-background/70 text-sm">{testimonial.role}</p>
                 </div>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -261,19 +258,25 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-            {[
-              { icon: Shield, title: "Trust & Safety", desc: "All chefs vetted and background checked" },
-              { icon: Award, title: "Quality Assured", desc: "Only the best culinary professionals" },
-              { icon: Clock, title: "Always Available", desc: "Book chefs for any date, any time" },
-            ].map((item, i) => (
-              <div key={i} className="text-center">
+            {[{
+            icon: Shield,
+            title: "Trust & Safety",
+            desc: "All chefs vetted and background checked"
+          }, {
+            icon: Award,
+            title: "Quality Assured",
+            desc: "Only the best culinary professionals"
+          }, {
+            icon: Clock,
+            title: "Always Available",
+            desc: "Book chefs for any date, any time"
+          }].map((item, i) => <div key={i} className="text-center">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
                   <item.icon className="h-8 w-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
                 <p className="text-muted-foreground">{item.desc}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -349,8 +352,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
