@@ -20,7 +20,8 @@ const Navbar = () => {
 
   const navLinks = [
     { href: "/packages", label: "Packages" },
-    { href: "/chefs", label: "Find Chefs", isButton: true },
+    { href: "/find-chefs", label: "Find Chefs", isButton: true },
+    { href: "/chefs", label: "Browse Chefs" },
     { href: "/pricing", label: "Pricing" },
     { href: "/academy", label: "Academy" },
     { href: "/marketplace", label: "Marketplace" },
