@@ -2,14 +2,24 @@ import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import chefMiiIcon from "@/assets/chefmii-icon.png";
+
 const Footer = () => {
-  return <footer className="bg-foreground text-background py-12">
+  return (
+    <footer className="bg-foreground text-background py-12">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-4 inline-block">
-              ChefMii
-            </span>
+            <Link to="/" className="flex items-center gap-2 mb-4">
+              <img 
+                src={chefMiiIcon} 
+                alt="ChefMii Icon" 
+                className="h-8 w-8 object-contain"
+              />
+              <span className="text-2xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                ChefMii
+              </span>
+            </Link>
             <p className="text-background/80 text-sm">
               Connecting you with exceptional chefs for every occasion, anywhere in the world.
             </p>
@@ -67,6 +77,8 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 };
+
 export default Footer;

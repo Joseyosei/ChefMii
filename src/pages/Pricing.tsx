@@ -1,9 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
-import { Link } from 'react-router-dom';
 import { useTheme } from "@/contexts/ThemeContext";
 
 const pricingPlans = [
@@ -25,7 +25,7 @@ const pricingPlans = [
     popular: true,
     features: [
       "Everything in Starter",
-      "2 hours of Chef Video Call",
+      "2 Hours of Chef Video Call",
       "Premium Menu Options",
       "Priority Support"
     ]
@@ -37,8 +37,8 @@ const pricingPlans = [
     elite: true,
     features: [
       "Everything in Professional",
-      "Global Travel Chef",
-      "Custom Menu",
+      "Global Travel Chef Access",
+      "Custom Menu Planning",
       "Dedicated Account Manager"
     ]
   }
@@ -46,6 +46,11 @@ const pricingPlans = [
 
 const Pricing = () => {
   const { isDarkMode } = useTheme();
+  const navigate = useNavigate();
+
+  const handleSubscribe = (plan: string) => {
+    navigate(`/register?plan=${plan}`);
+  };
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-950' : 'bg-gradient-to-b from-cream via-ivory to-cream'}`}>
@@ -57,7 +62,7 @@ const Pricing = () => {
             Pricing
           </h1>
           <p className={`text-xl max-w-2xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Dark mode. Light mode. Adaptive display.
+            Choose the perfect plan for your culinary journey
           </p>
         </div>
 
@@ -80,7 +85,7 @@ const Pricing = () => {
               {plan.elite && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="bg-purple-500 text-white text-xs font-bold px-4 py-1 rounded-full italic">
-                    Meist Popular
+                    Most Popular
                   </span>
                 </div>
               )}
@@ -99,17 +104,6 @@ const Pricing = () => {
                   </span>
                 </div>
 
-                {plan.name === "Professional Plan" && (
-                  <p className={`mb-6 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Perfect for immersive and adaptive experiences.
-                  </p>
-                )}
-                {plan.name === "Elite Plan" && (
-                  <p className="mb-6 text-sm text-gray-300">
-                    For maximum customization and support.
-                  </p>
-                )}
-
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
@@ -121,13 +115,12 @@ const Pricing = () => {
                   ))}
                 </ul>
 
-                <Link to="/register">
-                  <Button 
-                    className={`w-full ${plan.elite ? 'bg-transparent border-2 border-purple-500 text-purple-400 hover:bg-purple-500/10' : plan.popular ? 'bg-primary hover:bg-primary/90' : 'bg-primary hover:bg-primary/90'}`}
-                  >
-                    {plan.name === "Starter Plan" ? "Current Plan" : "Get Started"}
-                  </Button>
-                </Link>
+                <Button 
+                  onClick={() => handleSubscribe(plan.name.toLowerCase().replace(' plan', ''))}
+                  className={`w-full ${plan.elite ? 'bg-transparent border-2 border-purple-500 text-purple-400 hover:bg-purple-500/10' : plan.popular ? 'bg-primary hover:bg-primary/90' : 'bg-primary hover:bg-primary/90'}`}
+                >
+                  Select Plan
+                </Button>
               </CardContent>
             </Card>
           ))}

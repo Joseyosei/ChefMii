@@ -1,8 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, DollarSign } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Packages = () => {
@@ -11,55 +10,55 @@ const Packages = () => {
       icon: "🍽️",
       title: "Lifestyle & Daily",
       packages: [
-        { name: "Daily Meal Prep Chefs", range: "£30 – £150 per day" },
-        { name: "Family Chef Plan", range: "£400 – £1,200 per week" },
-        { name: "Meal Plans for Seniors", range: "£150 – £600 per week" },
-        { name: "Student Survival Meals", range: "£15 – £50 per meal" },
-        { name: "Couple's Culinary Nights", range: "£120 – £500 per evening" },
+        { name: "Daily Meal Prep Chefs", range: "£30 – £150 per day", slug: "daily-meal-prep" },
+        { name: "Family Chef Plan", range: "£400 – £1,200 per week", slug: "family-chef" },
+        { name: "Meal Plans for Seniors", range: "£150 – £600 per week", slug: "seniors-meal" },
+        { name: "Student Survival Meals", range: "£15 – £50 per meal", slug: "student-meals" },
+        { name: "Couple's Culinary Nights", range: "£120 – £500 per evening", slug: "couples-nights" },
       ],
     },
     {
       icon: "🎉",
       title: "Events & Celebrations",
       packages: [
-        { name: "Birthday Bash Packages", range: "£300 – £1,500 per event" },
-        { name: "Wedding Feast Packages", range: "£2,000 – £10,000 per event" },
-        { name: "Bridal Shower / Bachelor Party Chefs", range: "£500 – £2,000 per event" },
-        { name: "Funeral/Remembrance Catering", range: "£800 – £3,000 per event" },
-        { name: "Baby Shower Brunch Packages", range: "£400 – £1,200 per event" },
+        { name: "Birthday Bash Packages", range: "£300 – £1,500 per event", slug: "birthday-bash" },
+        { name: "Wedding Feast Packages", range: "£2,000 – £10,000 per event", slug: "wedding-feast" },
+        { name: "Bridal Shower / Bachelor Party Chefs", range: "£500 – £2,000 per event", slug: "bridal-bachelor" },
+        { name: "Funeral/Remembrance Catering", range: "£800 – £3,000 per event", slug: "remembrance" },
+        { name: "Baby Shower Brunch Packages", range: "£400 – £1,200 per event", slug: "baby-shower" },
       ],
     },
     {
       icon: "🏢",
       title: "Business & Institutions",
       packages: [
-        { name: "Office Lunch Subscriptions", range: "£800 – £3,500 per month" },
-        { name: "Conference Chef Services", range: "£1,500 – £8,000 per conference" },
-        { name: "School Meal Chefs", range: "£500 – £2,000 per week (per school/contract)" },
-        { name: "Military Mess Hall Chefs", range: "£3,000 – £12,000 per month" },
-        { name: "Flight Chef Experiences", range: "£1,500 – £5,000 per flight" },
+        { name: "Office Lunch Subscriptions", range: "£800 – £3,500 per month", slug: "office-lunch" },
+        { name: "Conference Chef Services", range: "£1,500 – £8,000 per conference", slug: "conference-chef" },
+        { name: "School Meal Chefs", range: "£500 – £2,000 per week", slug: "school-meals" },
+        { name: "Military Mess Hall Chefs", range: "£3,000 – £12,000 per month", slug: "military-mess" },
+        { name: "Flight Chef Experiences", range: "£1,500 – £5,000 per flight", slug: "flight-chef" },
       ],
     },
     {
       icon: "👑",
       title: "Luxury, Custom & VIP",
       packages: [
-        { name: "Royalty-In-Residence Service", range: "£10,000 – £40,000 per month" },
-        { name: "Global Travel Chef Companion", range: "£2,000 – £10,000 per trip" },
-        { name: "Michelin-at-Home Experience", range: "£1,000 – £5,000 per night" },
-        { name: "Celebrity Wellness Meal Plans", range: "£2,000 – £8,000 per month" },
-        { name: "Presidential Chef Detail", range: "£15,000 – £50,000 per month" },
+        { name: "Royalty-In-Residence Service", range: "£10,000 – £40,000 per month", slug: "royalty-residence" },
+        { name: "Global Travel Chef Companion", range: "£2,000 – £10,000 per trip", slug: "travel-chef" },
+        { name: "Michelin-at-Home Experience", range: "£1,000 – £5,000 per night", slug: "michelin-home" },
+        { name: "Celebrity Wellness Meal Plans", range: "£2,000 – £8,000 per month", slug: "celebrity-wellness" },
+        { name: "Presidential Chef Detail", range: "£15,000 – £50,000 per month", slug: "presidential-chef" },
       ],
     },
     {
       icon: "🎥",
       title: "Unique & Entertainment",
       packages: [
-        { name: "On-Set Chef Services", range: "£500 – £3,000 per day" },
-        { name: "Podcast or Live Show Chefs", range: "£250 – £1,000 per session" },
-        { name: "Festival/Event Booth Chefs", range: "£1,000 – £6,000 per event" },
-        { name: "ChefMe Kids Club", range: "£300 – £800 per session" },
-        { name: "Holiday Feast Packages", range: "£500 – £2,500 per event" },
+        { name: "On-Set Chef Services", range: "£500 – £3,000 per day", slug: "on-set-chef" },
+        { name: "Podcast or Live Show Chefs", range: "£250 – £1,000 per session", slug: "podcast-chef" },
+        { name: "Festival/Event Booth Chefs", range: "£1,000 – £6,000 per event", slug: "festival-booth" },
+        { name: "ChefMii Kids Club", range: "£300 – £800 per session", slug: "kids-club" },
+        { name: "Holiday Feast Packages", range: "£500 – £2,500 per event", slug: "holiday-feast" },
       ],
     },
   ];
@@ -94,17 +93,21 @@ const Packages = () => {
                   {category.packages.map((pkg, pkgIdx) => (
                     <Card 
                       key={pkgIdx} 
-                      className="p-6 hover:shadow-lg transition-all duration-300 hover-lift border-border/40"
+                      className="hover:shadow-lg transition-all duration-300 hover-lift border-border/40"
                     >
-                      <h3 className="text-lg font-semibold mb-3 text-foreground">
-                        {pkg.name}
-                      </h3>
-                      <div className="flex items-center gap-2">
-                        <DollarSign className="w-5 h-5 text-primary" />
-                        <p className="text-muted-foreground font-medium">
+                      <CardContent className="p-6">
+                        <h3 className="text-lg font-semibold mb-3 text-foreground">
+                          {pkg.name}
+                        </h3>
+                        <p className="text-muted-foreground font-medium mb-4">
                           {pkg.range}
                         </p>
-                      </div>
+                        <Link to={`/contact?package=${pkg.slug}`}>
+                          <Button variant="default" className="w-full">
+                            Book Now
+                          </Button>
+                        </Link>
+                      </CardContent>
                     </Card>
                   ))}
                 </div>

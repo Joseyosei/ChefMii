@@ -1,17 +1,23 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, User, Moon, Sun } from "lucide-react";
+import { Menu, User, Moon, Sun, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/hooks/useAuth";
+import ChefMiiLogo from "./ChefMiiLogo";
 
 const Navbar = () => {
   const { isDarkMode, toggleTheme } = useTheme();
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
   const navLinks = [
     { href: "/packages", label: "Packages" },
     { href: "/chefs", label: "Find Chefs", isButton: true },
@@ -22,15 +28,23 @@ const Navbar = () => {
     { href: "/kids-zone", label: "Kids' Zone" },
   ];
 
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
+  const getDashboardLink = () => {
+    if (profile?.role === "chef") {
+      return "/chef-dashboard";
+    }
+    return "/user-dashboard";
+  };
+
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/40">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold bg-gradient-to-r from-terracotta via-terracotta-dark to-terracotta bg-clip-text text-transparent hover:opacity-80 transition-opacity">
-              ChefMii
-            </span>
-          </Link>
+          <ChefMiiLogo iconSize="sm" />
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
@@ -84,17 +98,34 @@ const Navbar = () => {
                 <DropdownMenuItem asChild>
                   <Link to="/" className="cursor-pointer">Home</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/login" className="cursor-pointer">Login</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/register" className="cursor-pointer">Sign Up</Link>
-                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                {user ? (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to={getDashboardLink()} className="cursor-pointer">Dashboard</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/login" className="cursor-pointer">Login</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/register" className="cursor-pointer">Sign Up</Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
-            <Link to="/register">
-              <Button>Get Started</Button>
-            </Link>
+            {!user && (
+              <Link to="/register">
+                <Button>Get Started</Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Navigation */}
@@ -134,12 +165,25 @@ const Navbar = () => {
                   )
                 ))}
                 <div className="flex flex-col gap-2 mt-4">
-                  <Link to="/login">
-                    <Button variant="outline" className="w-full">Login</Button>
-                  </Link>
-                  <Link to="/register">
-                    <Button className="w-full">Get Started</Button>
-                  </Link>
+                  {user ? (
+                    <>
+                      <Link to={getDashboardLink()}>
+                        <Button variant="outline" className="w-full">Dashboard</Button>
+                      </Link>
+                      <Button onClick={handleSignOut} variant="destructive" className="w-full">
+                        Sign Out
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/login">
+                        <Button variant="outline" className="w-full">Login</Button>
+                      </Link>
+                      <Link to="/register">
+                        <Button className="w-full">Get Started</Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </SheetContent>
