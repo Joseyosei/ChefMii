@@ -27,6 +27,11 @@ import Marketplace from "./pages/Marketplace";
 import Shop from "./pages/Shop";
 import KidsZone from "./pages/KidsZone";
 import FindChefs from "./pages/FindChefs";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import Team from "./pages/Team";
+import Careers from "./pages/Careers";
+import BookingFlow from "./pages/BookingFlow";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +65,11 @@ const App = () => (
           <Route path="/shop" element={<Shop />} />
           <Route path="/kids-zone" element={<KidsZone />} />
           <Route path="/find-chefs" element={<FindChefs />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/booking" element={<BookingFlow />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
