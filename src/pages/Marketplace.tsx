@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -6,21 +7,27 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, ShoppingCart, Heart, TrendingUp, Award, Shield } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useCart } from '@/hooks/useCart';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from '@/hooks/use-toast';
 import productPastaSauce from "@/assets/product-pasta-sauce.jpg";
 import productSpiceCollection from "@/assets/product-spice-collection.jpg";
 import productCookbook from "@/assets/product-cookbook.jpg";
 
 const Marketplace = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { addToCart } = useCart();
+
   const products = [
     {
       name: "Chef Emma's Signature Pasta Sauce",
       chef: "Chef Emma Thompson",
       category: "Sauces",
-      price: "£12.99",
+      price: 12.99,
       rating: 4.9,
       reviews: 342,
-      image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&q=80",
+      image: productPastaSauce,
       trending: true,
       verified: true
     },
@@ -28,10 +35,10 @@ const Marketplace = () => {
       name: "Tokyo Spice Blend Collection",
       chef: "Chef Yuki Tanaka",
       category: "Spices",
-      price: "£24.99",
+      price: 24.99,
       rating: 5.0,
       reviews: 198,
-      image: "https://images.unsplash.com/photo-1596040033229-a0b959d1d5f0?w=800&q=80",
+      image: productSpiceCollection,
       trending: true,
       verified: true
     },
@@ -39,10 +46,10 @@ const Marketplace = () => {
       name: "Mediterranean Recipe Book",
       chef: "Chef Maria Santos",
       category: "Books",
-      price: "£34.99",
+      price: 34.99,
       rating: 4.8,
       reviews: 567,
-      image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80",
+      image: productCookbook,
       trending: false,
       verified: true
     },
@@ -50,7 +57,7 @@ const Marketplace = () => {
       name: "Premium Truffle Oil",
       chef: "Chef Marco Ricci",
       category: "Oils & Vinegars",
-      price: "£45.00",
+      price: 45.00,
       rating: 4.9,
       reviews: 234,
       image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=800&q=80",
@@ -61,7 +68,7 @@ const Marketplace = () => {
       name: "Artisan Meal Kit - Italian",
       chef: "Chef Marco Ricci",
       category: "Meal Kits",
-      price: "£49.99",
+      price: 49.99,
       rating: 5.0,
       reviews: 445,
       image: "https://images.unsplash.com/photo-1615671524827-c1fe3973b648?w=800&q=80",
@@ -72,7 +79,7 @@ const Marketplace = () => {
       name: "Professional Chef Knife Set",
       chef: "ChefMii Collection",
       category: "Cookware",
-      price: "£199.99",
+      price: 199.99,
       rating: 4.9,
       reviews: 892,
       image: "https://images.unsplash.com/photo-1593618998160-e34014e67546?w=800&q=80",
@@ -80,6 +87,24 @@ const Marketplace = () => {
       verified: true
     }
   ];
+
+  const handleAddToCart = async (product: typeof products[0]) => {
+    if (!user) {
+      toast({ title: 'Please login to add items to cart', variant: 'destructive' });
+      navigate('/login');
+      return;
+    }
+    
+    const success = await addToCart({
+      name: product.name,
+      image: product.image,
+      price: product.price,
+    });
+    
+    if (success) {
+      navigate('/cart');
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -99,12 +124,10 @@ const Marketplace = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-2xl mx-auto">
               <Input placeholder="Search products..." className="flex-1" />
-              <Link to="/marketplace">
-                <Button size="lg">
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  Browse All
-                </Button>
-              </Link>
+              <Button size="lg">
+                <ShoppingCart className="mr-2 h-5 w-5" />
+                Browse All
+              </Button>
             </div>
           </div>
         </div>
@@ -216,13 +239,11 @@ const Marketplace = () => {
                     <span className="text-sm text-muted-foreground">({product.reviews} reviews)</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <p className="text-2xl font-bold text-primary">{product.price}</p>
-                    <Link to="/register">
-                      <Button>
-                        <ShoppingCart className="mr-2 h-4 w-4" />
-                        Add to Cart
-                      </Button>
-                    </Link>
+                    <p className="text-2xl font-bold text-primary">£{product.price.toFixed(2)}</p>
+                    <Button onClick={() => handleAddToCart(product)}>
+                      <ShoppingCart className="mr-2 h-4 w-4" />
+                      Add to Cart
+                    </Button>
                   </div>
                 </div>
               </Card>
@@ -248,9 +269,9 @@ const Marketplace = () => {
               <Badge className="mb-2">Limited Edition</Badge>
               <h3 className="text-xl font-semibold mb-2">Holiday Spice Collection</h3>
               <p className="text-muted-foreground mb-4">Exclusive seasonal blend</p>
-              <Link to="/marketplace">
-                <Button className="w-full">Shop Now</Button>
-              </Link>
+              <Button className="w-full" onClick={() => handleAddToCart({ name: 'Holiday Spice Collection', image: productSpiceCollection, price: 29.99, chef: '', category: '', rating: 0, reviews: 0, trending: false, verified: false })}>
+                Add to Cart
+              </Button>
             </Card>
             <Card className="p-6">
               <div className="aspect-square rounded-lg overflow-hidden mb-4 bg-muted">
@@ -259,9 +280,9 @@ const Marketplace = () => {
               <Badge className="mb-2">New Release</Badge>
               <h3 className="text-xl font-semibold mb-2">Asian Fusion Cookbook</h3>
               <p className="text-muted-foreground mb-4">50 innovative recipes</p>
-              <Link to="/marketplace">
-                <Button className="w-full">Shop Now</Button>
-              </Link>
+              <Button className="w-full" onClick={() => handleAddToCart({ name: 'Asian Fusion Cookbook', image: productCookbook, price: 34.99, chef: '', category: '', rating: 0, reviews: 0, trending: false, verified: false })}>
+                Add to Cart
+              </Button>
             </Card>
             <Card className="p-6">
               <div className="aspect-square rounded-lg overflow-hidden mb-4 bg-muted">
@@ -270,9 +291,9 @@ const Marketplace = () => {
               <Badge className="mb-2">Best Seller</Badge>
               <h3 className="text-xl font-semibold mb-2">Premium Olive Oil Set</h3>
               <p className="text-muted-foreground mb-4">From Italian vineyards</p>
-              <Link to="/marketplace">
-                <Button className="w-full">Shop Now</Button>
-              </Link>
+              <Button className="w-full" onClick={() => handleAddToCart({ name: 'Premium Olive Oil Set', image: productPastaSauce, price: 39.99, chef: '', category: '', rating: 0, reviews: 0, trending: false, verified: false })}>
+                Add to Cart
+              </Button>
             </Card>
           </div>
         </div>

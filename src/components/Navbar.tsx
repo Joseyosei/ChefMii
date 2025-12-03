@@ -21,7 +21,6 @@ const Navbar = () => {
   const navLinks = [
     { href: "/packages", label: "Packages" },
     { href: "/find-chefs", label: "Find Chefs", isButton: true },
-    { href: "/chefs", label: "Browse Chefs" },
     { href: "/pricing", label: "Pricing" },
     { href: "/academy", label: "Academy" },
     { href: "/marketplace", label: "Marketplace" },
@@ -45,7 +44,7 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/40">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <ChefMiiLogo iconSize="sm" />
+          <ChefMiiLogo />
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">

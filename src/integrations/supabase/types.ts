@@ -14,6 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          booking_date: string
+          booking_time: string
+          chef_id: string
+          created_at: string
+          guests: number
+          id: string
+          package_name: string
+          special_requests: string | null
+          status: string
+          total_price: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_date: string
+          booking_time: string
+          chef_id: string
+          created_at?: string
+          guests?: number
+          id?: string
+          package_name: string
+          special_requests?: string | null
+          status?: string
+          total_price?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_date?: string
+          booking_time?: string
+          chef_id?: string
+          created_at?: string
+          guests?: number
+          id?: string
+          package_name?: string
+          special_requests?: string | null
+          status?: string
+          total_price?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      cart_items: {
+        Row: {
+          created_at: string
+          id: string
+          price: number
+          product_image: string | null
+          product_name: string
+          quantity: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          price: number
+          product_image?: string | null
+          product_name: string
+          quantity?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          price?: number
+          product_image?: string | null
+          product_name?: string
+          quantity?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          read_at: string | null
+          receiver_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          receiver_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          receiver_id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
