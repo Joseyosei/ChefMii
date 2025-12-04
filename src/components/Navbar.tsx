@@ -21,6 +21,7 @@ const Navbar = () => {
   const navLinks = [
     { href: "/packages", label: "Packages" },
     { href: "/find-chefs", label: "Find Chefs", isButton: true },
+    { href: "/chef-media", label: "Chef Media" },
     { href: "/pricing", label: "Pricing" },
     { href: "/academy", label: "Academy" },
     { href: "/marketplace", label: "Marketplace" },
