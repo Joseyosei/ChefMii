@@ -27,6 +27,7 @@ import Marketplace from "./pages/Marketplace";
 import Shop from "./pages/Shop";
 import KidsZone from "./pages/KidsZone";
 import FindChefs from "./pages/FindChefs";
+import ChefMedia from "./pages/ChefMedia";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Team from "./pages/Team";
@@ -65,6 +66,7 @@ const App = () => (
           <Route path="/shop" element={<Shop />} />
           <Route path="/kids-zone" element={<KidsZone />} />
           <Route path="/find-chefs" element={<FindChefs />} />
+          <Route path="/chef-media" element={<ChefMedia />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/team" element={<Team />} />
