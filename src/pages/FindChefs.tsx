@@ -17,48 +17,60 @@ const chefs = [
   {
     id: 'emma-thompson',
     name: 'Chef Emma',
-    bio: 'Specializes in Italian cuisine | 10 years of experience',
+    cuisine: 'Italian Cuisine',
+    bio: 'Specializes in Italian cuisine with 10 years of experience creating authentic pasta and risotto dishes.',
     image: chefEmma,
+    video: '/videos/hero-video.mp4',
     location: 'London, UK',
     rating: 4.9,
   },
   {
     id: 'david-rodriguez',
     name: 'Chef David',
-    bio: 'Asian fusion expert | Michelin-trained',
+    cuisine: 'Asian Fusion',
+    bio: 'Asian fusion expert with Michelin training. Passionate about blending Eastern and Western flavors.',
     image: chefDavid,
+    video: '/videos/hero-video.mp4',
     location: 'Manchester, UK',
     rating: 5.0,
   },
   {
     id: 'maria-santos',
     name: 'Chef Maria',
-    bio: 'Mediterranean flavors | Healthy cooking specialist',
+    cuisine: 'Mediterranean',
+    bio: 'Mediterranean flavors specialist focused on healthy, vibrant cooking with fresh ingredients.',
     image: chefMaria,
+    video: '/videos/hero-video.mp4',
     location: 'Birmingham, UK',
     rating: 4.8,
   },
   {
     id: 'james-wilson',
     name: 'Chef James',
-    bio: 'French fine dining | Pastry master',
+    cuisine: 'French Fine Dining',
+    bio: 'French fine dining expert and pastry master. Creating elegant experiences for special occasions.',
     image: chefJames,
+    video: '/videos/hero-video.mp4',
     location: 'Edinburgh, UK',
     rating: 4.9,
   },
   {
     id: 'sofia-chen',
     name: 'Chef Sofia',
-    bio: 'Pan-Asian cuisine | Dim Sum expert',
+    cuisine: 'Pan-Asian',
+    bio: 'Pan-Asian cuisine specialist and Dim Sum expert. Bringing authentic Asian street food to your home.',
     image: chefSofia,
+    video: '/videos/hero-video.mp4',
     location: 'Bristol, UK',
     rating: 4.7,
   },
   {
     id: 'oliver-martinez',
     name: 'Chef Oliver',
-    bio: 'Modern British | Farm-to-table advocate',
+    cuisine: 'Modern British',
+    bio: 'Modern British chef and farm-to-table advocate. Celebrating local, seasonal ingredients.',
     image: chefOliver,
+    video: '/videos/hero-video.mp4',
     location: 'Leeds, UK',
     rating: 4.9,
   },
@@ -123,22 +135,22 @@ export default function FindChefs() {
 
         {/* Card Stack Container */}
         <div className="relative w-full max-w-[340px] h-[520px]">
-          {/* Background Cards (Next chefs preview) */}
+        {/* Background Cards (Next chefs preview) */}
           <motion.div
             className="absolute inset-0"
             style={{ zIndex: 1 }}
             animate={{ scale: 0.85, y: 40, opacity: 0.5 }}
           >
             <Card className="w-full h-full overflow-hidden rounded-2xl shadow-lg border-border">
-              <div className="relative h-[320px] overflow-hidden">
+              <div className="relative h-[280px] overflow-hidden">
                 <img
                   src={nextNextChef.image}
                   alt={nextNextChef.name}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <CardContent className="p-5 text-center bg-card">
-                <h2 className="text-xl font-bold text-foreground">{nextNextChef.name}</h2>
+              <CardContent className="p-4 text-center bg-card">
+                <h2 className="text-lg font-bold text-foreground">{nextNextChef.name}</h2>
               </CardContent>
             </Card>
           </motion.div>
@@ -149,15 +161,15 @@ export default function FindChefs() {
             animate={{ scale: 0.92, y: 20, opacity: 0.7 }}
           >
             <Card className="w-full h-full overflow-hidden rounded-2xl shadow-lg border-border">
-              <div className="relative h-[320px] overflow-hidden">
+              <div className="relative h-[280px] overflow-hidden">
                 <img
                   src={nextChef.image}
                   alt={nextChef.name}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <CardContent className="p-5 text-center bg-card">
-                <h2 className="text-xl font-bold text-foreground">{nextChef.name}</h2>
+              <CardContent className="p-4 text-center bg-card">
+                <h2 className="text-lg font-bold text-foreground">{nextChef.name}</h2>
               </CardContent>
             </Card>
           </motion.div>
@@ -188,32 +200,35 @@ export default function FindChefs() {
               }}
             >
               <Card className="w-full h-full overflow-hidden rounded-2xl shadow-xl border-border cursor-grab active:cursor-grabbing">
-                <div className="relative h-[320px] overflow-hidden">
-                  <img
-                    src={currentChef.image}
-                    alt={currentChef.name}
+                <div className="relative h-[280px] overflow-hidden bg-black">
+                  <video
+                    src={currentChef.video}
                     className="w-full h-full object-cover"
+                    controls
+                    muted
+                    loop
+                    playsInline
+                    poster={currentChef.image}
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                    <div className="flex items-center gap-1 text-white">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-semibold">{currentChef.rating}</span>
-                    </div>
+                  <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <span className="text-white font-semibold text-sm">{currentChef.rating}</span>
                   </div>
                 </div>
-                <CardContent className="p-5 text-center bg-card">
+                <CardContent className="p-4 text-center bg-card">
                   <h2 className="text-xl font-bold text-foreground">{currentChef.name}</h2>
-                  <p className="text-sm text-muted-foreground mt-1">{currentChef.bio}</p>
+                  <p className="text-sm text-primary font-medium">{currentChef.cuisine}</p>
+                  <p className="text-sm text-muted-foreground mt-2 line-clamp-2">{currentChef.bio}</p>
                   <p className="text-xs text-muted-foreground mt-2 flex items-center justify-center gap-1">
                     <MapPin className="h-3 w-3" />
                     {currentChef.location}
                   </p>
                   
-                  <div className="flex justify-center gap-4 mt-5">
+                  <div className="flex justify-center gap-4 mt-4">
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      className="h-14 w-14 rounded-full border-2 border-destructive hover:bg-destructive/10"
+                      className="h-14 w-14 rounded-full border-2 border-destructive hover:bg-destructive/10 transition-all hover:scale-110"
                       onClick={() => handleNext(false)}
                     >
                       <X className="h-6 w-6 text-destructive" />
@@ -221,7 +236,7 @@ export default function FindChefs() {
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      className="h-14 w-14 rounded-full border-2 border-blue-500 hover:bg-blue-500/10"
+                      className="h-14 w-14 rounded-full border-2 border-blue-500 hover:bg-blue-500/10 transition-all hover:scale-110"
                       onClick={handleSuperLike}
                     >
                       <Star className="h-6 w-6 text-blue-500" />
@@ -229,7 +244,7 @@ export default function FindChefs() {
                     <Button 
                       variant="outline" 
                       size="icon" 
-                      className="h-14 w-14 rounded-full border-2 border-green-500 hover:bg-green-500/10"
+                      className="h-14 w-14 rounded-full border-2 border-green-500 hover:bg-green-500/10 transition-all hover:scale-110"
                       onClick={() => handleNext(true)}
                     >
                       <Heart className="h-6 w-6 text-green-500" />
