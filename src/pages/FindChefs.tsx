@@ -225,7 +225,7 @@ export default function FindChefs() {
         </p>
 
         {filteredChefs.length === 0 ? (
-          <Card className="w-full max-w-[340px] p-8 text-center">
+          <Card className="w-[400px] md:w-[450px] p-8 text-center">
             <p className="text-muted-foreground mb-4">No chefs match your filters</p>
             <Button onClick={resetFilters}>Reset Filters</Button>
           </Card>
@@ -244,7 +244,7 @@ export default function FindChefs() {
               </Button>
 
               {/* Card Stack Container */}
-              <div className="relative w-full max-w-[340px] h-[480px]">
+              <div className="relative w-[400px] md:w-[450px] h-[580px]">
                 {/* Background Cards (Next chefs preview) */}
                 {filteredChefs.length > 2 && nextNextChef && (
                   <motion.div
@@ -315,7 +315,7 @@ export default function FindChefs() {
                       }}
                     >
                       <Card className="w-full h-full overflow-hidden rounded-2xl shadow-xl border-border cursor-grab active:cursor-grabbing">
-                        <div className="relative h-[280px] overflow-hidden">
+                        <div className="relative h-[340px] overflow-hidden">
                           <img
                             src={currentChef.image}
                             alt={currentChef.name}
