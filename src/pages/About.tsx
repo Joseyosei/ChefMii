@@ -13,7 +13,7 @@ const About = () => {
       <section className="py-20 bg-gradient-to-b from-accent/30 to-background">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center fade-in">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">About ChefMe</h1>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">About ChefMii</h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
               We're on a mission to democratize exceptional dining experiences and make 
               world-class culinary talent accessible to everyone, everywhere.
@@ -26,15 +26,15 @@ const About = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
             <div>
-              <h2 className="text-4xl font-bold mb-6">Why We Built ChefMe</h2>
+              <h2 className="text-4xl font-bold mb-6">Why We Built ChefMii</h2>
               <p className="text-lg text-muted-foreground mb-4 leading-relaxed">
-                ChefMe was born from a simple belief: exceptional food should be accessible to everyone, 
+                ChefMii was born from a simple belief: exceptional food should be accessible to everyone, 
                 not just the wealthy or those in major cities. We saw a gap between talented chefs looking 
                 for opportunities and people wanting memorable dining experiences.
               </p>
               <p className="text-lg text-muted-foreground mb-4 leading-relaxed">
                 Whether you're a college student craving home-cooked meals, a family celebrating a milestone, 
-                or an organization hosting a presidential banquet, ChefMe connects you with the perfect 
+                or an organization hosting a presidential banquet, ChefMii connects you with the perfect 
                 culinary professional for your occasion.
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed">
@@ -46,7 +46,7 @@ const About = () => {
               <blockquote className="text-2xl font-semibold mb-4 text-foreground/90 leading-relaxed">
                 "Every occasion deserves a chef. Every chef deserves opportunity."
               </blockquote>
-              <p className="text-muted-foreground">— The ChefMe Team</p>
+              <p className="text-muted-foreground">— The ChefMii Team</p>
             </Card>
           </div>
         </div>
@@ -121,7 +121,7 @@ const About = () => {
 
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Join the ChefMe Family</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">Join the ChefMii Family</h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
             Whether you're looking to hire a chef or become one, we'd love to have you with us
           </p>
