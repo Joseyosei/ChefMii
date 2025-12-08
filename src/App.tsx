@@ -33,6 +33,7 @@ import Checkout from "./pages/Checkout";
 import Team from "./pages/Team";
 import Careers from "./pages/Careers";
 import BookingFlow from "./pages/BookingFlow";
+import MiniChefDashboard from "./pages/MiniChefDashboard";
 
 const queryClient = new QueryClient();
 
@@ -72,6 +73,7 @@ const App = () => (
           <Route path="/team" element={<Team />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/booking" element={<BookingFlow />} />
+          <Route path="/minichef-dashboard" element={<MiniChefDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
