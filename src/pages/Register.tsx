@@ -7,6 +7,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import chefMiiIcon from "@/assets/chefmii-icon.png";
+import { emailSchema, passwordSchema, nameSchema, rateLimiter } from "@/lib/security";
+
 const Register = () => {
   const [searchParams] = useSearchParams();
   const [fullName, setFullName] = useState("");
@@ -15,27 +17,22 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState<"user" | "chef">("user");
   const [isLoading, setIsLoading] = useState(false);
-  const {
-    signUp,
-    user,
-    profile,
-    loading
-  } = useAuth();
+  const { signUp, user, profile, loading } = useAuth();
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
 
-  // Get plan from URL if coming from pricing page
   const plan = searchParams.get("plan");
+  
   useEffect(() => {
     if (!loading && user && profile) {
       const redirectPath = profile.role === "chef" ? "/chef-dashboard" : "/user-dashboard";
       navigate(redirectPath);
     }
   }, [user, profile, loading, navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (!fullName || !email || !password || !confirmPassword) {
       toast({
         title: "Error",
@@ -44,6 +41,37 @@ const Register = () => {
       });
       return;
     }
+
+    const nameValidation = nameSchema.safeParse(fullName);
+    if (!nameValidation.success) {
+      toast({
+        title: "Invalid Name",
+        description: nameValidation.error.errors[0].message,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const emailValidation = emailSchema.safeParse(email);
+    if (!emailValidation.success) {
+      toast({
+        title: "Invalid Email",
+        description: emailValidation.error.errors[0].message,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const passwordValidation = passwordSchema.safeParse(password);
+    if (!passwordValidation.success) {
+      toast({
+        title: "Weak Password",
+        description: passwordValidation.error.errors[0].message,
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast({
         title: "Error",
@@ -52,19 +80,20 @@ const Register = () => {
       });
       return;
     }
-    if (password.length < 6) {
+
+    if (!rateLimiter.check(`register:${email}`, 3, 300000)) {
       toast({
-        title: "Error",
-        description: "Password must be at least 6 characters",
-        variant: "destructive"
+        title: "Too Many Attempts",
+        description: "Please wait 5 minutes before trying again",
+        variant: "destructive",
       });
       return;
     }
+
     setIsLoading(true);
-    const {
-      error
-    } = await signUp(email, password, fullName, role);
+    const { error } = await signUp(email, password, fullName, role);
     setIsLoading(false);
+
     if (error) {
       if (error.message.includes("already registered")) {
         toast({
@@ -80,12 +109,14 @@ const Register = () => {
         });
       }
     } else {
+      rateLimiter.reset(`register:${email}`);
       toast({
         title: "Welcome to ChefMii!",
         description: "Your account has been created successfully."
       });
     }
   };
+
   return <div className="min-h-screen bg-gradient-to-br from-terracotta/20 via-ivory to-cream">
       <Navbar />
       

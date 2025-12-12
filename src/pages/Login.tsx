@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import chefMiiIcon from "@/assets/chefmii-icon.png";
+import { emailSchema, passwordSchema, rateLimiter } from "@/lib/security";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -35,6 +36,25 @@ const Login = () => {
       return;
     }
 
+    const emailValidation = emailSchema.safeParse(email);
+    if (!emailValidation.success) {
+      toast({
+        title: "Invalid Email",
+        description: emailValidation.error.errors[0].message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!rateLimiter.check(`login:${email}`, 5, 300000)) {
+      toast({
+        title: "Too Many Attempts",
+        description: "Please wait 5 minutes before trying again",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     const { error } = await signIn(email, password);
     setIsLoading(false);
@@ -48,6 +68,7 @@ const Login = () => {
         variant: "destructive",
       });
     } else {
+      rateLimiter.reset(`login:${email}`);
       toast({
         title: "Welcome back!",
         description: "You have successfully logged in.",
