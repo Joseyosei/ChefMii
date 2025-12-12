@@ -18,7 +18,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [role, setRole] = useState<"user" | "chef">("user");
+  const [role, setRole] = useState<"user" | "chef" | "kid">("user");
   const [isLoading, setIsLoading] = useState(false);
   const { signUp, user, profile, loading } = useAuth();
   const navigate = useNavigate();
@@ -28,7 +28,12 @@ const Register = () => {
   
   useEffect(() => {
     if (!loading && user && profile) {
-      const redirectPath = profile.role === "chef" ? "/chef-dashboard" : "/user-dashboard";
+      let redirectPath = "/user-dashboard";
+      if (profile.role === "chef") {
+        redirectPath = "/chef-dashboard";
+      } else if (profile.role === "kid") {
+        redirectPath = "/minichef-dashboard";
+      }
       navigate(redirectPath);
     }
   }, [user, profile, loading, navigate]);
@@ -147,16 +152,23 @@ const Register = () => {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">I am a...</label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-3">
                   <Button type="button" variant={role === "user" ? "default" : "outline"} onClick={() => setRole("user")} disabled={isLoading} className="w-full">
                     User
                   </Button>
                   <Button type="button" variant={role === "chef" ? "default" : "outline"} onClick={() => setRole("chef")} disabled={isLoading} className="w-full text-black bg-white">
                     Chef
                   </Button>
+                  <Button type="button" variant={role === "kid" ? "default" : "outline"} onClick={() => setRole("kid")} disabled={isLoading} className="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-white hover:from-yellow-500 hover:to-orange-500">
+                    Kids
+                  </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {role === "chef" ? "Join as a chef to offer your culinary services" : "Sign up to book amazing chefs for any occasion"}
+                  {role === "chef" 
+                    ? "Join as a chef to offer your culinary services" 
+                    : role === "kid"
+                    ? "Perfect for children and teenagers who love cooking!"
+                    : "Sign up to book amazing chefs for any occasion"}
                 </p>
               </div>
 

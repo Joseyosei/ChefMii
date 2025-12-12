@@ -7,7 +7,7 @@ export interface Profile {
   user_id: string;
   email: string | null;
   full_name: string | null;
-  role: "user" | "chef";
+  role: "user" | "chef" | "kid";
   created_at: string;
   updated_at: string;
 }
@@ -61,7 +61,7 @@ export const useAuth = () => {
     }
   };
 
-  const signUp = async (email: string, password: string, fullName: string, role: "user" | "chef") => {
+  const signUp = async (email: string, password: string, fullName: string, role: "user" | "chef" | "kid") => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { data, error } = await supabase.auth.signUp({
