@@ -18,16 +18,13 @@ const Navbar = () => {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
 
-  const navLinks = [
-    { href: "/packages", label: "Packages" },
-    { href: "/find-chefs", label: "Find Chefs", isButton: true },
-    { href: "/chef-media", label: "Chef Media" },
-    { href: "/pricing", label: "Pricing" },
-    { href: "/academy", label: "Academy" },
-    { href: "/marketplace", label: "Marketplace" },
-    { href: "/shop", label: "Shop" },
-    { href: "/kids-zone", label: "Kids' Zone" },
-  ];
+    const navLinks = [
+      { href: "/find-chefs", label: "Find Chefs", isButton: true },
+      { href: "/chef-media", label: "Chef Media" },
+      { href: "/pricing", label: "Pricing" },
+      { href: "/academy", label: "Academy" },
+      { href: "/kids-zone", label: "Kids' Zone" },
+    ];
 
   const handleSignOut = async () => {
     await signOut();

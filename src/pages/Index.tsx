@@ -4,13 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Search, Calendar, Users, ChefHat, Clock, Award, Shield, Star, ChevronRight } from "lucide-react";
+import { Search, Calendar, Users, ChefHat, Clock, Award, Shield, Star, ChevronRight, ChevronDown } from "lucide-react";
 import heroImage from "@/assets/hero-chef.jpg";
 import gourmetPlate from "@/assets/gourmet-plate.jpg";
 import chefHome1 from "@/assets/chef-home-1.jpg";
 import chefHome2 from "@/assets/chef-home-2.jpg";
 import chefHome3 from "@/assets/chef-home-3.jpg";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 const Index = () => {
   return <div className="min-h-screen">
       <Navbar />
@@ -53,15 +59,34 @@ const Index = () => {
               </Link>
             </Card>
 
-            {/* Service Categories */}
-            <div className="mt-8">
-              <p className="text-sm font-medium mb-4">Food Worth Hiring For</p>
-              <div className="flex flex-wrap gap-2">
-                {["Private Chef Services", "Event Catering", "Cooking Classes", "Corporate Events", "High-Profile Chefs"].map(category => <Button key={category} variant="secondary" size="sm">
-                    {category}
-                  </Button>)}
+              {/* Service Categories */}
+              <div className="mt-8">
+                <p className="text-sm font-medium mb-4">Food Worth Hiring For</p>
+                <div className="flex flex-wrap gap-2">
+                  {["Private Chef Services", "Event Catering", "Cooking Classes", "Corporate Events", "High-Profile Chefs"].map(category => <Button key={category} variant="secondary" size="sm">
+                      {category}
+                    </Button>)}
+                  
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="secondary" size="sm" className="gap-1">
+                        More <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      <DropdownMenuItem asChild>
+                        <Link to="/packages">Packages</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/marketplace">Marketplace</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/shop">Shop</Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
-            </div>
           </div>
         </div>
       </section>
