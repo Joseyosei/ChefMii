@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Search, Calendar, Users, ChefHat, Clock, Award, Shield, Star, ChevronRight, ChevronDown } from "lucide-react";
+import { Search, Calendar, Users, ChefHat, Clock, Award, Shield, Star, ChevronRight, MoreHorizontal } from "lucide-react";
 import heroImage from "@/assets/hero-chef.jpg";
 import gourmetPlate from "@/assets/gourmet-plate.jpg";
 import chefHome1 from "@/assets/chef-home-1.jpg";
@@ -59,7 +59,7 @@ const Index = () => {
               </Link>
             </Card>
 
-              {/* Service Categories */}
+            {/* Service Categories */}
               <div className="mt-8">
                 <p className="text-sm font-medium mb-4">Food Worth Hiring For</p>
                 <div className="flex flex-wrap gap-2">
@@ -68,19 +68,19 @@ const Index = () => {
                     </Button>)}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="secondary" size="sm" className="gap-2">
-                        More <ChevronDown className="h-4 w-4" />
+                      <Button variant="secondary" size="sm">
+                        <MoreHorizontal className="h-4 w-4 mr-1" /> More
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-48">
                       <DropdownMenuItem asChild>
-                        <Link to="/packages" className="cursor-pointer w-full">Packages</Link>
+                        <Link to="/packages" className="cursor-pointer">Packages</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link to="/marketplace" className="cursor-pointer w-full">Marketplace</Link>
+                        <Link to="/marketplace" className="cursor-pointer">Marketplace</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link to="/shop" className="cursor-pointer w-full">Shop</Link>
+                        <Link to="/shop" className="cursor-pointer">Shop</Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
