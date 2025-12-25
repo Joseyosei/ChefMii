@@ -4,13 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Search, Calendar, Users, ChefHat, Clock, Award, Shield, Star, ChevronRight } from "lucide-react";
+import { Search, Calendar, Users, ChefHat, Clock, Award, Shield, Star, ChevronRight, ChevronDown } from "lucide-react";
 import heroImage from "@/assets/hero-chef.jpg";
 import gourmetPlate from "@/assets/gourmet-plate.jpg";
 import chefHome1 from "@/assets/chef-home-1.jpg";
 import chefHome2 from "@/assets/chef-home-2.jpg";
 import chefHome3 from "@/assets/chef-home-3.jpg";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 const Index = () => {
   return <div className="min-h-screen">
       <Navbar />
