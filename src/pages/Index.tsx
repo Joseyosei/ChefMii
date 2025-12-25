@@ -59,15 +59,33 @@ const Index = () => {
               </Link>
             </Card>
 
-            {/* Service Categories */}
-            <div className="mt-8">
-              <p className="text-sm font-medium mb-4">Food Worth Hiring For</p>
-              <div className="flex flex-wrap gap-2">
-                {["Private Chef Services", "Event Catering", "Cooking Classes", "Corporate Events", "High-Profile Chefs"].map(category => <Button key={category} variant="secondary" size="sm">
-                    {category}
-                  </Button>)}
+              {/* Service Categories */}
+              <div className="mt-8">
+                <p className="text-sm font-medium mb-4">Food Worth Hiring For</p>
+                <div className="flex flex-wrap gap-2">
+                  {["Private Chef Services", "Event Catering", "Cooking Classes", "Corporate Events", "High-Profile Chefs"].map(category => <Button key={category} variant="secondary" size="sm">
+                      {category}
+                    </Button>)}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="secondary" size="sm" className="gap-2">
+                        More <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-48">
+                      <DropdownMenuItem asChild>
+                        <Link to="/packages" className="cursor-pointer w-full">Packages</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/marketplace" className="cursor-pointer w-full">Marketplace</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/shop" className="cursor-pointer w-full">Shop</Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
-            </div>
           </div>
         </div>
       </section>
