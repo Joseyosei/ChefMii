@@ -15,7 +15,7 @@ const PrivacyPolicy = () => {
             <section>
               <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
               <p>
-                ChefMe Global ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains 
+                ChefMii Global ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains 
                 how we collect, use, disclose, and safeguard your information when you use our platform.
               </p>
             </section>
@@ -177,9 +177,9 @@ const PrivacyPolicy = () => {
                 For questions or concerns about this Privacy Policy or our data practices, please contact us at:
               </p>
               <p className="font-medium">
-                Email: privacy@chefmeglobal.com<br />
+                Email: privacy@chefmiiglobal.com<br />
                 Phone: +44 20 1234 5678<br />
-                Address: ChefMe Global, 123 Culinary Lane, London, UK
+                Address: ChefMii Global, 123 Culinary Lane, London, UK
               </p>
             </section>
           </div>

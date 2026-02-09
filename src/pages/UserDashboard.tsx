@@ -46,7 +46,7 @@ export default function UserDashboard() {
       <div className="flex">
         {/* Sidebar */}
         <aside className="w-64 min-h-screen bg-card border-r border-border p-6 hidden lg:block">
-          <h2 className="text-2xl font-bold text-primary mb-8">ChefMe</h2>
+          <h2 className="text-2xl font-bold text-primary mb-8">ChefMii</h2>
           <nav className="space-y-2">
             <button
               onClick={() => setActiveNav('dashboard')}

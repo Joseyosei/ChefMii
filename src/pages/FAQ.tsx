@@ -13,7 +13,7 @@ const FAQ = () => {
       },
       {
         q: "What areas do you serve?",
-        a: "ChefMe operates globally in over 120 countries. Simply enter your location when searching, and we'll show you available chefs in your area. If you're in a remote location, we can arrange for chefs to travel to you."
+        a: "ChefMii operates globally in over 120 countries. Simply enter your location when searching, and we'll show you available chefs in your area. If you're in a remote location, we can arrange for chefs to travel to you."
       },
       {
         q: "How does pricing work?",
@@ -37,7 +37,7 @@ const FAQ = () => {
     safety: [
       {
         q: "How are chefs vetted?",
-        a: "All ChefMe chefs undergo a comprehensive vetting process including background checks, credential verification, food safety certifications, and reference checks. We also review their culinary training, experience, and customer feedback before approval."
+        a: "All ChefMii chefs undergo a comprehensive vetting process including background checks, credential verification, food safety certifications, and reference checks. We also review their culinary training, experience, and customer feedback before approval."
       },
       {
         q: "What if I have food allergies?",
@@ -45,7 +45,7 @@ const FAQ = () => {
       },
       {
         q: "Are chefs insured?",
-        a: "Yes, all ChefMe chefs carry professional liability insurance and food safety certifications. They're also covered by our platform guarantee, which protects you in the unlikely event of any issues."
+        a: "Yes, all ChefMii chefs carry professional liability insurance and food safety certifications. They're also covered by our platform guarantee, which protects you in the unlikely event of any issues."
       }
     ],
     booking: [
@@ -59,7 +59,7 @@ const FAQ = () => {
       },
       {
         q: "Can I book for outside the UK?",
-        a: "Yes! ChefMe operates globally. We have chefs available in major cities worldwide. For international bookings, check the chef's travel availability and any additional travel costs, which will be clearly stated before booking."
+        a: "Yes! ChefMii operates globally. We have chefs available in major cities worldwide. For international bookings, check the chef's travel availability and any additional travel costs, which will be clearly stated before booking."
       },
       {
         q: "Do I need to provide kitchen equipment?",
@@ -77,7 +77,7 @@ const FAQ = () => {
           <div className="max-w-4xl mx-auto text-center fade-in">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">Frequently Asked Questions</h1>
             <p className="text-xl text-muted-foreground mb-8">
-              Find answers to common questions about booking chefs through ChefMe
+              Find answers to common questions about booking chefs through ChefMii
             </p>
             <div className="relative max-w-xl mx-auto">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -153,7 +153,7 @@ const FAQ = () => {
                 Contact Support
               </button>
             </a>
-            <a href="mailto:support@chefme.com">
+            <a href="mailto:support@chefmii.com">
               <button className="px-6 py-3 border border-border rounded-lg font-medium hover:bg-accent transition-colors">
                 Email Us
               </button>
