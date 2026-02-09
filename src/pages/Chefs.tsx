@@ -308,7 +308,7 @@ const Chefs = () => {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-6">Are You a Professional Chef?</h2>
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Join ChefMe Global and connect with clients looking for your culinary expertise
+            Join ChefMii Global and connect with clients looking for your culinary expertise
           </p>
           <Button size="lg" variant="secondary">Apply to Become a Chef</Button>
         </div>

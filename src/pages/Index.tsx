@@ -340,7 +340,7 @@ const Index = () => {
                   Can I book a chef outside the UK?
                 </AccordionTrigger>
                 <AccordionContent>
-                  Absolutely! ChefMe operates globally. Simply enter your location when searching, 
+                  Absolutely! ChefMii operates globally. Simply enter your location when searching, 
                   and we'll show you available chefs in your area.
                 </AccordionContent>
               </AccordionItem>
