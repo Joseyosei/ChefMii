@@ -10,9 +10,9 @@ import { Star, ShoppingCart, Heart, TrendingUp, Award, Shield } from "lucide-rea
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
-import productPastaSauce from "@/assets/product-pasta-sauce.jpg";
-import productSpiceCollection from "@/assets/product-spice-collection.jpg";
-import productCookbook from "@/assets/product-cookbook.jpg";
+const productPastaSauce = "/placeholder.svg?height=600&width=600";
+const productSpiceCollection = "/placeholder.svg?height=600&width=600";
+const productCookbook = "/placeholder.svg?height=600&width=600";
 
 const Marketplace = () => {
   const navigate = useNavigate();

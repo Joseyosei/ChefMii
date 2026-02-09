@@ -5,11 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Search, Calendar, Users, ChefHat, Clock, Award, Shield, Star, ChevronRight, MoreHorizontal } from "lucide-react";
-import heroImage from "@/assets/hero-chef.jpg";
-import gourmetPlate from "@/assets/gourmet-plate.jpg";
-import chefHome1 from "@/assets/chef-home-1.jpg";
-import chefHome2 from "@/assets/chef-home-2.jpg";
-import chefHome3 from "@/assets/chef-home-3.jpg";
+const heroImage = "/placeholder.svg?height=800&width=1200";
+const gourmetPlate = "/placeholder.svg?height=600&width=600";
+const chefHome1 = "/placeholder.svg?height=600&width=600";
+const chefHome2 = "/placeholder.svg?height=600&width=600";
+const chefHome3 = "/placeholder.svg?height=600&width=600";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import {
   DropdownMenu,
