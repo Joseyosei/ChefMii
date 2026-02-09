@@ -33,14 +33,17 @@ export const urlSchema = z.string().url('Invalid URL').refine(
   { message: 'Only HTTP and HTTPS URLs are allowed' }
 );
 
-export function sanitizeHTML(dirty: string): string {
+let _DOMPurify: any = null;
+
+export async function sanitizeHTML(dirty: string): Promise<string> {
   if (typeof window === 'undefined') {
     return dirty;
   }
-  // Dynamically import DOMPurify only on client
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const DOMPurify = require('dompurify');
-  return DOMPurify.sanitize(dirty, {
+  if (!_DOMPurify) {
+    const mod = await import('dompurify');
+    _DOMPurify = mod.default || mod;
+  }
+  return _DOMPurify.sanitize(dirty, {
     ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br'],
     ALLOWED_ATTR: ['href', 'target', 'rel'],
     ALLOW_DATA_ATTR: false,
