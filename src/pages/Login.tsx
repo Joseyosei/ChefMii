@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import chefMiiIcon from "@/assets/chefmii-icon.png";
+const chefMiiIcon = "/placeholder.svg?height=64&width=64";
 import { emailSchema, passwordSchema, rateLimiter } from "@/lib/security";
 
 const Login = () => {

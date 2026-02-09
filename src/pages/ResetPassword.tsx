@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import chefMiiIcon from "@/assets/chefmii-icon.png";
+const chefMiiIcon = "/placeholder.svg?height=64&width=64";
 import { passwordSchema } from "@/lib/security";
 import { supabase } from "@/integrations/supabase/client";
 

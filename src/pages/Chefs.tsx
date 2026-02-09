@@ -13,12 +13,12 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
-import chefEmma from "@/assets/chef-emma.jpg";
-import chefDavid from "@/assets/chef-david.jpg";
-import chefMaria from "@/assets/chef-maria.jpg";
-import chefJames from "@/assets/chef-james.jpg";
-import chefSofia from "@/assets/chef-sofia.jpg";
-import chefOliver from "@/assets/chef-oliver.jpg";
+const chefEmma = "/placeholder.svg?height=600&width=600";
+const chefDavid = "/placeholder.svg?height=600&width=600";
+const chefMaria = "/placeholder.svg?height=600&width=600";
+const chefJames = "/placeholder.svg?height=600&width=600";
+const chefSofia = "/placeholder.svg?height=600&width=600";
+const chefOliver = "/placeholder.svg?height=600&width=600";
 
 const Chefs = () => {
   const [date, setDate] = useState<Date>();

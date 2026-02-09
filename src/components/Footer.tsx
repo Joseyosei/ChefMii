@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import chefMiiIcon from "@/assets/chefmii-icon.png";
+const chefMiiIcon = "/placeholder.svg?height=32&width=32";
 
 const Footer = () => {
   return (

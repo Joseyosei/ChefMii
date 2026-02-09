@@ -1,4 +1,3 @@
-import DOMPurify from 'dompurify';
 import { z } from 'zod';
 
 export const emailSchema = z.string().email('Invalid email address').min(1, 'Email is required');
@@ -35,6 +34,12 @@ export const urlSchema = z.string().url('Invalid URL').refine(
 );
 
 export function sanitizeHTML(dirty: string): string {
+  if (typeof window === 'undefined') {
+    return dirty;
+  }
+  // Dynamically import DOMPurify only on client
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const DOMPurify = require('dompurify');
   return DOMPurify.sanitize(dirty, {
     ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br'],
     ALLOWED_ATTR: ['href', 'target', 'rel'],
@@ -111,4 +116,6 @@ export const rateLimiter = (() => {
   };
 })();
 
-setInterval(() => rateLimiter.cleanup(), 300000);
+if (typeof window !== 'undefined') {
+  setInterval(() => rateLimiter.cleanup(), 300000);
+}

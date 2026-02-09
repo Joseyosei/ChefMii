@@ -7,12 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, ShoppingCart, Heart, Sparkles, Gift, Shirt } from "lucide-react";
 import { Link } from "react-router-dom";
-import productChefApron from "@/assets/product-chef-apron.jpg";
-import productChefJacket from "@/assets/product-chef-jacket.jpg";
-import productCuttingBoard from "@/assets/product-cutting-board.jpg";
-import productUtensils from "@/assets/product-utensils.jpg";
-import productChefHat from "@/assets/product-chef-hat.jpg";
-import productGiftSet from "@/assets/product-gift-set.jpg";
+const productChefApron = "/placeholder.svg?height=600&width=600";
+const productChefJacket = "/placeholder.svg?height=600&width=600";
+const productCuttingBoard = "/placeholder.svg?height=600&width=600";
+const productUtensils = "/placeholder.svg?height=600&width=600";
+const productChefHat = "/placeholder.svg?height=600&width=600";
+const productGiftSet = "/placeholder.svg?height=600&width=600";
 
 const Shop = () => {
   const products = [
