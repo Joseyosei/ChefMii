@@ -7,13 +7,7 @@ export interface Profile {
   user_id: string;
   email: string | null;
   full_name: string | null;
-  role: "user" | "chef" | "kid" | "admin" | "employee" | "influencer";
-  avatar_url: string | null;
-  phone: string | null;
-  address: string | null;
-  notifications_enabled: boolean;
-  email_notifications: boolean;
-  sms_notifications: boolean;
+  role: "user" | "chef" | "kid";
   created_at: string;
   updated_at: string;
 }
@@ -67,7 +61,7 @@ export const useAuth = () => {
     }
   };
 
-  const signUp = async (email: string, password: string, fullName: string, role: "user" | "chef" | "kid" | "influencer") => {
+  const signUp = async (email: string, password: string, fullName: string, role: "user" | "chef" | "kid") => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { data, error } = await supabase.auth.signUp({
@@ -102,40 +96,6 @@ export const useAuth = () => {
     return { error };
   };
 
-  const resetPassword = async (email: string) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
-    });
-    return { error };
-  };
-
-  const updatePassword = async (newPassword: string) => {
-    const { error } = await supabase.auth.updateUser({
-      password: newPassword,
-    });
-    return { error };
-  };
-
-  const updateProfile = async (updates: Partial<Profile>) => {
-    if (!user) return { error: new Error('Not authenticated') };
-    
-    const { error } = await supabase
-      .from('profiles')
-      .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq('user_id', user.id);
-    
-    if (!error) {
-      setProfile(prev => prev ? { ...prev, ...updates } : null);
-    }
-    return { error };
-  };
-
-  const refreshProfile = async () => {
-    if (user) {
-      await fetchProfile(user.id);
-    }
-  };
-
   return {
     user,
     session,
@@ -144,9 +104,5 @@ export const useAuth = () => {
     signUp,
     signIn,
     signOut,
-    resetPassword,
-    updatePassword,
-    updateProfile,
-    refreshProfile,
   };
 };

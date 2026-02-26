@@ -1,73 +1,177 @@
-# Welcome to your Lovable project
+# ChefMii Mobile App
 
-## Project info
+A cross-platform mobile application for the ChefMii chef booking marketplace, built with React Native and Expo.
 
-**URL**: https://lovable.dev/projects/879fb84f-f88c-4b9d-92a7-49cf621c8768
+## 📱 Platforms
 
-## How can I edit this code?
+- **iOS** (iPhone & iPad)
+- **Android** (Phones & Tablets)
 
-There are several ways of editing your application.
+## 🚀 Features
 
-**Use Lovable**
+### Core Features
+- **Browse & Search Chefs** - Find professional chefs by cuisine, location, and availability
+- **Chef Profiles** - View detailed chef information, reviews, and portfolios
+- **Booking System** - Book chefs for private dining, events, or cooking classes
+- **Cart & Checkout** - Manage bookings and complete secure payments
+- **User Authentication** - Sign up, login, and manage your account
+- **Booking Management** - View, track, and manage your bookings
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/879fb84f-f88c-4b9d-92a7-49cf621c8768) and start prompting.
+### Navigation
+- Bottom tab navigation for main sections
+- Stack navigation for detailed screens
+- Smooth transitions and animations
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠️ Tech Stack
 
-**Use your preferred IDE**
+- **React Native** - Cross-platform mobile framework
+- **Expo** - Development and build toolchain
+- **TypeScript** - Type-safe JavaScript
+- **React Navigation** - Navigation library
+- **Supabase** - Backend as a Service (Auth, Database, Storage)
+- **Expo Linear Gradient** - Beautiful gradient effects
+- **React Native Reanimated** - Smooth animations
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 📦 Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- Expo CLI (`npm install -g expo-cli`)
+- iOS Simulator (Mac) or Android Emulator
 
-Follow these steps:
+### Setup
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. **Clone the repository**
+   \`\`\`bash
+   git clone https://github.com/Joseyosei/orchids-ChefMii.git
+   cd orchids-ChefMii/chefmii-mobile
+   \`\`\`
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. **Install dependencies**
+   \`\`\`bash
+   npm install
+   \`\`\`
 
-# Step 3: Install the necessary dependencies.
-npm i
+3. **Configure Supabase**
+   
+   Update the Supabase credentials in \`src/lib/supabase.ts\`:
+   \`\`\`typescript
+   const SUPABASE_URL = 'your-supabase-url';
+   const SUPABASE_ANON_KEY = 'your-supabase-anon-key';
+   \`\`\`
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+4. **Start the development server**
+   \`\`\`bash
+   npm start
+   \`\`\`
 
-**Edit a file directly in GitHub**
+5. **Run on device/simulator**
+   - Press \`i\` for iOS Simulator
+   - Press \`a\` for Android Emulator
+   - Scan QR code with Expo Go app for physical device
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📁 Project Structure
 
-**Use GitHub Codespaces**
+\`\`\`
+chefmii-mobile/
+├── App.tsx                 # Entry point
+├── app.json               # Expo configuration
+├── package.json           # Dependencies
+├── tsconfig.json          # TypeScript config
+├── babel.config.js        # Babel config
+├── assets/                # Static assets (icons, splash)
+└── src/
+    ├── components/        # Reusable UI components
+    │   ├── Button.tsx
+    │   ├── ChefCard.tsx
+    │   ├── CategoryCard.tsx
+    │   ├── ReviewCard.tsx
+    │   └── FilterModal.tsx
+    ├── contexts/          # React Context providers
+    │   ├── AuthContext.tsx
+    │   └── CartContext.tsx
+    ├── hooks/             # Custom React hooks
+    ├── lib/               # Utilities and configurations
+    │   └── supabase.ts
+    ├── navigation/        # Navigation configuration
+    │   └── RootNavigator.tsx
+    ├── screens/           # Screen components
+    │   ├── HomeScreen.tsx
+    │   ├── FindChefsScreen.tsx
+    │   ├── ChefDetailScreen.tsx
+    │   ├── BookingScreen.tsx
+    │   ├── BookingsScreen.tsx
+    │   ├── CartScreen.tsx
+    │   ├── CheckoutScreen.tsx
+    │   ├── ProfileScreen.tsx
+    │   ├── LoginScreen.tsx
+    │   ├── RegisterScreen.tsx
+    │   ├── ForgotPasswordScreen.tsx
+    │   └── BookingConfirmationScreen.tsx
+    └── types/             # TypeScript type definitions
+        └── index.ts
+\`\`\`
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🏗️ Building for Production
 
-## What technologies are used for this project?
+### iOS
+\`\`\`bash
+eas build --platform ios
+\`\`\`
 
-This project is built with:
+### Android
+\`\`\`bash
+eas build --platform android
+\`\`\`
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Both Platforms
+\`\`\`bash
+eas build --platform all
+\`\`\`
 
-## How can I deploy this project?
+## 🎨 Design System
 
-Simply open [Lovable](https://lovable.dev/projects/879fb84f-f88c-4b9d-92a7-49cf621c8768) and click on Share -> Publish.
+### Colors
+- **Primary**: #F97316 (Orange)
+- **Secondary**: #EA580C (Dark Orange)
+- **Success**: #10B981 (Green)
+- **Warning**: #F59E0B (Amber)
+- **Error**: #EF4444 (Red)
+- **Text Primary**: #1F2937
+- **Text Secondary**: #6B7280
+- **Background**: #F9FAFB
 
-## Can I connect a custom domain to my Lovable project?
+### Typography
+- **Headers**: Bold, 20-32px
+- **Body**: Regular, 14-16px
+- **Captions**: Regular, 12-13px
 
-Yes, you can!
+## 🧪 Testing with Ralph
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+This project includes a \`prd.json\` file for testing with the [Ralph](https://github.com/snarktank/ralph) autonomous AI agent loop.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+\`\`\`bash
+# Install Ralph
+cp /path/to/ralph/ralph.sh scripts/ralph/
+cp /path/to/ralph/CLAUDE.md scripts/ralph/
+
+# Run Ralph
+./scripts/ralph/ralph.sh
+\`\`\`
+
+## 📄 License
+
+MIT License - see LICENSE file for details.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+---
+
+Built with ❤️ for ChefMii

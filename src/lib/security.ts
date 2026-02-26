@@ -1,4 +1,3 @@
-import DOMPurify from 'dompurify';
 import { z } from 'zod';
 
 export const emailSchema = z.string().email('Invalid email address').min(1, 'Email is required');
@@ -34,8 +33,17 @@ export const urlSchema = z.string().url('Invalid URL').refine(
   { message: 'Only HTTP and HTTPS URLs are allowed' }
 );
 
-export function sanitizeHTML(dirty: string): string {
-  return DOMPurify.sanitize(dirty, {
+let _DOMPurify: any = null;
+
+export async function sanitizeHTML(dirty: string): Promise<string> {
+  if (typeof window === 'undefined') {
+    return dirty;
+  }
+  if (!_DOMPurify) {
+    const mod = await import('dompurify');
+    _DOMPurify = mod.default || mod;
+  }
+  return _DOMPurify.sanitize(dirty, {
     ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a', 'p', 'br'],
     ALLOWED_ATTR: ['href', 'target', 'rel'],
     ALLOW_DATA_ATTR: false,
@@ -111,4 +119,6 @@ export const rateLimiter = (() => {
   };
 })();
 
-setInterval(() => rateLimiter.cleanup(), 300000);
+if (typeof window !== 'undefined') {
+  setInterval(() => rateLimiter.cleanup(), 300000);
+}

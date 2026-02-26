@@ -4,115 +4,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useLocation } from "react-router-dom";
+import { toast } from "sonner";
 
 interface Message {
   role: "user" | "assistant";
   content: string;
 }
 
-const responses: Record<string, string[]> = {
-  greeting: [
-    "Hello! I'm ChefMii Assistant. How can I help you today?",
-    "Hi there! Welcome to ChefMii. What can I assist you with?",
-    "Welcome! I'm here to help you find the perfect chef or answer any questions.",
-  ],
-  chefs: [
-    "We have over 500 professional chefs from around the world! You can browse them at /chefs. Filter by cuisine type (Italian, Japanese, Nigerian, Mexican, etc.), dietary requirements, and location. Each chef has their own profile with reviews, specialties, and pricing.",
-  ],
-  booking: [
-    "Booking a chef is easy! 1) Browse our chefs at /chefs, 2) Select a chef you like, 3) Choose a package (Intimate Dinner, Family Feast, Party Package, or Corporate Event), 4) Pick your date and time, 5) Complete payment. Your chef will arrive with fresh ingredients and equipment!",
-  ],
-  pricing: [
-    "Our pricing varies by package:\n• Intimate Dinner (2-4 guests): from £150\n• Family Feast (5-8 guests): from £300\n• Party Package (10-15 guests): from £500\n• Corporate Event (15+ guests): from £800\n\nAll prices include chef service, ingredients, and cleanup!",
-  ],
-  packages: [
-    "We offer several packages:\n• Student Survival Meals: £50-£100/week\n• Family Chef Plans: Perfect for busy families\n• Event Chef Services: For parties and celebrations\n• VIP Chef Experiences: Premium dining at home\n\nVisit /packages for more details!",
-  ],
-  academy: [
-    "ChefMii Academy offers professional chef training, culinary certifications, and masterclasses taught by expert chefs. Whether you're a beginner or looking to enhance your skills, we have courses for everyone. Visit /academy to explore!",
-  ],
-  marketplace: [
-    "Our Marketplace features chef-created products including artisan sauces, premium spices, recipe books, meal kits, and professional cookware. All products are curated by our verified chefs. Browse at /marketplace!",
-  ],
-  shop: [
-    "The ChefMii Shop has premium chefwear, stylish aprons, kitchen accessories, and gourmet gift sets. Perfect for aspiring chefs or as gifts! Check it out at /shop.",
-  ],
-  kids: [
-    "Kids' Zone is our Mini Chefs Academy! We offer fun cooking lessons for children, interactive games, cooking videos, and birthday party bookings. A great way to get kids excited about cooking! Visit /kids-zone.",
-  ],
-  dietary: [
-    "We cater to all dietary requirements! Our chefs can prepare:\n• Vegan & Vegetarian meals\n• Halal & Kosher options\n• Gluten-free dishes\n• Dairy-free menus\n• Nut-free preparations\n\nJust filter by dietary requirements when browsing chefs!",
-  ],
-  cuisines: [
-    "We have chefs specializing in cuisines from around the world:\n• European: Italian, French, British, Spanish, Portuguese, Dutch, Irish\n• Asian: Japanese, Chinese, South Korean, Vietnamese, Indian\n• African: Nigerian, South African, Ivorian\n• Americas: Mexican, Brazilian, Canadian\n• Middle Eastern: Arab cuisines\n\nAnd many more! Use the cuisine filter at /chefs to find your perfect match.",
-  ],
-  account: [
-    "You can manage your account in the dashboard. Here you can:\n• View and manage bookings\n• Update your profile and photo\n• Chat with chefs\n• Track loyalty rewards\n• Change notification settings\n\nLog in to access your dashboard!",
-  ],
-  contact: [
-    "Need help? You can:\n• Email us at support@chefmii.com\n• Chat with me anytime!\n• Visit /contact for our contact form\n• Check /faq for frequently asked questions",
-  ],
-  default: [
-    "I'd be happy to help! You can ask me about:\n• Finding and booking chefs\n• Our packages and pricing\n• ChefMii Academy courses\n• Marketplace products\n• Dietary requirements\n• Kids' Zone activities\n\nWhat would you like to know?",
-  ],
-};
-
-const getKeywords = (text: string): string[] => {
-  const lower = text.toLowerCase();
-  const keywords: string[] = [];
-  
-  if (lower.match(/\b(hi|hello|hey|good morning|good afternoon|good evening)\b/)) keywords.push("greeting");
-  if (lower.match(/\b(chef|chefs|cook|cooks|find|browse|search)\b/)) keywords.push("chefs");
-  if (lower.match(/\b(book|booking|reserve|reservation|how to book)\b/)) keywords.push("booking");
-  if (lower.match(/\b(price|pricing|cost|how much|rates|fee|fees)\b/)) keywords.push("pricing");
-  if (lower.match(/\b(package|packages|plan|plans|tier|tiers)\b/)) keywords.push("packages");
-  if (lower.match(/\b(academy|training|course|courses|learn|certification|class|classes)\b/)) keywords.push("academy");
-  if (lower.match(/\b(marketplace|products|sauce|spice|recipe|meal kit|cookware)\b/)) keywords.push("marketplace");
-  if (lower.match(/\b(shop|merchandise|apron|gift|chefwear|accessory|accessories)\b/)) keywords.push("shop");
-  if (lower.match(/\b(kid|kids|children|child|mini chef|birthday|party for kids)\b/)) keywords.push("kids");
-  if (lower.match(/\b(dietary|vegan|vegetarian|halal|kosher|gluten|dairy|nut|allergy|allergies)\b/)) keywords.push("dietary");
-  if (lower.match(/\b(cuisine|cuisines|italian|japanese|indian|mexican|nigerian|french|chinese|korean)\b/)) keywords.push("cuisines");
-  if (lower.match(/\b(account|profile|dashboard|settings|password|login)\b/)) keywords.push("account");
-  if (lower.match(/\b(contact|support|help|email|phone)\b/)) keywords.push("contact");
-  
-  return keywords;
-};
-
-const getResponse = (userMessage: string): string => {
-  const keywords = getKeywords(userMessage);
-  
-  if (keywords.length === 0) {
-    return responses.default[Math.floor(Math.random() * responses.default.length)];
-  }
-  
-  const responseTexts: string[] = [];
-  keywords.slice(0, 2).forEach(keyword => {
-    const possibleResponses = responses[keyword];
-    if (possibleResponses) {
-      responseTexts.push(possibleResponses[Math.floor(Math.random() * possibleResponses.length)]);
-    }
-  });
-  
-  return responseTexts.join("\n\n") || responses.default[0];
-};
-
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
       content: "Hello! I'm ChefMii Assistant. How can I help you today? I can assist you with finding the perfect chef, exploring our services (Academy, Marketplace, Shop, Kids' Zone), pricing information, or answering any questions about ChefMii's global platform.",
     },
   ]);
-
-  // Hide on packages page where AI Event Concierge is present
-  if (location.pathname === "/packages") {
-    return null;
-  }
   const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -121,20 +29,117 @@ const ChatBot = () => {
     }
   }, [messages]);
 
+  const systemMessage = `You are ChefMii Assistant, the official AI assistant for ChefMii - a global platform connecting people with professional chefs for any occasion.
+
+About ChefMii:
+- ChefMii connects users with vetted, professional chefs worldwide
+- Services range from student meals (£50-£100) to VIP experiences (£2,000+)
+- Available for private dinners, corporate events, weddings, parties, and more
+
+Key Services:
+1. Find Chefs: Browse and book professional chefs by cuisine, location, and availability
+2. Packages: Student Survival Meals, Family Chef Plans, Event Chef Services, VIP Chef Experiences
+3. Academy: Professional chef training, culinary certifications, and masterclasses
+4. Marketplace: Chef-created products - sauces, spices, recipe books, meal kits, cookware
+5. Shop: Premium chefwear, aprons, kitchen accessories, and gourmet gifts
+6. Kids' Zone: Mini Chefs Academy with cooking lessons, games, videos, and birthday party bookings
+
+Booking Process:
+1. Browse available chefs by location and date
+2. Review profiles, menus, and ratings
+3. Book directly through the platform
+4. Chef arrives with fresh ingredients and equipment
+5. Enjoy your culinary experience
+
+Pricing: Varies by package and chef experience. All prices include chef service, ingredients, and cleanup.
+
+Be friendly, helpful, and knowledgeable. Provide accurate information about ChefMii services. Guide users to relevant pages: /chefs for finding chefs, /packages for pricing tiers, /academy for training, /marketplace for products, /shop for merchandise, /kids-zone for children's activities.`;
+
   const sendMessage = async () => {
-    if (!input.trim() || isTyping) return;
+    if (!input.trim() || isLoading) return;
 
     const userMessage: Message = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
-    setIsTyping(true);
+    setIsLoading(true);
 
-    await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000));
+    try {
+      const CHAT_URL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/chat`;
+      const response = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ messages: [...messages, userMessage] }),
+      });
 
-    const response = getResponse(input);
-    
-    setMessages((prev) => [...prev, { role: "assistant", content: response }]);
-    setIsTyping(false);
+      if (!response.ok || !response.body) {
+        if (response.status === 429) {
+          toast.error("Rate limit exceeded. Please try again later.");
+          setIsLoading(false);
+          return;
+        }
+        if (response.status === 402) {
+          toast.error("Service temporarily unavailable. Please try again later.");
+          setIsLoading(false);
+          return;
+        }
+        throw new Error("Failed to get response");
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let assistantMessage = "";
+      let textBuffer = "";
+
+      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        textBuffer += decoder.decode(value, { stream: true });
+        let newlineIndex: number;
+
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") break;
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              assistantMessage += content;
+              setMessages((prev) => {
+                const newMessages = [...prev];
+                newMessages[newMessages.length - 1] = {
+                  role: "assistant",
+                  content: assistantMessage,
+                };
+                return newMessages;
+              });
+            }
+          } catch {
+            textBuffer = line + "\n" + textBuffer;
+            break;
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Failed to send message. Please try again.");
+      setMessages((prev) => prev.slice(0, -1));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -146,6 +151,7 @@ const ChatBot = () => {
 
   return (
     <>
+      {/* Chat Button */}
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
@@ -157,8 +163,10 @@ const ChatBot = () => {
         </Button>
       )}
 
+      {/* Chat Window */}
       {isOpen && (
         <Card className="fixed bottom-6 right-6 w-96 h-[600px] flex flex-col shadow-2xl z-50 fade-in">
+          {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground rounded-t-lg">
             <div className="flex items-center gap-2">
               <MessageCircle className="h-5 w-5" />
@@ -174,6 +182,7 @@ const ChatBot = () => {
             </Button>
           </div>
 
+          {/* Messages */}
           <ScrollArea className="flex-1 p-4" ref={scrollRef}>
             <div className="space-y-4">
               {messages.map((message, index) => (
@@ -194,7 +203,7 @@ const ChatBot = () => {
                   </div>
                 </div>
               ))}
-              {isTyping && (
+              {isLoading && (
                 <div className="flex justify-start">
                   <div className="bg-secondary text-secondary-foreground rounded-lg px-4 py-2">
                     <div className="flex gap-1">
@@ -208,6 +217,7 @@ const ChatBot = () => {
             </div>
           </ScrollArea>
 
+          {/* Input */}
           <div className="p-4 border-t">
             <div className="flex gap-2">
               <Input
@@ -215,12 +225,12 @@ const ChatBot = () => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Ask me anything..."
-                disabled={isTyping}
+                disabled={isLoading}
                 className="flex-1"
               />
               <Button
                 onClick={sendMessage}
-                disabled={isTyping || !input.trim()}
+                disabled={isLoading || !input.trim()}
                 size="icon"
               >
                 <Send className="h-4 w-4" />

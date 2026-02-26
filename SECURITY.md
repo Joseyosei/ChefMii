@@ -183,4 +183,4 @@ If you discover a security vulnerability, please email: security@chefmii.com
 
 ---
 
-Last Updated: January 2026
+Last Updated: December 2025

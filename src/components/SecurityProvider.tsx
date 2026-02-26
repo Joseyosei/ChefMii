@@ -8,8 +8,6 @@ export function SecurityProvider({ children }: SecurityProviderProps) {
   useEffect(() => {
     const enforceSecurityPolicies = () => {
       if (typeof window !== 'undefined') {
-        Object.freeze(Object.prototype);
-        
         const originalOpen = window.open;
         window.open = function(url, target, features) {
           if (url && typeof url === 'string') {

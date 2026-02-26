@@ -19,12 +19,9 @@ const Navbar = () => {
   const navigate = useNavigate();
 
     const navLinks = [
-      { href: "/chefs", label: "Find Chefs", isButton: true },
-      { href: "/marketplace", label: "Marketplace" },
-      { href: "/supply-market", label: "Farmer" },
-      { href: "/pricing", label: "Pricing" },
-      { href: "/packages", label: "Event Packages" },
+      { href: "/find-chefs", label: "Find Chefs", isButton: true },
       { href: "/chef-media", label: "Chef Media" },
+      { href: "/pricing", label: "Pricing" },
       { href: "/academy", label: "Academy" },
       { href: "/kids-zone", label: "Kids' Zone" },
     ];
@@ -34,36 +31,12 @@ const Navbar = () => {
     navigate("/");
   };
 
-    const getDashboardLink = () => {
-      if (profile?.role === "chef") {
-        return "/chef-dashboard";
-      }
-      if (profile?.role === "vendor") {
-        return "/vendor-dashboard";
-      }
-      if (profile?.role === "business") {
-        return "/business-dashboard";
-      }
-      if (profile?.role === "institution") {
-        return "/institution-dashboard";
-      }
-      if (profile?.role === "admin") {
-        return "/admin";
-      }
-      if (profile?.role === "employee") {
-        return "/employee";
-      }
-      if (profile?.role === "kid") {
-        return "/kids-dashboard";
-      }
-      if (profile?.role === "parent") {
-        return "/parent-dashboard";
-      }
-      if (profile?.role === "influencer") {
-        return "/influencer-dashboard";
-      }
-      return "/user-dashboard";
-    };
+  const getDashboardLink = () => {
+    if (profile?.role === "chef") {
+      return "/chef-dashboard";
+    }
+    return "/user-dashboard";
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/40">

@@ -14,61 +14,52 @@ export type Database = {
   }
   public: {
     Tables: {
-        bookings: {
-          Row: {
-            booking_date: string
-            booking_time: string
-            chef_id: string
-            created_at: string
-            guests: number
-            id: string
-            package_name: string
-            payment_status: string | null
-            special_requests: string | null
-            status: string
-            stripe_payment_intent_id: string | null
-            stripe_session_id: string | null
-            total_price: number | null
-            updated_at: string
-            user_id: string
-          }
-          Insert: {
-            booking_date: string
-            booking_time: string
-            chef_id: string
-            created_at?: string
-            guests?: number
-            id?: string
-            package_name: string
-            payment_status?: string | null
-            special_requests?: string | null
-            status?: string
-            stripe_payment_intent_id?: string | null
-            stripe_session_id?: string | null
-            total_price?: number | null
-            updated_at?: string
-            user_id: string
-          }
-          Update: {
-            booking_date?: string
-            booking_time?: string
-            chef_id?: string
-            created_at?: string
-            guests?: number
-            id?: string
-            package_name?: string
-            payment_status?: string | null
-            special_requests?: string | null
-            status?: string
-            stripe_payment_intent_id?: string | null
-            stripe_session_id?: string | null
-            total_price?: number | null
-            updated_at?: string
-            user_id?: string
-          }
-          Relationships: []
+      bookings: {
+        Row: {
+          booking_date: string
+          booking_time: string
+          chef_id: string
+          created_at: string
+          guests: number
+          id: string
+          package_name: string
+          special_requests: string | null
+          status: string
+          total_price: number | null
+          updated_at: string
+          user_id: string
         }
-        cart_items: {
+        Insert: {
+          booking_date: string
+          booking_time: string
+          chef_id: string
+          created_at?: string
+          guests?: number
+          id?: string
+          package_name: string
+          special_requests?: string | null
+          status?: string
+          total_price?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_date?: string
+          booking_time?: string
+          chef_id?: string
+          created_at?: string
+          guests?: number
+          id?: string
+          package_name?: string
+          special_requests?: string | null
+          status?: string
+          total_price?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      cart_items: {
         Row: {
           created_at: string
           id: string
