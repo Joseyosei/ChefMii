@@ -1,0 +1,510 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Libre+Caslon+Text&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* ChefMii Premium Color Palette */
+    --background: 0 0% 96%;
+    --foreground: 0 0% 9%;
+
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 9%;
+
+    --popover: 0 0% 89%;
+    --popover-foreground: 0 0% 9%;
+
+    /* Terracotta primary */
+    --primary: 20 90% 48%;
+    --primary-foreground: 33 100% 96%;
+
+    /* Warm cream secondary */
+    --secondary: 199 88.664% 48.4314%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Olive muted tones */
+    --muted: 0 0% 63%;
+    --muted-foreground: 0 0% 9%;
+
+    /* Soft accent */
+    --accent: 47 100% 96%;
+    --accent-foreground: 37 92% 50%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 85% 97%;
+
+    --border: 0 0% 83%;
+    --input: 0 0% 83%;
+    --ring: 20 90% 48%;
+
+    --radius: 0.75rem;
+
+    /* Custom design tokens */
+    --cream: 40 60% 96%;
+    --ivory: 45 80% 98%;
+    --terracotta: 18 78% 50%;
+    --terracotta-dark: 18 78% 40%;
+    --olive: 45 20% 45%;
+    --olive-light: 45 15% 65%;
+
+    /* Kids Zone colors */
+    --mint: 160 60% 75%;
+    --mint-50: 160 60% 97%;
+    --mint-100: 160 55% 92%;
+    --mint-200: 160 50% 85%;
+    --mint-300: 160 50% 75%;
+    --mint-400: 160 55% 60%;
+    --mint-500: 160 55% 45%;
+    --mint-600: 160 55% 35%;
+    --mint-700: 160 55% 28%;
+    --mint-800: 160 55% 20%;
+    --mint-900: 160 55% 12%;
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -2px hsl(18 78% 50% / 0.08);
+    --shadow-medium: 0 8px 30px -4px hsl(18 78% 50% / 0.12);
+    --shadow-strong: 0 12px 40px -6px hsl(18 78% 50% / 0.18);
+
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 0 0% 9%;
+
+    --sidebar-primary: 20 90% 48%;
+
+    --sidebar-primary-foreground: 33 100% 96%;
+
+    --sidebar-accent: 0 0% 32%;
+
+    --sidebar-accent-foreground: 0 0% 98%;
+
+    --sidebar-border: 0 0% 83%;
+
+    --sidebar-ring: 20 90% 48%;
+
+    --chart-1: 27 95% 60%;
+
+    --chart-2: 43 96% 56%;
+
+    --chart-3: 47 95% 53%;
+
+    --chart-4: 24 94% 53%;
+
+    --chart-5: 0 0% 45%;
+
+    --sidebar: 0 0% 98%;
+
+    --font-sans: 'Roboto', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+
+    --font-serif: 'Libre Caslon Text', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
+
+    --font-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+
+    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+
+    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
+
+    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+
+    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
+
+    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+
+    --tracking-normal: 0em;
+
+    --spacing: 0.25rem;
+  }
+
+  .dark {
+    --background: 0 0% 9%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 14%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 25%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 27 95% 60%;
+    --primary-foreground: 12 81% 14%;
+
+    --secondary: 0 0% 45%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 45%;
+    --muted-foreground: 0 0% 98%;
+
+    --accent: 20 91% 14%;
+    --accent-foreground: 43 96% 56%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 85% 97%;
+
+    --border: 0 0% 32%;
+    --input: 0 0% 32%;
+    --ring: 27 95% 60%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 27 95% 60%;
+    --sidebar-primary-foreground: 12 81% 14%;
+    --sidebar-accent: 43 96% 56%;
+    --sidebar-accent-foreground: 20 91% 14%;
+    --sidebar-border: 0 0% 32%;
+    --sidebar-ring: 27 95% 60%;
+    --chart-1: 30 97% 72%;
+    --chart-2: 45 96% 64%;
+    --chart-3: 48 96% 76%;
+    --chart-4: 27 95% 60%;
+    --chart-5: 0 0% 45%;
+    --sidebar: 0 0% 14%;
+    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
+    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+  }
+}
+
+@layer base {
+  * {
+    cursor: url('/chef-hat-cursor.png') 16 16, auto;
+  }
+
+  body {
+    @apply bg-background text-foreground font-['Inter',sans-serif] antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+    .glass-card {
+      @apply bg-white/80 backdrop-blur-sm border border-white/20;
+    }
+
+    .dark .glass-card {
+      @apply bg-white/10 border-white/10;
+    }
+
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .fade-in {
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+}
+
+/* ============================================
+   DARK MODE OVERRIDES
+   Fix hardcoded Tailwind colors that don't
+   respond to dark mode across all pages
+   ============================================ */
+
+/* --- Text color overrides --- */
+.dark .text-black {
+  color: hsl(0 0% 98%) !important;
+}
+.dark .text-gray-900,
+.dark .text-slate-900,
+.dark .text-zinc-900,
+.dark .text-neutral-900 {
+  color: hsl(0 0% 95%) !important;
+}
+.dark .text-gray-800,
+.dark .text-slate-800,
+.dark .text-zinc-800,
+.dark .text-neutral-800 {
+  color: hsl(0 0% 90%) !important;
+}
+.dark .text-gray-700,
+.dark .text-slate-700,
+.dark .text-zinc-700,
+.dark .text-neutral-700 {
+  color: hsl(0 0% 82%) !important;
+}
+.dark .text-gray-600,
+.dark .text-slate-600,
+.dark .text-zinc-600,
+.dark .text-neutral-600 {
+  color: hsl(0 0% 72%) !important;
+}
+.dark .text-gray-500,
+.dark .text-slate-500,
+.dark .text-zinc-500,
+.dark .text-neutral-500 {
+  color: hsl(0 0% 62%) !important;
+}
+.dark .text-gray-400,
+.dark .text-slate-400,
+.dark .text-zinc-400,
+.dark .text-neutral-400 {
+  color: hsl(0 0% 55%) !important;
+}
+.dark .text-gray-300,
+.dark .text-slate-300 {
+  color: hsl(0 0% 50%) !important;
+}
+.dark .text-gray-200,
+.dark .text-slate-200 {
+  color: hsl(0 0% 45%) !important;
+}
+
+/* Hardcoded hex text colors */
+.dark .text-\[\#1a1a1a\] {
+  color: hsl(0 0% 95%) !important;
+}
+.dark .text-\[\#333\],
+.dark .text-\[\#333333\] {
+  color: hsl(0 0% 85%) !important;
+}
+.dark .text-\[\#666\],
+.dark .text-\[\#666666\] {
+  color: hsl(0 0% 70%) !important;
+}
+
+/* --- Background color overrides --- */
+.dark .bg-white {
+  background-color: hsl(0 0% 14%) !important;
+}
+.dark .bg-gray-50,
+.dark .bg-slate-50,
+.dark .bg-zinc-50,
+.dark .bg-neutral-50 {
+  background-color: hsl(0 0% 12%) !important;
+}
+.dark .bg-gray-100,
+.dark .bg-slate-100,
+.dark .bg-zinc-100,
+.dark .bg-neutral-100 {
+  background-color: hsl(0 0% 18%) !important;
+}
+.dark .bg-gray-200,
+.dark .bg-slate-200 {
+  background-color: hsl(0 0% 22%) !important;
+}
+.dark .bg-gray-300,
+.dark .bg-slate-300 {
+  background-color: hsl(0 0% 28%) !important;
+}
+
+/* Hardcoded hex background colors */
+.dark .bg-\[\#fafafa\],
+.dark .bg-\[\#FAFAFA\] {
+  background-color: hsl(0 0% 12%) !important;
+}
+.dark .bg-\[\#f5f5f5\],
+.dark .bg-\[\#F5F5F5\] {
+  background-color: hsl(0 0% 14%) !important;
+}
+
+/* Preserve intentionally dark backgrounds (don't double-darken) */
+.dark .bg-\[\#1a1a1a\] {
+  background-color: hsl(0 0% 18%) !important;
+}
+.dark .bg-\[\#0a0a0a\] {
+  background-color: hsl(0 0% 8%) !important;
+}
+
+/* Kids Zone warm cream */
+.dark .bg-\[\#FFFDF0\] {
+  background-color: hsl(0 0% 11%) !important;
+}
+
+/* --- Border color overrides --- */
+.dark .border-gray-100,
+.dark .border-slate-100 {
+  border-color: hsl(0 0% 25%) !important;
+}
+.dark .border-gray-200,
+.dark .border-slate-200 {
+  border-color: hsl(0 0% 30%) !important;
+}
+.dark .border-gray-300,
+.dark .border-slate-300 {
+  border-color: hsl(0 0% 35%) !important;
+}
+.dark .border-white {
+  border-color: hsl(0 0% 25%) !important;
+}
+
+/* --- Divide color overrides --- */
+.dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: hsl(0 0% 25%) !important;
+}
+
+/* --- Ring color overrides --- */
+.dark .ring-gray-100,
+.dark .ring-gray-200 {
+  --tw-ring-color: hsl(0 0% 30%) !important;
+}
+
+/* --- Placeholder overrides --- */
+.dark .placeholder-gray-400::placeholder,
+.dark .placeholder-gray-500::placeholder {
+  color: hsl(0 0% 50%) !important;
+}
+
+/* --- Semantic background patches for common patterns --- */
+.dark .bg-green-50 {
+  background-color: hsl(140 30% 15%) !important;
+}
+.dark .bg-green-100 {
+  background-color: hsl(140 30% 20%) !important;
+}
+.dark .bg-red-50 {
+  background-color: hsl(0 30% 15%) !important;
+}
+.dark .bg-red-100 {
+  background-color: hsl(0 30% 20%) !important;
+}
+.dark .bg-blue-50 {
+  background-color: hsl(210 30% 15%) !important;
+}
+.dark .bg-blue-100 {
+  background-color: hsl(210 30% 20%) !important;
+}
+.dark .bg-yellow-50 {
+  background-color: hsl(45 30% 15%) !important;
+}
+.dark .bg-yellow-100 {
+  background-color: hsl(45 30% 20%) !important;
+}
+.dark .bg-orange-50 {
+  background-color: hsl(25 30% 15%) !important;
+}
+.dark .bg-orange-100 {
+  background-color: hsl(25 30% 20%) !important;
+}
+.dark .bg-purple-50 {
+  background-color: hsl(270 30% 15%) !important;
+}
+.dark .bg-purple-100 {
+  background-color: hsl(270 30% 20%) !important;
+}
+.dark .bg-pink-50 {
+  background-color: hsl(330 30% 15%) !important;
+}
+.dark .bg-pink-100 {
+  background-color: hsl(330 30% 20%) !important;
+}
+
+/* --- Semantic border patches --- */
+.dark .border-green-100,
+.dark .border-green-200 {
+  border-color: hsl(140 30% 25%) !important;
+}
+.dark .border-red-100,
+.dark .border-red-200 {
+  border-color: hsl(0 30% 25%) !important;
+}
+.dark .border-blue-100,
+.dark .border-blue-200 {
+  border-color: hsl(210 30% 25%) !important;
+}
+.dark .border-orange-100,
+.dark .border-orange-200 {
+  border-color: hsl(25 30% 25%) !important;
+}
+
+/* --- Input / form element overrides --- */
+.dark input:not([class*="dark:"]),
+.dark textarea:not([class*="dark:"]),
+.dark select:not([class*="dark:"]) {
+  color-scheme: dark;
+}
+
+/* --- Shadow adjustments --- */
+.dark .shadow-xl,
+.dark .shadow-2xl,
+.dark .shadow-lg {
+  --tw-shadow-color: hsl(0 0% 0% / 0.3);
+}
+
+/* --- White text on dark containers should stay white --- */
+.dark .bg-\[\#1a1a1a\] .text-white,
+.dark .bg-primary .text-white,
+.dark .bg-\[\#FF4B2B\] .text-white,
+.dark .bg-\[\#EA580C\] .text-white {
+  color: white !important;
+}
+
+/* --- Hover state overrides --- */
+.dark .hover\:bg-gray-50:hover {
+  background-color: hsl(0 0% 18%) !important;
+}
+.dark .hover\:bg-gray-100:hover {
+  background-color: hsl(0 0% 22%) !important;
+}
+.dark .hover\:bg-gray-200:hover {
+  background-color: hsl(0 0% 26%) !important;
+}
+.dark .hover\:bg-white:hover {
+  background-color: hsl(0 0% 20%) !important;
+}
+
+/* --- Data attribute state overrides (for Radix UI tabs etc.) --- */
+.dark [data-state="active"].bg-white,
+.dark .data-\[state\=active\]\:bg-white[data-state="active"] {
+  background-color: hsl(0 0% 22%) !important;
+}
+
+/* --- Focus ring overrides --- */
+.dark .focus\:ring-gray-200:focus,
+.dark .focus\:ring-gray-300:focus {
+  --tw-ring-color: hsl(0 0% 35%) !important;
+}
+
+/* --- White with opacity should stay as-is for overlays --- */
+/* bg-white/10, bg-white/20 etc. are fine in dark mode */

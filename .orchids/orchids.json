@@ -1,0 +1,9 @@
+{
+  "projectId": "68e06d64-d8fb-45ed-9998-76d86e85c598",
+  "createdAt": 1765517397092,
+  "startupCommands": [
+    "npm install; npx vite"
+  ],
+  "deployedWithUserToken": true,
+  "vercelProjectId": "prj_veop6SI1nxNsEUiwerXZwwe4qV32"
+}
