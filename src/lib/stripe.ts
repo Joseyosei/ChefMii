@@ -1,12 +1,8 @@
 import { loadStripe } from '@stripe/stripe-js';
 
-const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
 
-if (!stripePublishableKey) {
-  console.error('Missing VITE_STRIPE_PUBLISHABLE_KEY');
-}
-
-export const stripePromise = loadStripe(stripePublishableKey || '');
+export const stripePromise = loadStripe(stripePublishableKey);
 
 export type CheckoutType = 'booking' | 'shop' | 'course';
 
