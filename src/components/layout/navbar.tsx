@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 
 import { WaitlistModal } from '@/components/waitlist/waitlist-modal'
+import { BrandLogo } from '@/components/layout/logo'
 
 export function Navbar() {
     const router = useRouter()
@@ -88,14 +89,7 @@ export function Navbar() {
                 <div className="flex items-center justify-between gap-2 sm:gap-4">
 
                     {/* Logo & Brand */}
-                    <Link href="/" className="flex items-center gap-2 group shrink-0">
-                        <div className="w-8 h-8 rounded-full gradient-brand flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
-                            <ChefHat className="w-4 h-4" />
-                        </div>
-                        <span className="text-xl sm:text-2xl font-serif font-black tracking-tight text-foreground group-hover:text-terracotta transition-colors">
-                            ChefMii
-                        </span>
-                    </Link>
+                    <BrandLogo size="md" priority />
 
                     {/* Desktop Navigation Links (Clean & Categorized) */}
                     <nav className="hidden lg:flex items-center gap-1">

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Sparkles, ChefHat, Building2, Baby, GraduationCap, Utensils, CheckCircle2, Copy, Share2, Loader2, ArrowRight } from 'lucide-react'
+import { X, Sparkles, ChefHat, Building2, Baby, GraduationCap, Utensils, CheckCircle2, Copy, Loader2, MapPin, Phone } from 'lucide-react'
 import type { WaitlistRole, WaitlistFormData, WaitlistSubmissionResponse } from '@/types/waitlist'
 
 interface WaitlistModalProps {
@@ -22,9 +22,15 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
     const [role, setRole] = useState<WaitlistRole>(defaultRole)
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
     
-    // Metadata fields
+    // Address fields
+    const [addressLine1, setAddressLine1] = useState('')
     const [city, setCity] = useState('')
+    const [postalCode, setPostalCode] = useState('')
+    const [country, setCountry] = useState('United Kingdom')
+    
+    // Role metadata fields
     const [cuisine, setCuisine] = useState('')
     const [companyName, setCompanyName] = useState('')
     const [eventCount, setEventCount] = useState('1-2 per month')
@@ -33,6 +39,7 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
     const [specialty, setSpecialty] = useState('')
     const [courseTopic, setCourseTopic] = useState('')
     const [occasion, setOccasion] = useState('Dinner Parties')
+    const [notes, setNotes] = useState('')
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
@@ -54,7 +61,11 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
             role,
             fullName,
             email,
+            phone,
+            addressLine1,
             city,
+            postalCode,
+            country,
             cuisine,
             companyName,
             eventCount,
@@ -63,6 +74,7 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
             specialty,
             courseTopic,
             occasion,
+            notes,
         }
 
         try {
@@ -98,54 +110,62 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
                 
                 {/* Modal Header */}
                 <div className="relative p-6 pb-4 border-b border-border bg-muted/40 shrink-0">
-                    <button
-                        onClick={onClose}
-                        className="absolute top-5 right-5 p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                        <X className="w-5 h-5" />
-                    </button>
-                    <div className="flex items-center gap-2 text-terracotta text-xs font-bold uppercase tracking-wider mb-1">
-                        <Sparkles className="w-4 h-4" /> VIP Priority Access
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <span className="p-2 rounded-xl bg-terracotta/10 text-terracotta">
+                                <Sparkles className="w-5 h-5" />
+                            </span>
+                            <div>
+                                <h2 className="text-xl font-serif font-bold text-foreground">
+                                    Join the ChefMii VIP Waitlist
+                                </h2>
+                                <p className="text-xs text-muted-foreground">
+                                    Be first in line when we launch in your area.
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={onClose}
+                            className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">
-                        {result ? "You're on the Waitlist!" : 'Join ChefMii Waitlist'}
-                    </h2>
-                    <p className="text-sm text-muted-foreground mt-0.5">
-                        {result ? 'Share your referral link to skip ahead in line.' : 'Get early platform access, exclusive perks, and launch invitations.'}
-                    </p>
                 </div>
 
-                {/* Modal Body */}
-                <div className="p-6 overflow-y-auto flex-1 space-y-6">
-
+                {/* Modal Content */}
+                <div className="flex-1 overflow-y-auto p-6 space-y-6">
                     {result ? (
-                        /* Confirmation Screen */
-                        <div className="text-center py-4 space-y-6 animate-in zoom-in-95 duration-300">
-                            <div className="w-20 h-20 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto border border-emerald-500/20 shadow-inner">
+                        /* Success Screen */
+                        <div className="flex flex-col items-center justify-center text-center py-6 space-y-6 animate-in zoom-in-95 duration-300">
+                            <div className="w-20 h-20 rounded-full bg-emerald-500/10 border-2 border-emerald-500/30 flex items-center justify-center text-emerald-500">
                                 <CheckCircle2 className="w-10 h-10" />
                             </div>
 
-                            <div>
-                                <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-terracotta/10 text-terracotta uppercase tracking-wider mb-2">
-                                    {result.role.toUpperCase()} VIP MEMBER
+                            <div className="space-y-2">
+                                <h3 className="text-2xl font-serif font-bold text-foreground">
+                                    You&apos;re on the VIP Waitlist!
+                                </h3>
+                                <p className="text-sm text-muted-foreground max-w-md">
+                                    Thanks <strong className="text-foreground">{result.fullName}</strong>! We have saved your details and location in our system.
+                                </p>
+                            </div>
+
+                            {/* Queue Position Badge */}
+                            <div className="w-full max-w-md p-6 rounded-2xl bg-muted/50 border border-border space-y-2">
+                                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                                    Your Queue Position
                                 </span>
-                                <h3 className="text-2xl font-bold">Welcome, {result.fullName}!</h3>
-                                <p className="text-muted-foreground text-sm max-w-md mx-auto mt-1">
-                                    We sent a confirmation to <span className="font-semibold text-foreground">{result.email}</span>.
+                                <div className="text-4xl font-serif font-black text-terracotta">
+                                    #{result.queuePosition}
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                    Priority Status: <span className="text-emerald-500 font-bold">Confirmed VIP</span>
                                 </p>
                             </div>
 
-                            {/* Queue Card */}
-                            <div className="bg-muted/60 border border-border p-6 rounded-2xl max-w-md mx-auto">
-                                <p className="text-xs uppercase font-bold tracking-wider text-muted-foreground mb-1">Your Priority Spot</p>
-                                <p className="text-4xl font-black text-terracotta font-serif">#{result.queuePosition}</p>
-                                <p className="text-xs text-muted-foreground mt-2">
-                                    You are ahead of 84% of upcoming members!
-                                </p>
-                            </div>
-
-                            {/* Referral Share Box */}
-                            <div className="space-y-3 max-w-md mx-auto text-left">
+                            {/* Referral Code Box */}
+                            <div className="w-full max-w-md space-y-2 text-left">
                                 <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground">
                                     Your Custom Referral Link (Skip Line)
                                 </label>
@@ -207,7 +227,7 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
                                 </p>
                             </div>
 
-                            {/* Standard Required Inputs */}
+                            {/* Personal Details */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
@@ -237,10 +257,63 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
                                 </div>
                             </div>
 
+                            {/* Phone & Address Details */}
+                            <div className="p-4 rounded-2xl bg-muted/40 border border-border space-y-3">
+                                <span className="text-xs font-bold text-terracotta uppercase tracking-wider flex items-center gap-1.5">
+                                    <MapPin className="w-3.5 h-3.5" /> Address & Location
+                                </span>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                        <label className="block text-xs font-medium text-muted-foreground mb-1">Phone Number</label>
+                                        <div className="relative">
+                                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                            <input
+                                                type="tel"
+                                                value={phone}
+                                                onChange={e => setPhone(e.target.value)}
+                                                placeholder="+44 7123 456789"
+                                                className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-terracotta"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-medium text-muted-foreground mb-1">Street Address</label>
+                                        <input
+                                            type="text"
+                                            value={addressLine1}
+                                            onChange={e => setAddressLine1(e.target.value)}
+                                            placeholder="e.g. 42 Baker Street"
+                                            className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-terracotta"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-medium text-muted-foreground mb-1">City / Region</label>
+                                        <input
+                                            type="text"
+                                            value={city}
+                                            onChange={e => setCity(e.target.value)}
+                                            placeholder="e.g. London"
+                                            className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-terracotta"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-medium text-muted-foreground mb-1">Postal Code / Zip</label>
+                                        <input
+                                            type="text"
+                                            value={postalCode}
+                                            onChange={e => setPostalCode(e.target.value)}
+                                            placeholder="e.g. W1U 8ED"
+                                            className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-xs focus:outline-none focus:ring-2 focus:ring-terracotta"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* Role-Specific Fields */}
-                            <div className="p-4 rounded-2xl bg-muted/40 border border-border/80 space-y-4">
-                                <span className="text-xs font-bold text-terracotta uppercase tracking-wider block">
-                                    Optional Details for {activeRoleInfo.label}
+                            <div className="p-4 rounded-2xl bg-muted/40 border border-border space-y-4">
+                                <span className="text-xs font-bold text-foreground uppercase tracking-wider block">
+                                    Preferences for {activeRoleInfo.label}
                                 </span>
 
                                 {role === 'chef' && (
@@ -251,17 +324,17 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
                                                 type="text"
                                                 value={cuisine}
                                                 onChange={e => setCuisine(e.target.value)}
-                                                placeholder="e.g. Pan-African, French, Omakase"
+                                                placeholder="e.g. Modern Italian, French, Omakase"
                                                 className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-xs focus:outline-none"
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-muted-foreground mb-1">City / Location</label>
+                                            <label className="block text-xs font-medium text-muted-foreground mb-1">Years Experience</label>
                                             <input
                                                 type="text"
-                                                value={city}
-                                                onChange={e => setCity(e.target.value)}
-                                                placeholder="e.g. London, Lagos, Dubai"
+                                                value={specialty}
+                                                onChange={e => setSpecialty(e.target.value)}
+                                                placeholder="e.g. 8+ years, Michelin background"
                                                 className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-xs focus:outline-none"
                                             />
                                         </div>
@@ -271,7 +344,7 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
                                 {role === 'business' && (
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-xs font-medium text-muted-foreground mb-1">Company / Organization</label>
+                                            <label className="block text-xs font-medium text-muted-foreground mb-1">Company Name</label>
                                             <input
                                                 type="text"
                                                 value={companyName}
@@ -281,7 +354,7 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-muted-foreground mb-1">Est. Events Frequency</label>
+                                            <label className="block text-xs font-medium text-muted-foreground mb-1">Event Frequency</label>
                                             <select
                                                 value={eventCount}
                                                 onChange={e => setEventCount(e.target.value)}
@@ -290,7 +363,7 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
                                                 <option value="1-2 per month">1-2 per month</option>
                                                 <option value="3-5 per month">3-5 per month</option>
                                                 <option value="Weekly corporate catering">Weekly corporate catering</option>
-                                                <option value="One-time large retreat">One-time large retreat</option>
+                                                <option value="One-time retreat">One-time retreat</option>
                                             </select>
                                         </div>
                                     </div>
@@ -336,7 +409,7 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-medium text-muted-foreground mb-1">Proposed Course Topic</label>
+                                            <label className="block text-xs font-medium text-muted-foreground mb-1">Course Topic</label>
                                             <input
                                                 type="text"
                                                 value={courseTopic}
@@ -351,47 +424,67 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
                                 {role === 'client' && (
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-xs font-medium text-muted-foreground mb-1">Preferred Cuisines</label>
-                                            <input
-                                                type="text"
-                                                value={cuisine}
-                                                onChange={e => setCuisine(e.target.value)}
-                                                placeholder="e.g. Italian, West African, Mexican"
-                                                className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-xs focus:outline-none"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-medium text-muted-foreground mb-1">Occasion Type</label>
+                                            <label className="block text-xs font-medium text-muted-foreground mb-1">Primary Occasion</label>
                                             <select
                                                 value={occasion}
                                                 onChange={e => setOccasion(e.target.value)}
                                                 className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-xs focus:outline-none"
                                             >
-                                                <option value="Dinner Parties">Intimate Home Dinners</option>
-                                                <option value="Weddings">Weddings & Banquets</option>
-                                                <option value="Birthday Parties">Birthdays & Anniversaries</option>
-                                                <option value="Date Nights">ChefMii Date Nights</option>
+                                                <option value="Dinner Parties">Dinner Parties</option>
+                                                <option value="Date Nights">Intimate Date Nights</option>
+                                                <option value="Birthdays & Milestones">Birthdays & Milestones</option>
+                                                <option value="Weddings & Large Banquets">Weddings & Large Banquets</option>
+                                                <option value="Weekly Meal Prep">Weekly Meal Prep</option>
                                             </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-medium text-muted-foreground mb-1">Favorite Cuisines</label>
+                                            <input
+                                                type="text"
+                                                value={cuisine}
+                                                onChange={e => setCuisine(e.target.value)}
+                                                placeholder="e.g. Italian, Japanese, BBQ"
+                                                className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-xs focus:outline-none"
+                                            />
                                         </div>
                                     </div>
                                 )}
+
+                                <div>
+                                    <label className="block text-xs font-medium text-muted-foreground mb-1">Special Notes / Dietary Requirements</label>
+                                    <input
+                                        type="text"
+                                        value={notes}
+                                        onChange={e => setNotes(e.target.value)}
+                                        placeholder="e.g. Halal, Gluten-free, or specific event date"
+                                        className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-xs focus:outline-none"
+                                    />
+                                </div>
                             </div>
 
+                            {/* Error Alert */}
                             {error && (
-                                <p className="text-xs font-semibold text-red-500 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
+                                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-xs font-medium">
                                     {error}
-                                </p>
+                                </div>
                             )}
 
+                            {/* Submit Button */}
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full py-4 gradient-brand text-white font-bold text-base rounded-2xl hover:opacity-90 disabled:opacity-50 transition-all shadow-lg flex items-center justify-center gap-2"
+                                className="w-full py-4 gradient-brand text-white font-bold rounded-2xl hover:opacity-90 transition-opacity shadow-lg shadow-terracotta/20 flex items-center justify-center gap-2"
                             >
                                 {loading ? (
-                                    <><Loader2 className="w-5 h-5 animate-spin" /> Reserving Spot...</>
+                                    <>
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        <span>Reserving Your VIP Spot…</span>
+                                    </>
                                 ) : (
-                                    <>Reserve Priority Spot <ArrowRight className="w-5 h-5" /></>
+                                    <>
+                                        <Sparkles className="w-4 h-4" />
+                                        <span>Join {activeRoleInfo.label} Priority Waitlist</span>
+                                    </>
                                 )}
                             </button>
                         </form>

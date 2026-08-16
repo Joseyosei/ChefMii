@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth, type UserRole } from '@/context/auth-context'
 import { ChefHat, Loader2 } from 'lucide-react'
+import { BrandLogo } from '@/components/layout/logo'
 
 export default function RegisterPage() {
     const router = useRouter()
@@ -20,8 +21,10 @@ export default function RegisterPage() {
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
 
-    const handleSignUp = async () => {
-        if (!firstName || !email || !password) {
+    const handleSignUp = async (e?: React.FormEvent) => {
+        if (e) e.preventDefault()
+        setError(null)
+        if (!email || !password || !firstName || !lastName) {
             setError('Please fill in all required fields.')
             return
         }
@@ -29,38 +32,40 @@ export default function RegisterPage() {
             setError('Password must be at least 6 characters.')
             return
         }
-
-        setLoading(true); setError(null)
-        const fullName = `${firstName.trim()} ${lastName.trim()}`.trim()
-        const { error } = await signUp(email, password, fullName, role)
-        setLoading(false)
-
-        if (error) { setError(error); return }
-
-        setSuccess(true)
-        setTimeout(() => {
-            if (role === 'chef') router.replace('/chef-dashboard')
-            else if (role === 'business') router.replace('/business-dashboard')
-            else router.replace('/user-dashboard')
-        }, 1200)
+        setLoading(true)
+        try {
+            const fullName = `${firstName} ${lastName}`.trim()
+            await signUp(email, password, fullName, role)
+            setSuccess(true)
+            setTimeout(() => {
+                const map: Record<UserRole, string> = {
+                    client: '/user-dashboard',
+                    chef: '/chef-dashboard',
+                    business: '/business-dashboard',
+                    admin: '/user-dashboard',
+                    kids: '/kids-zone',
+                    influencer: '/user-dashboard',
+                    farmer: '/marketplace',
+                }
+                router.push(map[role] || '/user-dashboard')
+            }, 1200)
+        } catch (err: unknown) {
+            const msg = err instanceof Error ? err.message : 'Registration failed. Please try again.'
+            setError(msg)
+        } finally {
+            setLoading(false)
+        }
     }
 
     if (success) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center p-6">
-                <div className="text-center max-w-md">
-                    <div className="w-20 h-20 rounded-full gradient-brand mx-auto mb-6 flex items-center justify-center">
-                        <span className="text-4xl">🎉</span>
+            <div className="min-h-screen flex items-center justify-center p-6 bg-background">
+                <div className="text-center max-w-sm">
+                    <div className="w-16 h-16 rounded-full gradient-brand flex items-center justify-center mx-auto mb-4 text-white">
+                        <ChefHat className="w-8 h-8" />
                     </div>
-                    <h1 className="text-3xl font-serif font-bold mb-3">Account Created!</h1>
-                    <p className="text-muted-foreground mb-6">
-                        {role === 'chef'
-                            ? "Welcome, Chef! Setting up your dashboard…"
-                            : "Welcome to ChefMii! Taking you to your dashboard…"}
-                    </p>
-                    <div className="flex justify-center">
-                        <Loader2 className="w-6 h-6 animate-spin text-terracotta" />
-                    </div>
+                    <h2 className="text-2xl font-serif font-bold mb-2">Welcome to ChefMii!</h2>
+                    <p className="text-muted-foreground text-sm">Taking you to your dashboard…</p>
                 </div>
             </div>
         )
@@ -71,9 +76,8 @@ export default function RegisterPage() {
             {/* Left dark panel — hidden on mobile */}
             <div className="hidden md:flex flex-1 bg-[#1a1a1a] items-center justify-center p-12">
                 <div className="text-white max-w-md">
-                    <div className="flex items-center gap-3 mb-8">
-                        <ChefHat className="w-10 h-10 text-terracotta" />
-                        <span className="text-3xl font-bold gradient-text-brand">ChefMii</span>
+                    <div className="mb-8 p-3 bg-white rounded-2xl inline-block shadow-lg">
+                        <BrandLogo size="lg" />
                     </div>
                     <h2 className="text-4xl font-serif font-bold mb-4 leading-tight">
                         Join the world&apos;s premier private chef marketplace
@@ -99,10 +103,10 @@ export default function RegisterPage() {
             {/* Right form panel */}
             <div className="flex-1 flex items-center justify-center p-6 md:p-8 overflow-y-auto">
                 <div className="w-full max-w-md py-6">
-                    <Link href="/" className="flex items-center gap-2 mb-8 md:hidden">
-                        <ChefHat className="w-7 h-7 text-terracotta" />
-                        <span className="text-2xl font-bold gradient-text-brand">ChefMii</span>
-                    </Link>
+                    {/* Mobile logo */}
+                    <div className="mb-8 md:hidden">
+                        <BrandLogo size="lg" />
+                    </div>
 
                     <h1 className="text-3xl font-serif font-bold mb-2">Create Account</h1>
                     <p className="text-muted-foreground mb-6">Start your ChefMii journey today — it&apos;s free.</p>

@@ -21,6 +21,7 @@ import {
     Settings, LogOut, CheckCircle, XCircle, Clock, Upload,
     DollarSign, TrendingUp, Camera, Bell, Star, Loader2, Trash2, GraduationCap
 } from 'lucide-react'
+import { BrandLogo } from '@/components/layout/logo'
 import ChefAcademyDashboard from './academy/page'
 
 // Demo data for tabs not yet fully connected to DB
@@ -531,7 +532,9 @@ export default function ChefDashboardPage() {
             {/* Topbar */}
             <div className="h-14 border-b border-border bg-background/95 backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 shrink-0 z-10">
                 <div className="flex items-center gap-2">
-                    <Link href="/" className="text-lg font-bold gradient-text-brand mr-4">ChefMii</Link>
+                    <div className="mr-4">
+                        <BrandLogo size="sm" />
+                    </div>
                     <div className="hidden sm:block">
                         <p className="text-sm font-bold">
                             {tab === 'overview' ? `Good morning, ${profile?.full_name?.split(' ')[1] || 'Chef'}! 👨‍🍳` : TABS.find(t => t.id === tab)?.label}

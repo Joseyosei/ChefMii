@@ -24,6 +24,7 @@ import {
     Plus, X, ChefHat, Search, Home, Bell, User as UserIcon,
     Send, Loader2, Upload, CheckCircle,
 } from 'lucide-react'
+import { BrandLogo } from '@/components/layout/logo'
 
 /* ── Types ───────────────────────────────────────────────────── */
 interface MediaItem {
@@ -713,10 +714,9 @@ export default function ChefMediaPage() {
             <div className="absolute top-0 left-0 right-0 z-30 safe-top">
                 {/* Back link for desktop */}
                 <div className="hidden sm:flex items-center gap-3 px-4 pt-4 pb-2">
-                    <Link href="/" className="flex items-center gap-2">
-                        <ChefHat className="w-6 h-6 text-white" />
-                        <span className="text-xl font-bold text-white">ChefMii</span>
-                    </Link>
+                    <div className="p-1.5 bg-white/10 backdrop-blur-md rounded-xl">
+                        <BrandLogo size="sm" />
+                    </div>
                 </div>
 
                 {/* Tabs */}

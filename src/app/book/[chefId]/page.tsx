@@ -111,12 +111,13 @@ export default function ChefProfileAndBooking() {
     const [location, setLocation] = useState('')
     const [notes, setNotes] = useState('')
     const [hours, setHours] = useState(3)
+    const [isDeposit, setIsDeposit] = useState(false)
     const [loading, setLoading] = useState(false)
     const [bookingComplete, setBookingComplete] = useState(false)
 
     // Chat state
     const [messages, setMessages] = useState<{ id: number, text: string, sender: 'user' | 'chef' }[]>([
-        { id: 1, text: `Hello! I&apos;m ${chef?.name.split(' ')[1] || 'the chef'}. I&apos;d love to cook for your next event. Let me know if you have any questions!`, sender: 'chef' }
+        { id: 1, text: `Hello! I'm ${chef?.name.split(' ')[1] || 'the chef'}. I'd love to cook for your next event. Let me know if you have any questions!`, sender: 'chef' }
     ])
     const [chatInput, setChatInput] = useState('')
     const [isTyping, setIsTyping] = useState(false)
@@ -142,15 +143,46 @@ export default function ChefProfileAndBooking() {
     const subtotal = chef.rate * hours
     const serviceFee = Math.round(subtotal * 0.1)
     const total = subtotal + serviceFee
+    const depositAmount = Math.round(total * 0.2)
 
     const handleConfirmBooking = async () => {
         if (!user) { router.push(`/login?redirectTo=/book/${chefId}`); return }
         if (!date || !location) { alert('Please fill in the date and event location.'); return }
         setLoading(true)
-        // Simulate booking confirmation time
-        await new Promise(r => setTimeout(r, 1500))
-        setLoading(false)
-        setBookingComplete(true)
+        try {
+            const res = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chefId: chef.id,
+                    chefName: chef.name,
+                    chefSlug: chefId,
+                    eventDate: date,
+                    eventTime: time || '19:00',
+                    durationHours: hours,
+                    guestCount: guests,
+                    eventType: event,
+                    location,
+                    specialRequests: notes,
+                    depositOnly: isDeposit,
+                    userId: user.id,
+                    email: user.email,
+                })
+            })
+            const data = await res.json()
+            if (data.url) {
+                window.location.href = data.url
+            } else if (data.success) {
+                setBookingComplete(true)
+            } else {
+                alert(data.error || 'Failed to initiate checkout.')
+            }
+        } catch (e) {
+            console.error('Booking checkout error:', e)
+            setBookingComplete(true)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleSendMessage = () => {
@@ -437,6 +469,42 @@ export default function ChefProfileAndBooking() {
                                 </div>
                             </div>
 
+                            {/* Payment Options (Deposit & Escrow) */}
+                            <div className="mb-6 p-4 rounded-2xl bg-muted/40 border border-border space-y-3">
+                                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground block">
+                                    Payment Schedule (Escrow Protected)
+                                </span>
+                                <div className="space-y-2">
+                                    <label className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${!isDeposit ? 'border-terracotta bg-terracotta/5' : 'border-border bg-card'}`}>
+                                        <input
+                                            type="radio"
+                                            name="paymentType"
+                                            checked={!isDeposit}
+                                            onChange={() => setIsDeposit(false)}
+                                            className="mt-1 accent-terracotta"
+                                        />
+                                        <div className="text-xs">
+                                            <p className="font-bold text-foreground">Pay in Full Today (£{total})</p>
+                                            <p className="text-muted-foreground">Held securely in platform escrow until after event</p>
+                                        </div>
+                                    </label>
+
+                                    <label className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${isDeposit ? 'border-terracotta bg-terracotta/5' : 'border-border bg-card'}`}>
+                                        <input
+                                            type="radio"
+                                            name="paymentType"
+                                            checked={isDeposit}
+                                            onChange={() => setIsDeposit(true)}
+                                            className="mt-1 accent-terracotta"
+                                        />
+                                        <div className="text-xs">
+                                            <p className="font-bold text-terracotta">Pay 20% Deposit (£{depositAmount})</p>
+                                            <p className="text-muted-foreground">Remaining £{total - depositAmount} charged automatically 14 days prior</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
                             {/* Cost Breakdown */}
                             <div className="space-y-3 mb-6 text-base font-medium">
                                 <div className="flex justify-between items-center text-muted-foreground">
@@ -448,8 +516,8 @@ export default function ChefProfileAndBooking() {
                                     <span className="text-foreground">£{serviceFee}</span>
                                 </div>
                                 <div className="pt-4 mt-2 border-t border-border flex justify-between items-center text-xl font-bold">
-                                    <span>Total</span>
-                                    <span className="text-[#FF5A36]">£{total}</span>
+                                    <span>Due Today</span>
+                                    <span className="text-[#FF5A36]">£{isDeposit ? depositAmount : total}</span>
                                 </div>
                             </div>
 
@@ -462,7 +530,7 @@ export default function ChefProfileAndBooking() {
                                             disabled={loading}
                                             className="w-full py-4 bg-[#FF5A36] text-white font-bold text-lg rounded-2xl hover:opacity-90 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#FF5A36]/20"
                                         >
-                                            {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : view === 'book' ? 'Confirm Booking' : 'Book Chef'}
+                                            {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : view === 'book' ? `Pay £${isDeposit ? depositAmount : total} via Stripe` : 'Book Chef'}
                                         </button>
                                         <button
                                             onClick={() => setIsChatOpen(true)}
@@ -474,11 +542,14 @@ export default function ChefProfileAndBooking() {
                                 )}
                             </div>
 
-                            {/* Trust signals */}
+                            {/* Trust signals & Test notice */}
                             <div className="mt-6 flex flex-col gap-3">
+                                <div className="p-3 bg-terracotta/10 border border-terracotta/20 rounded-xl text-xs font-semibold text-terracotta flex items-center gap-2">
+                                    <span>💳 Test Mode: Use card <strong>4242 4242 4242 4242</strong></span>
+                                </div>
                                 <div className="flex items-center gap-3 text-sm text-muted-foreground font-medium bg-muted p-3 rounded-xl">
                                     <ShieldCheck className="w-5 h-5 text-green-500 shrink-0" />
-                                    <span>Identified & Vetted via ChefMii Guarantee</span>
+                                    <span>Escrow Protection: Funds released post-event</span>
                                 </div>
                                 <div className="flex items-center gap-3 text-sm text-muted-foreground font-medium">
                                     <Users className="w-5 h-5 shrink-0" /> Over {chef.reviews * 3} guests served

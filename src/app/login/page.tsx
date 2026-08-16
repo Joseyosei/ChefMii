@@ -9,6 +9,7 @@ import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/lib/firebase/client'
 import { useAuth, dashboardHref } from '@/context/auth-context'
 import { ChefHat, Eye, EyeOff, Loader2 } from 'lucide-react'
+import { BrandLogo } from '@/components/layout/logo'
 
 function LoginContent() {
     const router = useRouter()
@@ -23,47 +24,61 @@ function LoginContent() {
     const [error, setError] = useState<string | null>(null)
     const [forgotSent, setForgotSent] = useState(false)
 
-    // Already logged in → redirect
+    const redirectTo = params.get('redirectTo') || dashboardHref(role)
+
     useEffect(() => {
         if (user && role) {
-            const redirectTo = params.get('redirectTo') || dashboardHref(role)
-            router.replace(redirectTo)
+            router.push(redirectTo)
         }
-    }, [user, role, router, params])
+    }, [user, role, redirectTo, router])
 
-    const handleSignIn = async () => {
-        if (!email || !password) { setError('Please fill in all fields.'); return }
-        setLoading(true); setError(null)
-        const { error } = await signIn(email, password)
-        setLoading(false)
-        if (error) { setError(error); return }
-        const redirectTo = params.get('redirectTo') || dashboardHref(role)
-        router.replace(redirectTo)
+    const handleEmailLogin = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setError(null)
+        setLoading(true)
+        try {
+            await signIn(email, password)
+            // Redirect handled by useEffect
+        } catch (err: unknown) {
+            const msg = err instanceof Error ? err.message : 'Invalid credentials. Please try again.'
+            setError(msg)
+        } finally {
+            setLoading(false)
+        }
     }
 
-    const handleGoogleSignIn = async () => {
-        setGoogleLoading(true); setError(null)
-        const { error } = await signInWithGoogle()
-        setGoogleLoading(false)
-        if (error) { setError(error); return }
-        const redirectTo = params.get('redirectTo') || dashboardHref(role)
-        router.replace(redirectTo)
+    const handleGoogleLogin = async () => {
+        setError(null)
+        setGoogleLoading(true)
+        try {
+            await signInWithGoogle()
+            // Redirect handled by useEffect
+        } catch (err: unknown) {
+            const msg = err instanceof Error ? err.message : 'Google sign in failed.'
+            setError(msg)
+        } finally {
+            setGoogleLoading(false)
+        }
     }
 
     const handleForgotPassword = async () => {
-        if (!email) { setError('Enter your email first, then click Forgot Password.'); return }
+        if (!email) {
+            setError('Please enter your email address first.')
+            return
+        }
         try {
             await sendPasswordResetEmail(auth, email)
             setForgotSent(true)
-            setError(null)
         } catch (err: unknown) {
-            const e = err as { message?: string }
-            setError(e.message || 'Failed to send reset email.')
+            const msg = err instanceof Error ? err.message : 'Failed to send password reset email.'
+            setError(msg)
         }
     }
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') handleSignIn()
+        if (e.key === 'Enter') {
+            handleEmailLogin(e as unknown as React.FormEvent)
+        }
     }
 
     return (
@@ -71,9 +86,8 @@ function LoginContent() {
             {/* Left brand panel — hidden on mobile */}
             <div className="hidden md:flex flex-1 gradient-brand items-center justify-center p-12">
                 <div className="text-white max-w-md">
-                    <div className="flex items-center gap-3 mb-8">
-                        <ChefHat className="w-10 h-10 text-white" />
-                        <span className="text-3xl font-bold">ChefMii</span>
+                    <div className="mb-8 p-3 bg-white rounded-2xl inline-block shadow-lg">
+                        <BrandLogo size="lg" />
                     </div>
                     <h2 className="text-4xl font-serif font-bold mb-4 leading-tight">
                         Welcome back to the world&apos;s finest chef marketplace
@@ -93,10 +107,9 @@ function LoginContent() {
             <div className="flex-1 flex items-center justify-center p-6 md:p-8">
                 <div className="w-full max-w-md">
                     {/* Mobile logo */}
-                    <Link href="/" className="flex items-center gap-2 mb-8 md:hidden">
-                        <ChefHat className="w-7 h-7 text-terracotta" />
-                        <span className="text-2xl font-bold gradient-text-brand">ChefMii</span>
-                    </Link>
+                    <div className="mb-8 md:hidden">
+                        <BrandLogo size="lg" />
+                    </div>
 
                     <h1 className="text-3xl font-serif font-bold mb-2">Sign In</h1>
                     <p className="text-muted-foreground mb-8">Welcome back! Please enter your details.</p>
@@ -159,7 +172,7 @@ function LoginContent() {
 
                         <button
                             id="login-submit"
-                            onClick={handleSignIn}
+                            onClick={handleEmailLogin}
                             disabled={loading || googleLoading}
                             className="w-full min-h-[44px] py-3 gradient-brand text-white font-bold rounded-xl hover:opacity-90 disabled:opacity-50 transition-all text-sm flex items-center justify-center gap-2"
                         >
@@ -174,7 +187,7 @@ function LoginContent() {
 
                         <button
                             type="button"
-                            onClick={handleGoogleSignIn}
+                            onClick={handleGoogleLogin}
                             disabled={loading || googleLoading}
                             className="w-full min-h-[44px] py-3 border border-border rounded-xl text-sm font-medium hover:bg-muted transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
                         >

@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Facebook, Instagram, Twitter, Linkedin, Send } from 'lucide-react'
 
+import { BrandLogo } from '@/components/layout/logo'
+
 const footerLinks = {
     'Explore': [
         { href: '/find-chefs', label: 'Find a Chef' },
@@ -44,11 +46,9 @@ export function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-16">
                     {/* Brand Info */}
                     <div className="lg:col-span-2">
-                        <Link href="/" className="inline-block mb-6">
-                            <span className="text-3xl tracking-tight text-[#FF5A36]" style={{ fontWeight: 500, fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-                                ChefMii
-                            </span>
-                        </Link>
+                        <div className="mb-6">
+                            <BrandLogo size="lg" />
+                        </div>
                         <p className="text-zinc-400 text-sm leading-relaxed mb-8 max-w-sm">
                             The world&apos;s premier platform for private dining. We connect you with world-class chefs for unforgettable culinary experiences, from intimate dinners to grand banquets.
                         </p>

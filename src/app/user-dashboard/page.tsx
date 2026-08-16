@@ -20,6 +20,7 @@ import {
     LogOut, ChefHat, Clock, CheckCircle, XCircle, MapPin,
     Search, Bell, Loader2, Send
 } from 'lucide-react'
+import { BrandLogo } from '@/components/layout/logo'
 import { useUserDashboardData, UserBooking, AvailableChef, UserConversation } from '@/hooks/useUserDashboardData'
 
 const STATUS_STYLES: Record<string, string> = {
@@ -518,9 +519,9 @@ export default function UserDashboardPage() {
             {/* Topbar */}
             <div className="h-14 border-b border-border bg-background/95 backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 shrink-0 z-10">
                 <div className="flex items-center gap-2">
-                    <Link href="/" className="flex items-center gap-1.5 mr-2 sm:mr-4">
-                        <span className="text-lg font-bold gradient-text-brand">ChefMii</span>
-                    </Link>
+                    <div className="mr-2 sm:mr-4">
+                        <BrandLogo size="sm" />
+                    </div>
                     <div className="hidden sm:block">
                         <p className="text-sm font-bold">
                             {tab === 'overview' ? `Good morning, ${profile?.full_name?.split(' ')[0] || 'there'}! 👋` : TABS.find(t => t.id === tab)?.label}
