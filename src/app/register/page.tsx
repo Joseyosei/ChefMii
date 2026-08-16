@@ -25,8 +25,8 @@ export default function RegisterPage() {
             setError('Please fill in all required fields.')
             return
         }
-        if (password.length < 8) {
-            setError('Password must be at least 8 characters.')
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters.')
             return
         }
 
@@ -37,13 +37,12 @@ export default function RegisterPage() {
 
         if (error) { setError(error); return }
 
-        // Some Supabase projects require email confirm – show success screen
         setSuccess(true)
         setTimeout(() => {
             if (role === 'chef') router.replace('/chef-dashboard')
             else if (role === 'business') router.replace('/business-dashboard')
             else router.replace('/user-dashboard')
-        }, 2000)
+        }, 1200)
     }
 
     if (success) {
@@ -189,7 +188,7 @@ export default function RegisterPage() {
                                 type="password"
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
-                                placeholder="Min. 8 characters"
+                                placeholder="Min. 6 characters"
                                 className="w-full px-4 py-3 min-h-[44px] rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-terracotta text-sm"
                             />
                         </div>

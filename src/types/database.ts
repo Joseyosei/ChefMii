@@ -9,7 +9,7 @@ export type Json =
 export type RoleType = 'client' | 'chef' | 'business' | 'admin' | 'kids' | 'influencer' | 'farmer'
 
 export interface Database {
-    __InternalSupabase: { PostgrestVersion: '12' }
+    __version: '1.0'
     public: {
         Tables: {
             profiles: {

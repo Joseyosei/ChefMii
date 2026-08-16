@@ -5,6 +5,17 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import {
+    collection,
+    query,
+    orderBy,
+    onSnapshot,
+    addDoc,
+    doc,
+    setDoc,
+    serverTimestamp,
+} from 'firebase/firestore'
+import { db } from '@/lib/firebase/client'
+import {
     LayoutDashboard, Calendar, MessageSquare, Star, Settings,
     LogOut, ChefHat, Clock, CheckCircle, XCircle, MapPin,
     Search, Bell, Loader2, Send
@@ -216,57 +227,58 @@ function MessagesView({ conversations }: { conversations: UserConversation[] }) 
     const [active, setActive] = useState<UserConversation | null>(conversations[0] || null)
     const [reply, setReply] = useState('')
     const { user } = useAuth()
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const supabaseClient = typeof window !== 'undefined' ? require('@/lib/supabase/client').createClient() : null
 
     // For messages of the active conversation
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [msgs, setMsgs] = useState<any[]>([])
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [loadingMsgs, setLoadingMsgs] = useState(false)
 
     useEffect(() => {
-        if (!active || !user || !supabaseClient) return
-        
-        const fetchMsgs = async () => {
-            setLoadingMsgs(true)
-            const { data } = await supabaseClient
-                .from('messages')
-                .select('*')
-                .eq('conversation_id', active.id)
-                .order('created_at', { ascending: true })
-            if (data) setMsgs(data)
+        if (!active || !user) return
+
+        const msgQuery = query(
+            collection(db, 'conversations', active.id, 'messages'),
+            orderBy('createdAt', 'asc')
+        )
+
+        const unsub = onSnapshot(msgQuery, (snapshot) => {
+            const list = snapshot.docs.map(docSnap => ({
+                id: docSnap.id,
+                ...docSnap.data(),
+            }))
+            setMsgs(list)
             setLoadingMsgs(false)
-        }
-        
-        fetchMsgs()
-        
-        const channel = supabaseClient.channel(`msgs-${active.id}`)
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${active.id}` }, (payload: any) => {
-                setMsgs(prev => [...prev, payload.new])
-            })
-            .subscribe()
-            
-            
-        return () => { supabaseClient.removeChannel(channel) }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [active?.id, user?.id, supabaseClient])
+        }, (err) => {
+            console.warn('Realtime messages listener in user dashboard:', err)
+            setLoadingMsgs(false)
+        })
+
+        return () => unsub()
+    }, [active?.id, user?.id])
 
     const send = async () => {
-        if (!reply.trim() || !active || !user || !supabaseClient) return
-        const msgText = reply
+        if (!reply.trim() || !active || !user) return
+        const msgText = reply.trim()
         setReply('')
-        
-        await supabaseClient.from('messages').insert({
-            conversation_id: active.id,
-            sender_id: user.id,
-            content: msgText
-        })
-        
-        await supabaseClient.from('conversations').update({
-            last_message: msgText,
-            last_message_at: new Date().toISOString()
-        }).eq('id', active.id)
+
+        try {
+            await addDoc(collection(db, 'conversations', active.id, 'messages'), {
+                conversation_id: active.id,
+                sender_id: user.id,
+                content: msgText,
+                is_read: false,
+                createdAt: serverTimestamp(),
+            })
+
+            await setDoc(doc(db, 'conversations', active.id), {
+                last_message: msgText,
+                last_message_at: new Date().toISOString(),
+                updatedAt: serverTimestamp(),
+            }, { merge: true })
+        } catch (e) {
+            console.error('Error sending message:', e)
+        }
     }
 
     if (conversations.length === 0) {
@@ -390,9 +402,7 @@ function ReviewsView() {
 }
 
 function SettingsView({ profile }: { profile: { full_name: string | null; role: string | null } | null }) {
-    const { refreshProfile } = useAuth()
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const supabaseClient = typeof window !== 'undefined' ? require('@/lib/supabase/client').createClient() : null
+    const { user, refreshProfile } = useAuth()
     const [name, setName] = useState(profile?.full_name || '')
     const [phone, setPhone] = useState('')
     const [saved, setSaved] = useState(false)
@@ -400,11 +410,16 @@ function SettingsView({ profile }: { profile: { full_name: string | null; role: 
 
     const save = async () => {
         setSaving(true)
-        if (supabaseClient) {
-            const { data: { user } } = await supabaseClient.auth.getUser()
-            if (user) {
-                await supabaseClient.from('profiles').update({ full_name: name, phone, updated_at: new Date().toISOString() }).eq('id', user.id)
+        if (user) {
+            try {
+                await setDoc(doc(db, 'users', user.id), {
+                    full_name: name,
+                    phone,
+                    updatedAt: serverTimestamp(),
+                }, { merge: true })
                 await refreshProfile()
+            } catch (e) {
+                console.error('Error saving user profile settings:', e)
             }
         }
         setSaving(false); setSaved(true)

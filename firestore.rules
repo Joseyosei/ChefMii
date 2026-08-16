@@ -1,0 +1,93 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ── Waitlist: Public can create (join), only admin can read/modify ──
+    match /waitlist/{docId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+
+    // ── Users / Profiles: Only owner can read/write their own document ──
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
+    
+    match /profiles/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId);
+    }
+
+    // ── Bookings: Only client or assigned chef can read/write ──
+    match /bookings/{bookingId} {
+      allow read: if isAuthenticated() && (
+        resource.data.client_id == request.auth.uid ||
+        resource.data.user_id == request.auth.uid ||
+        resource.data.chef_id == request.auth.uid
+      );
+      allow create: if isAuthenticated() && request.resource.data.client_id == request.auth.uid;
+      allow update: if isAuthenticated() && (
+        resource.data.client_id == request.auth.uid ||
+        resource.data.chef_id == request.auth.uid
+      );
+      allow delete: if false;
+    }
+
+    // ── Conversations & Realtime Messages ──
+    match /conversations/{conversationId} {
+      allow read, update: if isAuthenticated() && (
+        resource.data.participant1 == request.auth.uid ||
+        resource.data.participant2 == request.auth.uid
+      );
+      allow create: if isAuthenticated() && (
+        request.resource.data.participant1 == request.auth.uid ||
+        request.resource.data.participant2 == request.auth.uid
+      );
+      
+      match /messages/{messageId} {
+        allow read: if isAuthenticated() && (
+          get(/databases/$(database)/documents/conversations/$(conversationId)).data.participant1 == request.auth.uid ||
+          get(/databases/$(database)/documents/conversations/$(conversationId)).data.participant2 == request.auth.uid
+        );
+        allow create: if isAuthenticated() && request.resource.data.sender_id == request.auth.uid;
+        allow update, delete: if false;
+      }
+    }
+
+    // ── Chef Media & Reels: Publicly readable, writable by owner ──
+    match /chef_media/{mediaId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.resource.data.chef_id == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.chef_id == request.auth.uid;
+
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if isAuthenticated() && request.resource.data.user_id == request.auth.uid;
+        allow update, delete: if isAuthenticated() && resource.data.user_id == request.auth.uid;
+      }
+    }
+
+    // ── Corporate Requests ──
+    match /corporate_requests/{requestId} {
+      allow read, write: if isAuthenticated() && (
+        resource.data.business_id == request.auth.uid ||
+        request.resource.data.business_id == request.auth.uid
+      );
+    }
+
+    // ── Default Deny All ──
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

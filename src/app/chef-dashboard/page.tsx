@@ -5,7 +5,17 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { useDashboardData, BookingRequest, Conversation, ChefMedia } from '@/hooks/useDashboardData'
-import { createClient } from '@/lib/supabase/client'
+import {
+    collection,
+    query,
+    orderBy,
+    onSnapshot,
+    addDoc,
+    doc,
+    setDoc,
+    serverTimestamp,
+} from 'firebase/firestore'
+import { db } from '@/lib/firebase/client'
 import {
     LayoutDashboard, Calendar, MessageSquare, Edit3, Image,
     Settings, LogOut, CheckCircle, XCircle, Clock, Upload,
@@ -195,7 +205,6 @@ function RequestsView({ bookings, updateStatus }: { bookings: BookingRequest[], 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function MessagesView({ conversations, user }: { conversations: Conversation[], user: any }) {
-    const supabase = createClient()
     const [active, setActive] = useState<Conversation | null>(conversations[0] || null)
     const [reply, setReply] = useState('')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -203,23 +212,51 @@ function MessagesView({ conversations, user }: { conversations: Conversation[], 
     const [sending, setSending] = useState(false)
 
     useEffect(() => {
-        if (active) {
-            supabase.from('messages').select('*').eq('conversation_id', active.id).order('created_at', { ascending: true })
-                .then(({ data }) => setMsgs(data || []))
-        }
-    }, [active, supabase])
+        if (!active) return
+
+        const msgQuery = query(
+            collection(db, 'conversations', active.id, 'messages'),
+            orderBy('createdAt', 'asc')
+        )
+
+        const unsub = onSnapshot(msgQuery, (snapshot) => {
+            const list = snapshot.docs.map(docSnap => ({
+                id: docSnap.id,
+                ...docSnap.data(),
+            }))
+            setMsgs(list)
+        }, (err) => {
+            console.warn('Realtime messages listener in chef dashboard:', err)
+        })
+
+        return () => unsub()
+    }, [active])
 
     const send = async () => {
-        if (!reply.trim() || !active) return
+        if (!reply.trim() || !active || !user) return
         setSending(true)
-        const msg = { conversation_id: active.id, sender_id: user.id, content: reply.trim() }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const { error } = await supabase.from('messages').insert(msg as any)
-        if (!error) {
-            setReply('')
-            setMsgs(m => [...m, { ...msg, created_at: new Date().toISOString() }])
+        const msgContent = reply.trim()
+        setReply('')
+
+        try {
+            await addDoc(collection(db, 'conversations', active.id, 'messages'), {
+                conversation_id: active.id,
+                sender_id: user.id,
+                content: msgContent,
+                is_read: false,
+                createdAt: serverTimestamp(),
+            })
+
+            await setDoc(doc(db, 'conversations', active.id), {
+                last_message: msgContent,
+                last_message_at: new Date().toISOString(),
+                updatedAt: serverTimestamp(),
+            }, { merge: true })
+        } catch (e) {
+            console.error('Failed to send chef message:', e)
+        } finally {
+            setSending(false)
         }
-        setSending(false)
     }
 
     if (!conversations.length) {
@@ -354,7 +391,6 @@ function ProfileView() {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function MediaView({ media, removeMedia, user }: { media: ChefMedia[], removeMedia: (id: string) => void, user: any }) {
-    const supabase = createClient()
     const fileRef = useRef<HTMLInputElement>(null)
     const [uploading, setUploading] = useState(false)
 
@@ -362,29 +398,23 @@ function MediaView({ media, removeMedia, user }: { media: ChefMedia[], removeMed
         if (!fl || !fl.length || !user) return
         setUploading(true)
         const file = fl[0]
-        const fileExt = file.name.split('.').pop()
-        const fileName = `${Math.random()}.${fileExt}`
-        const filePath = `${user.id}/${fileName}`
 
-        const { error: uploadError } = await supabase.storage.from('chef-media').upload(filePath, file)
-        if (uploadError) {
-            alert('Upload failed!')
+        try {
+            const previewUrl = URL.createObjectURL(file)
+            await addDoc(collection(db, 'chef_media'), {
+                chef_id: user.id,
+                title: file.name,
+                video_url: previewUrl,
+                thumbnail_url: previewUrl,
+                views: 0,
+                likes: 0,
+                createdAt: serverTimestamp(),
+            })
+        } catch (e) {
+            console.error('Error adding chef media:', e)
+        } finally {
             setUploading(false)
-            return
         }
-
-        const { data: { publicUrl } } = supabase.storage.from('chef-media').getPublicUrl(filePath)
-        
-        await supabase.from('chef_media').insert({
-            chef_id: user.id,
-            title: file.name,
-            video_url: publicUrl,
-            thumbnail_url: publicUrl // simple fallback
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any)
-
-        setUploading(false)
-        /* Data will be refetched by Realtime subscription in the hook */
     }
 
     return (

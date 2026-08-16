@@ -1,7 +1,21 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { useState, useEffect, useCallback } from 'react'
+import {
+    collection,
+    query,
+    where,
+    orderBy,
+    onSnapshot,
+    addDoc,
+    doc,
+    setDoc,
+    getDoc,
+    getDocs,
+    serverTimestamp,
+    type Unsubscribe,
+} from 'firebase/firestore'
+import { db } from '@/lib/firebase/client'
 import { useAuth } from '@/context/auth-context'
 
 export interface Message {
@@ -30,157 +44,203 @@ export interface Conversation {
 
 export function useMessaging(conversationId?: string) {
     const { user } = useAuth()
-    const supabase = createClient()
     const [conversations, setConversations] = useState<Conversation[]>([])
     const [messages, setMessages] = useState<Message[]>([])
     const [loading, setLoading] = useState(true)
     const [sending, setSending] = useState(false)
-    const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
 
     /* ── Load conversations ───────────────────────────── */
     const loadConversations = useCallback(async () => {
-        if (!user) return
-        const { data } = await supabase
-            .from('conversations')
-            .select('*')
-            .or(`participant1.eq.${user.id},participant2.eq.${user.id}`)
-            .order('last_message_at', { ascending: false })
-
-        if (!data) { setLoading(false); return }
-
-        // Enrich with other user profile
-        const enriched: Conversation[] = await Promise.all(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (data as any[]).map(async (conv: any) => {
-                const otherId = conv.participant1 === user.id ? conv.participant2 : conv.participant1
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('id, full_name, avatar_url, role')
-                    .eq('id', otherId)
-                    .single()
-
-                // Count unread
-                const { count } = await supabase
-                    .from('messages')
-                    .select('id', { count: 'exact', head: true })
-                    .eq('conversation_id', conv.id)
-                    .eq('is_read', false)
-                    .neq('sender_id', user.id)
-
-                return { ...conv, other_user: profile ?? undefined, unread_count: count ?? 0 }
-            })
-        )
-        setConversations(enriched)
-        setLoading(false)
-    }, [user, supabase])
-
-    /* ── Load messages for one conversation ──────────── */
-    const loadMessages = useCallback(async (convId: string) => {
-        const { data } = await supabase
-            .from('messages')
-            .select('*')
-            .eq('conversation_id', convId)
-            .order('created_at', { ascending: true })
-        setMessages(data ?? [])
-
-        // Mark as read
-        if (user) {
-            await supabase
-                .from('messages')
-                // @ts-expect-error Bypass type mismatch
-                .update({ is_read: true })
-                .eq('conversation_id', convId)
-                .neq('sender_id', user.id)
+        if (!user) {
+            setLoading(false)
+            return
         }
-    }, [user, supabase])
 
-    /* ── Realtime subscription ───────────────────────── */
-    useEffect(() => {
-        if (!conversationId) return
+        try {
+            const q1 = query(collection(db, 'conversations'), where('participant1', '==', user.id))
+            const q2 = query(collection(db, 'conversations'), where('participant2', '==', user.id))
 
-        loadMessages(conversationId)
+            const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)])
+            const allDocs = [...snap1.docs, ...snap2.docs]
 
-        const channel = supabase
-            .channel(`messages:${conversationId}`)
-            .on(
-                'postgres_changes',
-                { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${conversationId}` },
-                (payload) => {
-                    setMessages(prev => [...prev, payload.new as Message])
-                    // Mark read if from other user
-                    if (user && (payload.new as Message).sender_id !== user.id) {
-                        // @ts-expect-error Bypass type mismatch
-                        supabase.from('messages').update({ is_read: true }).eq('id', (payload.new as Message).id)
+            // Deduplicate by ID
+            const uniqueMap = new Map<string, Conversation>()
+
+            for (const docSnap of allDocs) {
+                if (uniqueMap.has(docSnap.id)) continue
+
+                const c = docSnap.data()
+                const otherId = c.participant1 === user.id ? c.participant2 : c.participant1
+
+                let otherUserProfile = {
+                    id: otherId || '',
+                    full_name: 'ChefMii User',
+                    avatar_url: null,
+                    role: 'client',
+                }
+
+                if (otherId) {
+                    try {
+                        const userSnap = await getDoc(doc(db, 'users', otherId))
+                        if (userSnap.exists()) {
+                            const uData = userSnap.data()
+                            otherUserProfile = {
+                                id: userSnap.id,
+                                full_name: uData.full_name || uData.name || 'ChefMii User',
+                                avatar_url: uData.avatar_url || null,
+                                role: uData.role || 'client',
+                            }
+                        }
+                    } catch {
+                        // ignore
                     }
                 }
-            )
-            .subscribe()
 
-        channelRef.current = channel
-        return () => { supabase.removeChannel(channel) }
-    }, [conversationId, loadMessages, supabase, user])
+                uniqueMap.set(docSnap.id, {
+                    id: docSnap.id,
+                    participant1: c.participant1 || user.id,
+                    participant2: c.participant2 || otherId,
+                    last_message: c.last_message || null,
+                    last_message_at: c.last_message_at || c.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+                    other_user: otherUserProfile,
+                    unread_count: 0,
+                })
+            }
 
-    /* ── Load conversations on mount ─────────────────── */
-    useEffect(() => { loadConversations() }, [loadConversations])
+            setConversations(Array.from(uniqueMap.values()))
+        } catch (err) {
+            console.warn('Error loading conversations:', err)
+        } finally {
+            setLoading(false)
+        }
+    }, [user])
 
-    /* ── Send message ────────────────────────────────── */
-    const sendMessage = useCallback(async (convId: string, content: string) => {
+    /* ── Realtime Messages for Selected Conversation ───── */
+    useEffect(() => {
+        if (!conversationId) {
+            setMessages([])
+            return
+        }
+
+        const msgQuery = query(
+            collection(db, 'conversations', conversationId, 'messages'),
+            orderBy('createdAt', 'asc')
+        )
+
+        let unsub: Unsubscribe | null = null
+
+        try {
+            unsub = onSnapshot(msgQuery, (snapshot) => {
+                const msgs: Message[] = snapshot.docs.map(docSnap => {
+                    const data = docSnap.data()
+                    return {
+                        id: docSnap.id,
+                        conversation_id: conversationId,
+                        sender_id: data.sender_id || '',
+                        content: data.content || '',
+                        is_read: data.is_read ?? true,
+                        created_at: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+                    }
+                })
+                setMessages(msgs)
+            }, (err) => {
+                console.warn('Realtime messages listener error:', err)
+            })
+        } catch (e) {
+            console.warn('Could not attach message onSnapshot:', e)
+        }
+
+        return () => {
+            if (unsub) unsub()
+        }
+    }, [conversationId])
+
+    useEffect(() => {
+        loadConversations()
+    }, [loadConversations])
+
+    /* ── Send Message ──────────────────────────────────── */
+    const sendMessage = useCallback(async (convId: string, content: string): Promise<boolean> => {
         if (!user || !content.trim()) return false
         setSending(true)
-        // @ts-expect-error Bypass type mismatch
-        const { error } = await supabase.from('messages').insert({
-            conversation_id: convId,
-            sender_id: user.id,
-            content: content.trim(),
-        })
-        // Update conversation last_message
-        if (!error) {
-            await supabase
-                .from('conversations')
-                // @ts-expect-error Bypass type mismatch
-                .update({ last_message: content.trim(), last_message_at: new Date().toISOString() })
-                .eq('id', convId)
-            await loadConversations()
-        }
-        setSending(false)
-        return !error
-    }, [user, supabase, loadConversations])
 
-    /* ── Start or get conversation ───────────────────── */
+        try {
+            const trimmed = content.trim()
+            // 1. Add to sub-collection
+            await addDoc(collection(db, 'conversations', convId, 'messages'), {
+                conversation_id: convId,
+                sender_id: user.id,
+                content: trimmed,
+                is_read: false,
+                createdAt: serverTimestamp(),
+            })
+
+            // 2. Update conversation summary
+            await setDoc(doc(db, 'conversations', convId), {
+                last_message: trimmed,
+                last_message_at: new Date().toISOString(),
+                updatedAt: serverTimestamp(),
+            }, { merge: true })
+
+            setSending(false)
+            return true
+        } catch (error) {
+            console.error('Error sending message:', error)
+            setSending(false)
+            return false
+        }
+    }, [user])
+
+    /* ── Get or Create Conversation ────────────────────── */
     const getOrCreateConversation = useCallback(async (otherUserId: string): Promise<string | null> => {
         if (!user) return null
-        const uid = user.id
 
-        // Check both orderings
-        const { data: existingData } = await supabase
-            .from('conversations')
-            .select('id')
-            .or(
-                `and(participant1.eq.${uid},participant2.eq.${otherUserId}),and(participant1.eq.${otherUserId},participant2.eq.${uid})`
+        try {
+            // Check existing
+            const q1 = query(
+                collection(db, 'conversations'),
+                where('participant1', '==', user.id),
+                where('participant2', '==', otherUserId)
             )
-            .maybeSingle()
+            const q2 = query(
+                collection(db, 'conversations'),
+                where('participant1', '==', otherUserId),
+                where('participant2', '==', user.id)
+            )
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const existing = existingData as any;
+            const [s1, s2] = await Promise.all([getDocs(q1), getDocs(q2)])
+            if (!s1.empty) return s1.docs[0].id
+            if (!s2.empty) return s2.docs[0].id
 
-        if (existing) return existing.id
+            // Create new
+            const newDocRef = await addDoc(collection(db, 'conversations'), {
+                participant1: user.id,
+                participant2: otherUserId,
+                last_message: null,
+                last_message_at: new Date().toISOString(),
+                createdAt: serverTimestamp(),
+            })
 
-        const { data: createdData } = await supabase
-            .from('conversations')
-            // @ts-expect-error Bypass type mismatch
-            .insert({ participant1: uid, participant2: otherUserId })
-            .select('id')
-            .single()
+            await loadConversations()
+            return newDocRef.id
+        } catch (error) {
+            console.error('Error creating conversation:', error)
+            return null
+        }
+    }, [user, loadConversations])
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const created = createdData as any;
-
-        await loadConversations()
-        return created?.id ?? null
-    }, [user, supabase, loadConversations])
+    const loadMessages = useCallback(async (_convId?: string) => {
+        // Handled reactively by onSnapshot
+    }, [])
 
     return {
-        conversations, messages, loading, sending,
-        sendMessage, getOrCreateConversation, loadMessages, loadConversations,
+        conversations,
+        messages,
+        loading,
+        sending,
+        sendMessage,
+        getOrCreateConversation,
+        loadMessages,
+        loadConversations,
     }
 }

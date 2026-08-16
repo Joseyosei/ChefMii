@@ -1,37 +1,68 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { adminAuth, adminDb } from '@/lib/firebase/admin'
+import { FieldValue } from 'firebase-admin/firestore'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function GET(_request: NextRequest) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const supabase = createClient() as any
-    const { data: { user } } = await supabase.auth.getUser()
+async function getUserIdFromRequest(request: NextRequest): Promise<string | null> {
+    const authHeader = request.headers.get('Authorization')
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const idToken = authHeader.split('Bearer ')[1]
+        try {
+            const decodedToken = await adminAuth.verifyIdToken(idToken)
+            return decodedToken.uid
+        } catch (e) {
+            console.warn('Profile route: ID token verification failed:', e)
+        }
+    }
+    return null
+}
 
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+export async function GET(request: NextRequest) {
+    try {
+        const userId = await getUserIdFromRequest(request)
+        if (!userId) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
 
-    const { data: profile } = await supabase
-        .from('profiles').select('*').eq('id', user.id).single()
+        const userDoc = await adminDb.collection('users').doc(userId).get()
+        if (!userDoc.exists) {
+            return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
+        }
 
-    return NextResponse.json({ user, profile })
+        return NextResponse.json({
+            profile: { id: userDoc.id, ...userDoc.data() },
+        })
+    } catch (error) {
+        console.error('Profile GET error:', error)
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    }
 }
 
 export async function PATCH(request: NextRequest) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const supabase = createClient() as any
-    const { data: { user } } = await supabase.auth.getUser()
+    try {
+        const userId = await getUserIdFromRequest(request)
+        if (!userId) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
 
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        const body = await request.json()
+        const { full_name, phone, avatar_url } = body
 
-    const { full_name, phone, avatar_url } = await request.json()
+        const updateData: Record<string, unknown> = {
+            updatedAt: FieldValue.serverTimestamp(),
+        }
+        if (full_name !== undefined) updateData.full_name = full_name
+        if (phone !== undefined) updateData.phone = phone
+        if (avatar_url !== undefined) updateData.avatar_url = avatar_url
 
-    const { data, error } = await supabase
-        .from('profiles')
-        .update({ full_name, phone, avatar_url, updated_at: new Date().toISOString() })
-        .eq('id', user.id)
-        .select()
-        .single()
+        const userRef = adminDb.collection('users').doc(userId)
+        await userRef.set(updateData, { merge: true })
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-
-    return NextResponse.json({ profile: data })
+        const updatedDoc = await userRef.get()
+        return NextResponse.json({
+            profile: { id: updatedDoc.id, ...updatedDoc.data() },
+        })
+    } catch (error) {
+        console.error('Profile PATCH error:', error)
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    }
 }

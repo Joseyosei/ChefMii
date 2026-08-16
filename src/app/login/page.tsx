@@ -5,18 +5,21 @@ export const dynamic = 'force-dynamic'
 import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { sendPasswordResetEmail } from 'firebase/auth'
+import { auth } from '@/lib/firebase/client'
 import { useAuth, dashboardHref } from '@/context/auth-context'
 import { ChefHat, Eye, EyeOff, Loader2 } from 'lucide-react'
 
 function LoginContent() {
     const router = useRouter()
     const params = useSearchParams()
-    const { signIn, user, role } = useAuth()
+    const { signIn, signInWithGoogle, user, role } = useAuth()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPw, setShowPw] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [googleLoading, setGoogleLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [forgotSent, setForgotSent] = useState(false)
 
@@ -38,15 +41,25 @@ function LoginContent() {
         router.replace(redirectTo)
     }
 
+    const handleGoogleSignIn = async () => {
+        setGoogleLoading(true); setError(null)
+        const { error } = await signInWithGoogle()
+        setGoogleLoading(false)
+        if (error) { setError(error); return }
+        const redirectTo = params.get('redirectTo') || dashboardHref(role)
+        router.replace(redirectTo)
+    }
+
     const handleForgotPassword = async () => {
         if (!email) { setError('Enter your email first, then click Forgot Password.'); return }
-        // Supabase password reset
-        const { createClient } = await import('@/lib/supabase/client')
-        const sb = createClient()
-        await sb.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/reset-password`,
-        })
-        setForgotSent(true)
+        try {
+            await sendPasswordResetEmail(auth, email)
+            setForgotSent(true)
+            setError(null)
+        } catch (err: unknown) {
+            const e = err as { message?: string }
+            setError(e.message || 'Failed to send reset email.')
+        }
     }
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -147,7 +160,7 @@ function LoginContent() {
                         <button
                             id="login-submit"
                             onClick={handleSignIn}
-                            disabled={loading}
+                            disabled={loading || googleLoading}
                             className="w-full min-h-[44px] py-3 gradient-brand text-white font-bold rounded-xl hover:opacity-90 disabled:opacity-50 transition-all text-sm flex items-center justify-center gap-2"
                         >
                             {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Signing in…</> : 'Sign In'}
@@ -161,9 +174,17 @@ function LoginContent() {
 
                         <button
                             type="button"
-                            className="w-full min-h-[44px] py-3 border border-border rounded-xl text-sm font-medium hover:bg-muted transition-colors flex items-center justify-center gap-3"
+                            onClick={handleGoogleSignIn}
+                            disabled={loading || googleLoading}
+                            className="w-full min-h-[44px] py-3 border border-border rounded-xl text-sm font-medium hover:bg-muted transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
                         >
-                            <span className="font-bold text-blue-600">G</span> Continue with Google
+                            {googleLoading ? (
+                                <Loader2 className="w-4 h-4 animate-spin text-terracotta" />
+                            ) : (
+                                <>
+                                    <span className="font-bold text-blue-600">G</span> Continue with Google
+                                </>
+                            )}
                         </button>
                     </div>
 

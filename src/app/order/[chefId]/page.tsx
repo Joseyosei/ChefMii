@@ -8,8 +8,39 @@ import { useParams } from 'next/navigation'
 import { Navbar } from '@/components/layout/navbar'
 import { X, Heart, Share2, Search, ShoppingBag, Plus, Minus } from 'lucide-react'
 
+export interface MenuItem {
+  id: string
+  name: string
+  description: string
+  price: number
+  image: string
+  badge?: string
+  likes?: number
+  reviews?: number
+}
+
+export interface MenuSection {
+  id: string
+  category: string
+  items: MenuItem[]
+}
+
+export interface ChefDetail {
+  name: string
+  cuisine: string
+  rating: number
+  reviews: number
+  distance: string
+  time: string
+  image: string
+  tagline: string
+  badge: string
+  deliveryFee: string
+  menu: MenuSection[]
+}
+
 // Mock chef data
-const CHEF_DATA: Record<string, any> = {
+const CHEF_DATA: Record<string, ChefDetail> = {
   '11111111-1111-1111-1111-111111111111': {
     name: 'Marco Rossi',
     cuisine: 'Italian',

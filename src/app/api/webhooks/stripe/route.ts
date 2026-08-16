@@ -1,13 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/server'
-import { createClient } from '@/lib/supabase/server'
+import { adminDb } from '@/lib/firebase/admin'
+import { FieldValue } from 'firebase-admin/firestore'
 import Stripe from 'stripe'
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || ''
+
+async function updateBookingByPaymentIntent(paymentIntentId: string, status: string) {
+    try {
+        const snap = await adminDb.collection('bookings')
+            .where('stripe_payment_intent_id', '==', paymentIntentId)
+            .get()
+
+        if (snap.empty) {
+            console.log(`No booking found for payment intent: ${paymentIntentId}`)
+            return
+        }
+
+        const batch = adminDb.batch()
+        snap.docs.forEach(doc => {
+            batch.update(doc.ref, {
+                status,
+                updatedAt: FieldValue.serverTimestamp(),
+            })
+        })
+        await batch.commit()
+    } catch (err) {
+        console.error(`Failed to update booking status for intent ${paymentIntentId}:`, err)
+    }
+}
 
 export async function POST(request: NextRequest) {
     const body = await request.text()
-    const signature = request.headers.get('stripe-signature')!
+    const signature = request.headers.get('stripe-signature') || ''
 
     let event: Stripe.Event
 
@@ -18,30 +43,22 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const supabase = createClient() as any
-
     switch (event.type) {
         case 'payment_intent.succeeded': {
             const pi = event.data.object as Stripe.PaymentIntent
-            await supabase.from('bookings')
-                .update({ status: 'confirmed', updated_at: new Date().toISOString() })
-                .eq('stripe_payment_intent_id', pi.id)
+            await updateBookingByPaymentIntent(pi.id, 'confirmed')
             break
         }
         case 'payment_intent.payment_failed': {
             const pi = event.data.object as Stripe.PaymentIntent
-            await supabase.from('bookings')
-                .update({ status: 'cancelled', updated_at: new Date().toISOString() })
-                .eq('stripe_payment_intent_id', pi.id)
+            await updateBookingByPaymentIntent(pi.id, 'cancelled')
             break
         }
         case 'charge.refunded': {
             const charge = event.data.object as Stripe.Charge
             if (charge.payment_intent) {
-                await supabase.from('bookings')
-                    .update({ status: 'refunded', updated_at: new Date().toISOString() })
-                    .eq('stripe_payment_intent_id', charge.payment_intent)
+                const intentId = typeof charge.payment_intent === 'string' ? charge.payment_intent : charge.payment_intent.id
+                await updateBookingByPaymentIntent(intentId, 'refunded')
             }
             break
         }
