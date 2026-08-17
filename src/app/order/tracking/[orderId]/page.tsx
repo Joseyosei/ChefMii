@@ -100,7 +100,7 @@ export default function OrderTrackingPage() {
     return (
         <>
             <Navbar />
-            <main className="min-h-screen bg-stone-50 dark:bg-stone-950 pb-24">
+            <main className="min-h-screen bg-stone-50 dark:bg-stone-950 pb-24 pt-24 sm:pt-28">
                 {/* Top Navigation Bar */}
                 <div className="bg-white dark:bg-stone-900 border-b border-border shadow-xs">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">

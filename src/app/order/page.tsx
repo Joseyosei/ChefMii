@@ -277,10 +277,10 @@ export default function OrderPage() {
     return (
         <>
             <Navbar />
-            <main className="min-h-screen bg-stone-50 dark:bg-stone-950 pb-20">
+            <main className="min-h-screen bg-stone-50 dark:bg-stone-950 pb-20 pt-24 sm:pt-28">
                 {/* Active Live Order Floating Banner */}
-                <div className="bg-stone-900 text-white px-4 py-2.5 text-xs font-medium flex items-center justify-between border-b border-stone-800">
-                    <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-4">
+                    <div className="bg-stone-900 text-white px-4 py-3 rounded-2xl text-xs font-medium flex items-center justify-between border border-stone-800 shadow-md">
                         <div className="flex items-center gap-2">
                             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                             <span>Live Order #CF892 is on its way with driver Ahmed (ETA 12 mins)</span>
@@ -296,7 +296,7 @@ export default function OrderPage() {
                 </div>
 
                 {/* Uber-Style Top Navigation & Address Bar */}
-                <section className="bg-white dark:bg-stone-900 border-b border-border shadow-xs sticky top-0 z-30">
+                <section className="bg-white dark:bg-stone-900 border-b border-border shadow-xs sticky top-20 z-20">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
                         {/* Delivery / Pickup Pill Toggle */}
                         <div className="flex items-center bg-stone-100 dark:bg-stone-800 p-1 rounded-full border border-border shrink-0">

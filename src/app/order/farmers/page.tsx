@@ -214,7 +214,7 @@ function FarmersContent() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-background pb-32">
+      <main className="min-h-screen bg-background pt-24 sm:pt-28 pb-32">
         {/* Hero Section */}
         <div className="relative h-64 overflow-hidden bg-muted">
           <img

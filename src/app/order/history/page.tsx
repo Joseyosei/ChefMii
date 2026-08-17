@@ -89,7 +89,7 @@ function OrderHistoryContent() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-background pt-24 sm:pt-28 pb-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
           {/* Header */}
           <div className="mb-8">

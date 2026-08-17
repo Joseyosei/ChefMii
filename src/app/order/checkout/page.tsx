@@ -34,7 +34,7 @@ function CheckoutContent() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-background pt-24 sm:pt-28 pb-16">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
           {/* Header */}
           <div className="flex items-center gap-4 mb-8">
