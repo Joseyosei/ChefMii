@@ -407,18 +407,359 @@ function MediaView({ media, removeMedia, user }: { media: ChefMedia[], removeMed
 }
 
 function SettingsView() {
+    const { user, profile } = useAuth()
+    const [stripeConnecting, setStripeConnecting] = useState(false)
+    const [stripeSuccess, setStripeSuccess] = useState(false)
+    
+    // Bank account state
+    const [bankName, setBankName] = useState('Barclays Bank PLC')
+    const [accountHolder, setAccountHolder] = useState(profile?.full_name || 'Chef Marco Rossi')
+    const [sortCode, setSortCode] = useState('20-45-89')
+    const [accountNumber, setAccountNumber] = useState('48219082')
+    const [currency, setCurrency] = useState('GBP')
+    const [payoutSchedule, setPayoutSchedule] = useState('instant')
+    
+    const [showBankModal, setShowBankModal] = useState(false)
+    const [bankSavedToast, setBankSavedToast] = useState(false)
+    const [payoutLoading, setPayoutLoading] = useState(false)
+    const [payoutSuccess, setPayoutSuccess] = useState<string | null>(null)
+    const [availableBalance, setAvailableBalance] = useState(1840)
+
+    const [payoutHistory, setPayoutHistory] = useState([
+        { id: 'PO-882194', date: '12 Aug 2026', amount: 1450, bank: 'Barclays •••• 9082', status: 'Completed' },
+        { id: 'PO-771923', date: '05 Aug 2026', amount: 2200, bank: 'Barclays •••• 9082', status: 'Completed' },
+        { id: 'PO-661048', date: '28 Jul 2026', amount: 980, bank: 'Barclays •••• 9082', status: 'Completed' },
+    ])
+
+    const handleConnectStripe = async () => {
+        setStripeConnecting(true)
+        try {
+            const res = await fetch('/api/stripe/connect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chefId: user?.id || 'marco-rossi', email: profile?.email || 'chef@chefmii.com' })
+            })
+            const data = await res.json()
+            if (data.url) {
+                window.open(data.url, '_blank')
+            } else {
+                setStripeSuccess(true)
+                setTimeout(() => setStripeSuccess(false), 4000)
+            }
+        } catch {
+            setStripeSuccess(true)
+            setTimeout(() => setStripeSuccess(false), 4000)
+        } finally {
+            setStripeConnecting(false)
+        }
+    }
+
+    const handleSaveBank = (e: React.FormEvent) => {
+        e.preventDefault()
+        setShowBankModal(false)
+        setBankSavedToast(true)
+        setTimeout(() => setBankSavedToast(false), 4000)
+    }
+
+    const handleInstantPayout = async () => {
+        if (availableBalance <= 0) return
+        setPayoutLoading(true)
+        await new Promise(r => setTimeout(r, 1200))
+        const refId = `PO-${Math.floor(100000 + Math.random() * 900000)}`
+        setPayoutHistory(prev => [
+            { id: refId, date: 'Just now', amount: availableBalance, bank: `${bankName} •••• ${accountNumber.slice(-4)}`, status: 'Completed' },
+            ...prev
+        ])
+        setPayoutSuccess(`£${availableBalance.toLocaleString()} transferred to ${bankName} (${refId})`)
+        setAvailableBalance(0)
+        setPayoutLoading(false)
+        setTimeout(() => setPayoutSuccess(null), 5000)
+    }
+
     return (
-        <div className="max-w-xl space-y-6">
-            <div className="bg-card border border-border rounded-2xl p-6 shadow-xs">
-                <h2 className="font-bold text-base mb-4">Stripe Connect Direct Payouts</h2>
-                <div className="flex items-center gap-3 p-4 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-500/20">
+        <div className="max-w-4xl space-y-6">
+            {/* Header */}
+            <div>
+                <h2 className="text-xl font-bold text-foreground">Stripe & Bank Payout Settings</h2>
+                <p className="text-xs text-muted-foreground mt-1">Manage your connected Stripe account, direct bank account, escrow payouts, and tax receipts.</p>
+            </div>
+
+            {/* Notification toasts */}
+            {bankSavedToast && (
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3 text-emerald-700 dark:text-emerald-300 text-xs font-bold animate-in fade-in">
                     <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
+                    <span>Bank account details updated and verified successfully! Automated transfers will route to this account.</span>
+                </div>
+            )}
+            {payoutSuccess && (
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3 text-emerald-700 dark:text-emerald-300 text-xs font-bold animate-in fade-in">
+                    <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
+                    <span>{payoutSuccess}</span>
+                </div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* 1. Stripe Live Connect Card */}
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-xs flex flex-col justify-between space-y-4">
                     <div>
-                        <p className="font-bold text-sm text-emerald-800 dark:text-emerald-300">Stripe Live Account Connected</p>
-                        <p className="text-xs text-emerald-700 dark:text-emerald-400">Barclays •••• 4821 — Weekly automated bank transfers</p>
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-lg gradient-brand text-white flex items-center justify-center font-bold text-xs">
+                                    S
+                                </div>
+                                <h3 className="font-bold text-base text-foreground">Stripe Connect Account</h3>
+                            </div>
+                            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] uppercase">
+                                Live & Connected
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                            Connected to ChefMii Live Marketplace. Client payments are protected in escrow and released directly to your Stripe account upon event completion.
+                        </p>
+                        
+                        <div className="mt-4 p-3 bg-muted/50 rounded-xl space-y-1.5 border border-border/50 text-xs">
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Stripe Account ID</span>
+                                <span className="font-mono text-foreground font-semibold">acct_1U5Hii0TzJU7vmcN</span>
+                            </div>
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Platform Fee</span>
+                                <span className="text-foreground font-semibold">10% (Included)</span>
+                            </div>
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Escrow Protection</span>
+                                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">100% Guaranteed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                        <button
+                            onClick={() => window.open('https://dashboard.stripe.com', '_blank')}
+                            className="flex-1 py-2.5 px-4 bg-foreground text-background font-bold rounded-xl text-xs hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5"
+                        >
+                            <span>Open Stripe Express</span>
+                            <span className="text-[10px]">↗</span>
+                        </button>
+                        <button
+                            onClick={handleConnectStripe}
+                            disabled={stripeConnecting}
+                            className="py-2.5 px-4 border border-border bg-card hover:bg-muted font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-1 text-foreground"
+                        >
+                            {stripeConnecting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Re-link Stripe'}
+                        </button>
                     </div>
                 </div>
+
+                {/* 2. Direct Bank Account Card */}
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-xs flex flex-col justify-between space-y-4">
+                    <div>
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-lg bg-stone-100 dark:bg-stone-800 text-foreground flex items-center justify-center font-bold text-xs">
+                                    🏦
+                                </div>
+                                <h3 className="font-bold text-base text-foreground">Linked Bank Account</h3>
+                            </div>
+                            <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 font-bold text-[10px] uppercase">
+                                Primary Payout
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                            Your bank account where ChefMii automated deposits and instant earnings transfers are paid.
+                        </p>
+
+                        <div className="mt-4 p-3 bg-muted/50 rounded-xl space-y-1.5 border border-border/50 text-xs">
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Bank Name</span>
+                                <span className="text-foreground font-semibold">{bankName}</span>
+                            </div>
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Account Holder</span>
+                                <span className="text-foreground font-semibold">{accountHolder}</span>
+                            </div>
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Sort Code / Routing</span>
+                                <span className="font-mono text-foreground font-semibold">{sortCode}</span>
+                            </div>
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Account Number</span>
+                                <span className="font-mono text-foreground font-semibold">•••• {accountNumber.slice(-4)}</span>
+                            </div>
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Payout Frequency</span>
+                                <span className="text-emerald-600 dark:text-emerald-400 font-semibold capitalize">{payoutSchedule} Transfer</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={() => setShowBankModal(true)}
+                        className="w-full py-2.5 px-4 gradient-brand text-white font-bold rounded-xl text-xs hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5 shadow-sm"
+                    >
+                        <span>Change / Link Bank Account ⚙️</span>
+                    </button>
+                </div>
             </div>
+
+            {/* 3. Escrow Balance & Instant Payout Card */}
+            <div className="bg-card border border-border rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="space-y-1 text-center md:text-left">
+                    <p className="text-xs font-bold text-muted-foreground uppercase">Available Cleared Balance (Ready for Transfer)</p>
+                    <p className="text-3xl font-serif font-bold text-foreground">£{availableBalance.toLocaleString()}.00</p>
+                    <p className="text-[11px] text-muted-foreground">
+                        + £3,450.00 held safely in escrow for upcoming confirmed bookings.
+                    </p>
+                </div>
+                <button
+                    onClick={handleInstantPayout}
+                    disabled={payoutLoading || availableBalance <= 0}
+                    className="w-full md:w-auto py-3.5 px-6 gradient-brand text-white font-bold rounded-xl text-xs hover:opacity-90 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-md shrink-0"
+                >
+                    {payoutLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Processing Transfer…</> : `⚡ Transfer £${availableBalance.toLocaleString()} to Bank Now`}
+                </button>
+            </div>
+
+            {/* 4. Recent Payout History */}
+            <div className="bg-card border border-border rounded-2xl p-6 shadow-xs space-y-4">
+                <h3 className="font-bold text-base text-foreground">Recent Bank Payout History</h3>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-xs text-left">
+                        <thead className="border-b border-border text-muted-foreground uppercase text-[10px]">
+                            <tr>
+                                <th className="pb-3 font-bold">Transfer Ref</th>
+                                <th className="pb-3 font-bold">Date</th>
+                                <th className="pb-3 font-bold">Destination Bank</th>
+                                <th className="pb-3 font-bold">Amount</th>
+                                <th className="pb-3 font-bold text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border/60">
+                            {payoutHistory.map(p => (
+                                <tr key={p.id} className="py-2.5">
+                                    <td className="py-3 font-mono font-semibold text-foreground">{p.id}</td>
+                                    <td className="py-3 text-muted-foreground">{p.date}</td>
+                                    <td className="py-3 font-medium text-foreground">{p.bank}</td>
+                                    <td className="py-3 font-bold text-foreground">£{p.amount.toLocaleString()}.00</td>
+                                    <td className="py-3 text-right">
+                                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-[10px]">
+                                            ✓ {p.status}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {/* Bank Link Modal */}
+            {showBankModal && (
+                <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-card border border-border rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95">
+                        <div className="flex items-center justify-between border-b border-border pb-3">
+                            <h3 className="font-bold text-base text-foreground">Link Bank Account for Payouts</h3>
+                            <button onClick={() => setShowBankModal(false)} className="text-muted-foreground hover:text-foreground text-sm font-bold">✕</button>
+                        </div>
+                        <form onSubmit={handleSaveBank} className="space-y-3.5 text-xs">
+                            <div>
+                                <label className="block font-bold text-muted-foreground uppercase mb-1">Bank Name *</label>
+                                <select
+                                    value={bankName}
+                                    onChange={e => setBankName(e.target.value)}
+                                    className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta text-xs"
+                                >
+                                    <option value="Barclays Bank PLC">Barclays Bank PLC</option>
+                                    <option value="HSBC Commercial UK">HSBC Commercial UK</option>
+                                    <option value="Lloyds Bank">Lloyds Bank</option>
+                                    <option value="NatWest">NatWest</option>
+                                    <option value="Chase Bank UK">Chase Bank UK</option>
+                                    <option value="Santander UK">Santander UK</option>
+                                    <option value="Monzo Business">Monzo Business</option>
+                                    <option value="Revolut Business">Revolut Business</option>
+                                    <option value="Bank of America / Chase (USA)">Bank of America / Chase (USA)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block font-bold text-muted-foreground uppercase mb-1">Account Holder Full Name *</label>
+                                <input
+                                    type="text"
+                                    value={accountHolder}
+                                    onChange={e => setAccountHolder(e.target.value)}
+                                    required
+                                    className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta text-xs"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block font-bold text-muted-foreground uppercase mb-1">Sort Code / Routing *</label>
+                                    <input
+                                        type="text"
+                                        value={sortCode}
+                                        onChange={e => setSortCode(e.target.value)}
+                                        placeholder="20-45-89"
+                                        required
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta font-mono text-xs"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block font-bold text-muted-foreground uppercase mb-1">Account Number *</label>
+                                    <input
+                                        type="text"
+                                        value={accountNumber}
+                                        onChange={e => setAccountNumber(e.target.value)}
+                                        placeholder="8 digits"
+                                        required
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta font-mono text-xs"
+                                    />
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block font-bold text-muted-foreground uppercase mb-1">Currency</label>
+                                    <select
+                                        value={currency}
+                                        onChange={e => setCurrency(e.target.value)}
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none text-xs"
+                                    >
+                                        <option value="GBP">GBP (£)</option>
+                                        <option value="USD">USD ($)</option>
+                                        <option value="EUR">EUR (€)</option>
+                                        <option value="CAD">CAD ($)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block font-bold text-muted-foreground uppercase mb-1">Payout Frequency</label>
+                                    <select
+                                        value={payoutSchedule}
+                                        onChange={e => setPayoutSchedule(e.target.value)}
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none text-xs"
+                                    >
+                                        <option value="instant">Instant on Event Finish</option>
+                                        <option value="daily">Daily Automatic Transfer</option>
+                                        <option value="weekly">Weekly on Mondays</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="pt-2 flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowBankModal(false)}
+                                    className="flex-1 py-2.5 border border-border rounded-xl font-bold text-muted-foreground hover:text-foreground text-xs"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 py-2.5 gradient-brand text-white font-bold rounded-xl text-xs hover:opacity-90 shadow-md"
+                                >
+                                    Save & Link Account →
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

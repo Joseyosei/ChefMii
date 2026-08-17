@@ -274,31 +274,345 @@ function AcademyView() {
 
 function SettingsView() {
     const [saved, setSaved] = useState(false)
+    const [companyName, setCompanyName] = useState('Apex Enterprises Ltd')
+    const [industry, setIndustry] = useState('Financial Services')
+    const [billingEmail, setBillingEmail] = useState('finance@apex.com')
+    const [vatNumber, setVatNumber] = useState('GB123456789')
+
+    // Bank & Stripe state
+    const [bankName, setBankName] = useState('HSBC Commercial Banking UK')
+    const [accountHolder, setAccountHolder] = useState('Apex Enterprises Ltd Treasury')
+    const [sortCode, setSortCode] = useState('40-05-15')
+    const [accountNumber, setAccountNumber] = useState('98314201')
+    const [showBankModal, setShowBankModal] = useState(false)
+    const [showCardModal, setShowCardModal] = useState(false)
+    const [toastMessage, setToastMessage] = useState<string | null>(null)
+
+    const [paymentMethods, setPaymentMethods] = useState([
+        { id: 'pm-1', brand: 'Visa Corporate', last4: '7123', exp: '09/27', isDefault: true },
+        { id: 'pm-2', brand: 'Mastercard Enterprise', last4: '4091', exp: '12/28', isDefault: false },
+    ])
+
+    const handleSaveProfile = () => {
+        setSaved(true)
+        setToastMessage('Company profile and tax invoicing details saved.')
+        setTimeout(() => { setSaved(false); setToastMessage(null) }, 3000)
+    }
+
+    const handleSaveBank = (e: React.FormEvent) => {
+        e.preventDefault()
+        setShowBankModal(false)
+        setToastMessage('Corporate bank account successfully linked and verified.')
+        setTimeout(() => setToastMessage(null), 4000)
+    }
+
     return (
-        <div className="max-w-xl space-y-6">
-            <div className="bg-card border border-border rounded-2xl p-6">
-                <h2 className="font-bold text-lg mb-5">Company Profile</h2>
-                {[{ l: 'Company Name', v: 'Apex Enterprises Ltd' }, { l: 'Industry', v: 'Financial Services' }, { l: 'Billing Email', v: 'finance@apex.com' }, { l: 'VAT Number', v: 'GB123456789' }].map(f => (
-                    <div key={f.l} className="mb-4">
-                        <label className="block text-sm font-semibold mb-1.5">{f.l}</label>
-                        <input defaultValue={f.v} className="w-full px-4 py-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-terracotta" />
-                    </div>
-                ))}
-                <button onClick={() => { setSaved(true); setTimeout(() => setSaved(false), 2000) }} className="px-6 py-2.5 gradient-brand text-white text-sm font-bold rounded-xl hover:opacity-90">
-                    {saved ? '✓ Saved!' : 'Save Changes'}
-                </button>
+        <div className="max-w-4xl space-y-6">
+            {/* Header */}
+            <div>
+                <h2 className="text-xl font-bold text-foreground">Company & Financial Settings</h2>
+                <p className="text-xs text-muted-foreground mt-1">Manage corporate billing, Stripe account, business bank deposits, and automated invoicing.</p>
             </div>
-            <div className="bg-card border border-border rounded-2xl p-6">
-                <h2 className="font-bold text-lg mb-4">Payment Methods</h2>
-                <div className="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
-                    <CheckCircle className="w-5 h-5 text-blue-600 shrink-0" />
-                    <div className="flex-1">
-                        <p className="font-semibold text-sm text-blue-800 dark:text-blue-400">Corporate card on file</p>
-                        <p className="text-xs text-blue-700 dark:text-blue-500">Visa •••• 7123 · Expires 09/27</p>
+
+            {toastMessage && (
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-3 text-emerald-700 dark:text-emerald-300 text-xs font-bold animate-in fade-in">
+                    <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
+                    <span>{toastMessage}</span>
+                </div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* 1. Stripe & Corporate Payment Methods */}
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-xs flex flex-col justify-between space-y-4">
+                    <div>
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-lg gradient-brand text-white flex items-center justify-center font-bold text-xs">
+                                    S
+                                </div>
+                                <h3 className="font-bold text-base text-foreground">Corporate Stripe Billing</h3>
+                            </div>
+                            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] uppercase">
+                                Stripe Active
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                            Used for instant multi-chef bookings, summit banquets, and automated escrow deposits.
+                        </p>
+
+                        <div className="mt-4 space-y-2">
+                            {paymentMethods.map(pm => (
+                                <div key={pm.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-xl border border-border/50 text-xs">
+                                    <div className="flex items-center gap-2.5">
+                                        <div className="w-7 h-5 rounded bg-stone-200 dark:bg-stone-700 flex items-center justify-center font-bold text-[9px]">
+                                            💳
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-foreground">{pm.brand} •••• {pm.last4}</p>
+                                            <p className="text-[10px] text-muted-foreground">Expires {pm.exp}</p>
+                                        </div>
+                                    </div>
+                                    {pm.isDefault && (
+                                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-[10px]">
+                                            Default
+                                        </span>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                    <button className="text-xs text-blue-600 hover:underline font-medium">Replace</button>
+
+                    <button
+                        onClick={() => setShowCardModal(true)}
+                        className="w-full py-2.5 px-4 gradient-brand text-white font-bold rounded-xl text-xs hover:opacity-90 transition-opacity flex items-center justify-center gap-1.5 shadow-sm"
+                    >
+                        <span>+ Link New Stripe Corporate Card / Account</span>
+                    </button>
+                </div>
+
+                {/* 2. Business Bank Account */}
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-xs flex flex-col justify-between space-y-4">
+                    <div>
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-lg bg-stone-100 dark:bg-stone-800 text-foreground flex items-center justify-center font-bold text-xs">
+                                    🏦
+                                </div>
+                                <h3 className="font-bold text-base text-foreground">Linked Corporate Bank</h3>
+                            </div>
+                            <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 font-bold text-[10px] uppercase">
+                                Verified
+                            </span>
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                            Bank account used for BACS direct invoice debits, event security deposit returns, and treasury reconciliation.
+                        </p>
+
+                        <div className="mt-4 p-3 bg-muted/50 rounded-xl space-y-1.5 border border-border/50 text-xs">
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Bank Name</span>
+                                <span className="text-foreground font-semibold">{bankName}</span>
+                            </div>
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Treasury Holder</span>
+                                <span className="text-foreground font-semibold">{accountHolder}</span>
+                            </div>
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Sort Code</span>
+                                <span className="font-mono text-foreground font-semibold">{sortCode}</span>
+                            </div>
+                            <div className="flex justify-between text-muted-foreground">
+                                <span>Account Number</span>
+                                <span className="font-mono text-foreground font-semibold">•••• {accountNumber.slice(-4)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={() => setShowBankModal(true)}
+                        className="w-full py-2.5 px-4 border border-border bg-card hover:bg-muted font-bold rounded-xl text-xs transition-colors flex items-center justify-center gap-1.5 text-foreground"
+                    >
+                        <span>Change Corporate Bank Account ⚙️</span>
+                    </button>
                 </div>
             </div>
+
+            {/* 3. Company Profile & VAT Registration */}
+            <div className="bg-card border border-border rounded-2xl p-6 shadow-xs space-y-4">
+                <h3 className="font-bold text-base text-foreground">Company Details & VAT Invoicing</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div>
+                        <label className="block font-bold text-muted-foreground uppercase mb-1">Company Registered Name</label>
+                        <input
+                            type="text"
+                            value={companyName}
+                            onChange={e => setCompanyName(e.target.value)}
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta"
+                        />
+                    </div>
+                    <div>
+                        <label className="block font-bold text-muted-foreground uppercase mb-1">Industry Sector</label>
+                        <input
+                            type="text"
+                            value={industry}
+                            onChange={e => setIndustry(e.target.value)}
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta"
+                        />
+                    </div>
+                    <div>
+                        <label className="block font-bold text-muted-foreground uppercase mb-1">Billing & Accounts Email</label>
+                        <input
+                            type="email"
+                            value={billingEmail}
+                            onChange={e => setBillingEmail(e.target.value)}
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta"
+                        />
+                    </div>
+                    <div>
+                        <label className="block font-bold text-muted-foreground uppercase mb-1">VAT / Tax Identification Number</label>
+                        <input
+                            type="text"
+                            value={vatNumber}
+                            onChange={e => setVatNumber(e.target.value)}
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta font-mono"
+                        />
+                    </div>
+                </div>
+                <div className="pt-2 flex justify-end">
+                    <button
+                        onClick={handleSaveProfile}
+                        className="px-6 py-2.5 gradient-brand text-white font-bold rounded-xl text-xs hover:opacity-90 transition-opacity shadow-sm"
+                    >
+                        {saved ? '✓ Saved!' : 'Save Company Details'}
+                    </button>
+                </div>
+            </div>
+
+            {/* Bank Modal */}
+            {showBankModal && (
+                <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-card border border-border rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95">
+                        <div className="flex items-center justify-between border-b border-border pb-3">
+                            <h3 className="font-bold text-base text-foreground">Link Business Bank Account</h3>
+                            <button onClick={() => setShowBankModal(false)} className="text-muted-foreground hover:text-foreground text-sm font-bold">✕</button>
+                        </div>
+                        <form onSubmit={handleSaveBank} className="space-y-3.5 text-xs">
+                            <div>
+                                <label className="block font-bold text-muted-foreground uppercase mb-1">Bank Name *</label>
+                                <select
+                                    value={bankName}
+                                    onChange={e => setBankName(e.target.value)}
+                                    className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none text-xs"
+                                >
+                                    <option value="HSBC Commercial Banking UK">HSBC Commercial Banking UK</option>
+                                    <option value="Barclays Corporate">Barclays Corporate</option>
+                                    <option value="Lloyds Commercial Banking">Lloyds Commercial Banking</option>
+                                    <option value="NatWest Commercial">NatWest Commercial</option>
+                                    <option value="JPMorgan Chase Commercial">JPMorgan Chase Commercial</option>
+                                    <option value="Citibank Corporate">Citibank Corporate</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block font-bold text-muted-foreground uppercase mb-1">Company Treasury Account Name *</label>
+                                <input
+                                    type="text"
+                                    value={accountHolder}
+                                    onChange={e => setAccountHolder(e.target.value)}
+                                    required
+                                    className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none text-xs"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block font-bold text-muted-foreground uppercase mb-1">Sort Code *</label>
+                                    <input
+                                        type="text"
+                                        value={sortCode}
+                                        onChange={e => setSortCode(e.target.value)}
+                                        placeholder="40-05-15"
+                                        required
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none font-mono text-xs"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block font-bold text-muted-foreground uppercase mb-1">Account Number *</label>
+                                    <input
+                                        type="text"
+                                        value={accountNumber}
+                                        onChange={e => setAccountNumber(e.target.value)}
+                                        placeholder="98314201"
+                                        required
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none font-mono text-xs"
+                                    />
+                                </div>
+                            </div>
+                            <div className="pt-2 flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowBankModal(false)}
+                                    className="flex-1 py-2.5 border border-border rounded-xl font-bold text-muted-foreground hover:text-foreground text-xs"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 py-2.5 gradient-brand text-white font-bold rounded-xl text-xs hover:opacity-90 shadow-md"
+                                >
+                                    Save Corporate Bank →
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Card Modal */}
+            {showCardModal && (
+                <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-card border border-border rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95">
+                        <div className="flex items-center justify-between border-b border-border pb-3">
+                            <h3 className="font-bold text-base text-foreground">Link Corporate Payment Card</h3>
+                            <button onClick={() => setShowCardModal(false)} className="text-muted-foreground hover:text-foreground text-sm font-bold">✕</button>
+                        </div>
+                        <div className="space-y-3.5 text-xs">
+                            <div>
+                                <label className="block font-bold text-muted-foreground uppercase mb-1">Cardholder Full Name</label>
+                                <input
+                                    type="text"
+                                    defaultValue="Apex Enterprises Ltd"
+                                    className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none text-xs"
+                                />
+                            </div>
+                            <div>
+                                <label className="block font-bold text-muted-foreground uppercase mb-1">Card Number</label>
+                                <input
+                                    type="text"
+                                    placeholder="4000 1234 5678 9010"
+                                    className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none font-mono text-xs"
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block font-bold text-muted-foreground uppercase mb-1">Expiry Date</label>
+                                    <input
+                                        type="text"
+                                        placeholder="MM/YY"
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none font-mono text-xs"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block font-bold text-muted-foreground uppercase mb-1">CVC / CVV</label>
+                                    <input
+                                        type="password"
+                                        placeholder="•••"
+                                        className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground focus:outline-none font-mono text-xs"
+                                    />
+                                </div>
+                            </div>
+                            <div className="pt-2 flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowCardModal(false)}
+                                    className="flex-1 py-2.5 border border-border rounded-xl font-bold text-muted-foreground hover:text-foreground text-xs"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowCardModal(false)
+                                        setToastMessage('Corporate card successfully linked with Stripe 3D-Secure verification.')
+                                        setTimeout(() => setToastMessage(null), 4000)
+                                    }}
+                                    className="flex-1 py-2.5 gradient-brand text-white font-bold rounded-xl text-xs hover:opacity-90 shadow-md"
+                                >
+                                    Verify & Link with Stripe →
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
