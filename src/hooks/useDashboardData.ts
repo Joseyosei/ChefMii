@@ -28,6 +28,7 @@ export interface BookingRequest {
     status: 'pending' | 'confirmed' | 'declined' | 'completed' | 'cancelled'
     created_at: string
     user?: { full_name: string | null; avatar_url?: string | null }
+    client_name?: string
 }
 
 export interface Conversation {
