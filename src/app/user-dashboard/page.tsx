@@ -142,11 +142,17 @@ function BookingsView({ bookings }: { bookings: UserBooking[] }) {
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center justify-between sm:justify-end gap-4">
-                                    <div className="text-right">
+                                <div className="flex items-center justify-between sm:justify-end gap-3 flex-wrap">
+                                    <div className="text-right mr-2">
                                         <span className="text-[10px] text-muted-foreground block uppercase font-bold">Total</span>
                                         <span className="font-black text-lg text-terracotta">£{b.total_price}</span>
                                     </div>
+                                    <Link
+                                        href="/reviews"
+                                        className="px-3.5 py-2 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-xs font-bold rounded-xl hover:bg-amber-500 hover:text-white transition-all flex items-center gap-1"
+                                    >
+                                        ⭐ Rate Chef
+                                    </Link>
                                     <Link
                                         href={`/order/tracking/${b.chef_id || 'marco-rossi'}`}
                                         className="px-4 py-2 bg-stone-900 dark:bg-stone-100 text-white dark:text-black text-xs font-bold rounded-xl hover:opacity-90 transition-opacity"
@@ -159,6 +165,43 @@ function BookingsView({ bookings }: { bookings: UserBooking[] }) {
                     ))}
                 </div>
             )}
+        </div>
+    )
+}
+
+function UserReviewsView() {
+    return (
+        <div className="space-y-6">
+            <div className="bg-card border border-border rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h2 className="text-xl font-bold font-serif text-foreground">Verified Dining Reviews & Feedback</h2>
+                    <p className="text-xs text-muted-foreground mt-1">Share your dining feedback or browse reviews from fellow clients worldwide.</p>
+                </div>
+                <Link
+                    href="/reviews"
+                    className="px-5 py-2.5 gradient-brand text-white text-xs font-bold rounded-xl shadow-xs hover:opacity-90 transition-opacity shrink-0 flex items-center gap-1.5"
+                >
+                    <Star className="w-3.5 h-3.5 fill-white" />
+                    Open Public Reviews Hub →
+                </Link>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
+                    <span className="text-xs font-bold text-terracotta uppercase">100% Escrow Feedback</span>
+                    <h3 className="font-bold text-base text-foreground">Why Review Your Chef?</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                        Reviews help our Michelin-trained private chefs build their global reputation, unlock higher booking tiers, and maintain our strict 7-stage quality vetting standards.
+                    </p>
+                </div>
+                <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
+                    <span className="text-xs font-bold text-emerald-600 uppercase">Earn Loyalty Credits</span>
+                    <h3 className="font-bold text-base text-foreground">Get £25 Off Your Next Feast</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                        Every verified review submitted with a dining photo credits your account with £25 toward your next private chef booking or marketplace order.
+                    </p>
+                </div>
+            </div>
         </div>
     )
 }
@@ -636,6 +679,7 @@ export default function UserDashboardPage() {
         { id: 'overview', label: 'Overview', icon: LayoutDashboard },
         { id: 'bookings', label: 'Bookings', icon: Calendar, badge: bookings.length > 0 ? bookings.length : undefined },
         { id: 'book', label: 'Book Master Chef', icon: ChefHat },
+        { id: 'reviews', label: 'Reviews & Feedback', icon: Star },
         { id: 'messages', label: 'Messages', icon: MessageSquare, badge: pendingMessages > 0 ? pendingMessages : undefined },
         { id: 'settings', label: 'Settings', icon: Settings },
     ]
@@ -734,6 +778,7 @@ export default function UserDashboardPage() {
                         {tab === 'overview' && <OverviewView userName={profile?.full_name || 'Foodie'} goTo={setTab} bookings={bookings} />}
                         {tab === 'bookings' && <BookingsView bookings={bookings} />}
                         {tab === 'book' && <BookChefView chefs={chefs} />}
+                        {tab === 'reviews' && <UserReviewsView />}
                         {tab === 'messages' && <MessagesView conversations={conversations} />}
                         {tab === 'settings' && <SettingsView profile={profile as any} />}
                     </div>

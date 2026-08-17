@@ -9,6 +9,7 @@ import { BrandLogo } from '@/components/layout/logo'
 const footerLinks = {
     'Explore': [
         { href: '/find-chefs', label: 'Find a Chef' },
+        { href: '/reviews', label: 'Verified Reviews ⭐' },
         { href: '/marketplace', label: 'Marketplace' },
         { href: '/packages', label: 'Event Packages' },
         { href: '/academy', label: 'Chef Academy' },

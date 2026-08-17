@@ -7,7 +7,7 @@ import { ChatbotWidget } from '@/components/chatbot/chatbot-widget'
 import {
     LayoutDashboard, Calendar, FileText, Users, GraduationCap,
     Settings, LogOut, TrendingUp, DollarSign, CheckCircle,
-    Download, Plus, ChevronRight, Bell, Building2, Loader2
+    Download, Plus, ChevronRight, Bell, Building2, Loader2, Star
 } from 'lucide-react'
 import { useBusinessDashboardData, CorporateEvent } from '@/hooks/useBusinessDashboardData'
 
@@ -51,6 +51,7 @@ const NAV = [
     { id: 'invoices', label: 'Invoices', icon: FileText },
     { id: 'team', label: 'Team', icon: Users },
     { id: 'academy', label: 'Staff Training', icon: GraduationCap },
+    { id: 'reviews', label: 'Reviews & Ratings', icon: Star },
     { id: 'settings', label: 'Settings', icon: Settings },
 ]
 
@@ -617,13 +618,56 @@ function SettingsView() {
     )
 }
 
+function BusinessReviewsView() {
+    return (
+        <div className="space-y-6">
+            <div className="bg-card border border-border rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h2 className="text-xl font-bold font-serif text-foreground">Corporate Catering Reviews & Feedback</h2>
+                    <p className="text-xs text-muted-foreground mt-1">Submit feedback on corporate dining events, executive retreats, and team lunch stipends.</p>
+                </div>
+                <Link
+                    href="/reviews"
+                    className="px-5 py-2.5 gradient-brand text-white text-xs font-bold rounded-xl shadow-xs hover:opacity-90 transition-opacity shrink-0 flex items-center gap-1.5"
+                >
+                    <Star className="w-3.5 h-3.5 fill-white" />
+                    Write Corporate Review →
+                </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
+                    <span className="text-xs font-bold text-terracotta uppercase">Executive Quality Assurance</span>
+                    <h3 className="font-bold text-base text-foreground">Enterprise Rating System</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                        Your corporate ratings directly impact which Master Chefs are prioritized for VIP summit banquets and recurring team meal deliveries.
+                    </p>
+                </div>
+                <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
+                    <span className="text-xs font-bold text-blue-600 uppercase">VAT & Escrow Verified</span>
+                    <h3 className="font-bold text-base text-foreground">Official Corporate Endorsements</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                        Reviews submitted from this corporate dashboard receive the verified &ldquo;Corporate Event Organizer&rdquo; badge on the ChefMii public platform.
+                    </p>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 /* ── Page ──────────────────────────────────────────────── */
 export default function BusinessDashboardPage() {
     const [tab, setTab] = useState('overview')
     const { events, loading, error } = useBusinessDashboardData()
 
     const titles: Record<string, string> = {
-        overview: 'Good morning, Apex Team! 🏢', events: 'Event Management', invoices: 'Invoice History', team: 'Team Management', academy: 'Staff Training', settings: 'Company Settings',
+        overview: 'Good morning, Apex Team! 🏢',
+        events: 'Event Management',
+        invoices: 'Invoice History',
+        team: 'Team Management',
+        academy: 'Staff Training',
+        reviews: 'Corporate Reviews & Ratings',
+        settings: 'Company Settings',
     }
     return (
         <>
@@ -685,6 +729,7 @@ export default function BusinessDashboardPage() {
                                 {tab === 'invoices' && <InvoicesView />}
                                 {tab === 'team' && <TeamView />}
                                 {tab === 'academy' && <AcademyView />}
+                                {tab === 'reviews' && <BusinessReviewsView />}
                                 {tab === 'settings' && <SettingsView />}
                             </>
                         )}

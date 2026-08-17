@@ -71,6 +71,7 @@ export function Navbar() {
 
     const EXPLORE_DROPDOWN_LINKS = [
         { href: '/order', label: '🍽️ Order Food Delivery', desc: 'Fresh chef meals delivered to your door' },
+        { href: '/reviews', label: '⭐ Client & Business Reviews', desc: 'Verified dining ratings & testimonials' },
         { href: '/marketplace', label: '🛒 Chef Marketplace', desc: 'Artisanal ingredients & specialty produce' },
         { href: '/packages', label: '🎉 Event Packages', desc: 'Bespoke menus for weddings & parties' },
         { href: '/pricing', label: '💳 Subscription Plans', desc: 'Consumer & Business corporate tiers' },
