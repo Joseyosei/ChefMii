@@ -2,314 +2,602 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
-import { MapPin, Search, Clock, DollarSign, Star, Zap, CheckCircle, Leaf } from 'lucide-react'
+import {
+    MapPin,
+    Search,
+    Clock,
+    DollarSign,
+    Star,
+    Zap,
+    CheckCircle2,
+    Leaf,
+    SlidersHorizontal,
+    ShoppingBag,
+    ArrowRight,
+    Bike,
+    Sparkles,
+    ShieldCheck,
+    Navigation
+} from 'lucide-react'
 
-const CUISINES = [
-  { emoji: '🍝', label: 'Italian', id: 'italian' },
-  { emoji: '🍣', label: 'Japanese', id: 'japanese' },
-  { emoji: '🌍', label: 'African', id: 'african' },
-  { emoji: '🍛', label: 'Indian', id: 'indian' },
-  { emoji: '🥐', label: 'French', id: 'french' },
-  { emoji: '🔥', label: 'BBQ', id: 'bbq' },
-  { emoji: '🥗', label: 'Vegan', id: 'vegan' },
-  { emoji: '🌾', label: 'Farm Fresh', id: 'farm' },
-]
-
-const FILTERS = [
-  { icon: Zap, label: 'Under 30 mins', id: 'fast' },
-  { icon: DollarSign, label: 'Under £15', id: 'cheap' },
-  { icon: Star, label: 'Top Rated', id: 'rated' },
-  { icon: CheckCircle, label: 'Verified', id: 'verified' },
-  { icon: Leaf, label: 'Free Delivery', id: 'free' },
-]
-
-const TRENDING_CHEFS = [
-  {
-    id: '11111111-1111-1111-1111-111111111111',
-    name: 'Marco Rossi',
-    cuisine: 'Italian',
-    rating: 4.9,
-    reviews: 342,
-    distance: '0.8 mi',
-    time: '25 mins',
-    fee: 'Free delivery',
-    badge: 'Most liked',
-    image: 'https://images.unsplash.com/photo-1577003832033-a0d99e4bed89?w=400&h=300&fit=crop',
-  },
-  {
-    id: '22222222-2222-2222-2222-222222222222',
-    name: 'Yuki Tanaka',
-    cuisine: 'Japanese',
-    rating: 4.8,
-    reviews: 298,
-    distance: '1.2 mi',
-    time: '30 mins',
-    fee: '£2.99',
-    badge: 'Top rated',
-    image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop',
-  },
-  {
-    id: '33333333-3333-3333-3333-333333333333',
-    name: 'Sophie Leclerc',
-    cuisine: 'French',
-    rating: 4.7,
-    reviews: 215,
-    distance: '1.5 mi',
-    time: '35 mins',
-    fee: '£3.99',
-    badge: '',
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop',
-  },
-  {
-    id: '44444444-4444-4444-4444-444444444444',
-    name: 'James Okafor',
-    cuisine: 'West African',
-    rating: 4.9,
-    reviews: 287,
-    distance: '0.9 mi',
-    time: '28 mins',
-    fee: 'Free delivery',
-    badge: 'Most liked',
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop',
-  },
-]
-
-const FARMERS = [
-  {
-    id: 'farmer-1',
-    name: 'Green Valley Farm',
-    location: 'Hertfordshire',
-    badge: 'Organic',
-    nextDelivery: 'Tomorrow',
-    image: 'https://images.unsplash.com/photo-1488459716781-6f3ee1e28e54?w=400&h=300&fit=crop',
-  },
-  {
-    id: 'farmer-2',
-    name: 'Sunny Acres',
-    location: 'Surrey',
-    badge: 'Organic',
-    nextDelivery: 'Tomorrow',
-    image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad576?w=400&h=300&fit=crop',
-  },
-  {
-    id: 'farmer-3',
-    name: 'Fresh Harvest Co',
-    location: 'Kent',
-    badge: 'Certified',
-    nextDelivery: 'Today',
-    image: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=400&h=300&fit=crop',
-  },
-]
-
-function OrderHubContent() {
-  const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null)
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([])
-  const [deliveryMode, setDeliveryMode] = useState('delivery')
-  const [location, setLocation] = useState('London, UK')
-
-  const toggleFilter = (id: string) => {
-    setSelectedFilters(prev =>
-      prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
-    )
-  }
-
-  return (
-    <>
-      <Navbar />
-      <main className="min-h-screen bg-background">
-        {/* Header Section */}
-        <div className="bg-gradient-to-b from-terracotta/10 to-transparent pt-8 pb-12 px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-2">Order from Chefs 🍽️</h1>
-            <p className="text-muted-foreground text-lg mb-6">Discover top chefs and fresh produce near you</p>
-
-            {/* Location & Delivery Mode */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
-              <div className="flex-1 flex items-center gap-2 bg-card border border-border rounded-xl px-4 py-3 cursor-pointer hover:border-terracotta transition-colors">
-                <MapPin className="w-5 h-5 text-terracotta flex-shrink-0" />
-                <input
-                  type="text"
-                  value={location}
-                  onChange={e => setLocation(e.target.value)}
-                  className="flex-1 bg-transparent outline-none text-sm"
-                  placeholder="Enter delivery address"
-                />
-              </div>
-              <div className="flex gap-2 bg-card border border-border rounded-xl p-1">
-                <button
-                  onClick={() => setDeliveryMode('delivery')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    deliveryMode === 'delivery'
-                      ? 'bg-terracotta text-white'
-                      : 'text-foreground hover:bg-muted'
-                  }`}
-                >
-                  Delivery
-                </button>
-                <button
-                  onClick={() => setDeliveryMode('pickup')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    deliveryMode === 'pickup'
-                      ? 'bg-terracotta text-white'
-                      : 'text-foreground hover:bg-muted'
-                  }`}
-                >
-                  Pickup
-                </button>
-              </div>
-            </div>
-
-            {/* Cuisine Categories */}
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-              {CUISINES.map(cuisine => (
-                <button
-                  key={cuisine.id}
-                  onClick={() => setSelectedCuisine(selectedCuisine === cuisine.id ? null : cuisine.id)}
-                  className={`px-4 py-2 rounded-full whitespace-nowrap font-medium transition-all flex-shrink-0 ${
-                    selectedCuisine === cuisine.id
-                      ? 'bg-terracotta text-white'
-                      : 'bg-card border border-border text-foreground hover:border-terracotta'
-                  }`}
-                >
-                  {cuisine.emoji} {cuisine.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 border-b border-border">
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-            {FILTERS.map(filter => {
-              const Icon = filter.icon
-              return (
-                <button
-                  key={filter.id}
-                  onClick={() => toggleFilter(filter.id)}
-                  className={`px-4 py-2 rounded-full whitespace-nowrap font-medium transition-all flex items-center gap-2 flex-shrink-0 ${
-                    selectedFilters.includes(filter.id)
-                      ? 'bg-terracotta text-white'
-                      : 'bg-card border border-border text-foreground hover:border-terracotta'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {filter.label}
-                </button>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Trending Chefs */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-          <h2 className="text-2xl font-serif font-bold mb-6 flex items-center gap-2">
-            🔥 Trending Now
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {TRENDING_CHEFS.map(chef => (
-              <Link
-                key={chef.id}
-                href={`/order/${chef.id}`}
-                className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-terracotta hover:shadow-lg transition-all"
-              >
-                <div className="relative h-48 overflow-hidden bg-muted">
-                  <img
-                    src={chef.image}
-                    alt={chef.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {chef.badge && (
-                    <div className="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                      {chef.badge}
-                    </div>
-                  )}
-                </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-lg mb-1">{chef.name}</h3>
-                  <p className="text-sm text-muted-foreground mb-3">{chef.cuisine}</p>
-                  <div className="flex items-center gap-1 mb-2">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span className="font-bold">{chef.rating}</span>
-                    <span className="text-xs text-muted-foreground">({chef.reviews})</span>
-                  </div>
-                  <div className="text-xs text-muted-foreground space-y-1">
-                    <div className="flex justify-between">
-                      <span>{chef.distance}</span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" /> {chef.time}
-                      </span>
-                    </div>
-                    <div className="text-green-600 font-medium">{chef.fee}</div>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Farmers Section */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 border-t border-border">
-          <h2 className="text-2xl font-serif font-bold mb-6 flex items-center gap-2">
-            🌾 Order Fresh from Farmers
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {FARMERS.map(farmer => (
-              <Link
-                key={farmer.id}
-                href={`/order/farmers/${farmer.id}`}
-                className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-terracotta hover:shadow-lg transition-all"
-              >
-                <div className="relative h-40 overflow-hidden bg-muted">
-                  <img
-                    src={farmer.image}
-                    alt={farmer.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-3 left-3 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-bold">
-                    {farmer.badge}
-                  </div>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-lg mb-1">{farmer.name}</h3>
-                  <p className="text-sm text-muted-foreground mb-3">{farmer.location}</p>
-                  <div className="text-sm font-medium text-green-600">
-                    Next delivery: {farmer.nextDelivery}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Reorder Favorites */}
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 border-t border-border">
-          <h2 className="text-2xl font-serif font-bold mb-6 flex items-center gap-2">
-            ❤️ Reorder Favourites
-          </h2>
-          <div className="bg-card border border-border rounded-2xl p-8 text-center">
-            <p className="text-muted-foreground mb-4">No previous orders yet</p>
-            <p className="text-sm text-muted-foreground">Place your first order to see favorites here</p>
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </>
-  )
+interface ChefKitchen {
+    id: string
+    chefId: string
+    name: string
+    chefName: string
+    chefPhoto: string
+    cuisine: string
+    rating: number
+    reviews: number
+    distance: string
+    time: string
+    fee: string
+    priceTier: string
+    dishImage: string
+    popularDish: string
+    badge?: string
+    isPromoted?: boolean
 }
 
+const CUISINES = [
+    { emoji: '🍝', label: 'Italian', id: 'italian' },
+    { emoji: '🍣', label: 'Japanese', id: 'japanese' },
+    { emoji: '🥐', label: 'French', id: 'french' },
+    { emoji: '🥩', label: 'American BBQ', id: 'american' },
+    { emoji: '🥟', label: 'Chinese Dim Sum', id: 'chinese' },
+    { emoji: '🥘', label: 'Korean BBQ', id: 'korean' },
+    { emoji: '🍛', label: 'African Feast', id: 'african' },
+    { emoji: '🥗', label: 'Nordic & Clean', id: 'nordic' },
+    { emoji: '🌾', label: 'Farm Fresh', id: 'farm' },
+]
+
+const PROMO_BANNERS = [
+    {
+        title: 'Michelin-Grade Dinners Delivered',
+        subtitle: 'Prepared hot by verified private chefs in your area',
+        cta: 'Order Now',
+        code: 'CHEFMII20',
+        badge: '£10 OFF First Order',
+        bg: 'from-amber-700/90 to-terracotta/90',
+        image: '/images/orders/order_italian_pasta.png',
+    },
+    {
+        title: 'Fresh Omakase & Sushi Boxes',
+        subtitle: 'Direct from master sushi chefs within 30 minutes',
+        cta: 'Explore Japanese',
+        code: 'OMAKASE15',
+        badge: 'Top Rated',
+        bg: 'from-stone-900/95 to-slate-800/90',
+        image: '/images/orders/order_japanese_sushi.png',
+    },
+]
+
+const CHEF_KITCHENS: ChefKitchen[] = [
+    {
+        id: 'kitchen-marco',
+        chefId: 'marco-rossi',
+        name: 'Trattoria di Marco',
+        chefName: 'Chef Marco Rossi',
+        chefPhoto: '/images/chefs/chef_marco_rossi.png',
+        cuisine: 'Italian Fine Dining',
+        rating: 4.9,
+        reviews: 342,
+        distance: '0.8 mi',
+        time: '20-30 min',
+        fee: 'Free delivery',
+        priceTier: '££',
+        dishImage: '/images/orders/order_italian_pasta.png',
+        popularDish: 'Handmade Black Truffle Tagliatelle',
+        badge: '🔥 #1 Most Ordered',
+        isPromoted: true,
+    },
+    {
+        id: 'kitchen-yuki',
+        chefId: 'yuki-tanaka',
+        name: 'Tanaka Omakase Express',
+        chefName: 'Chef Yuki Tanaka',
+        chefPhoto: '/images/chefs/chef_yuki_tanaka.png',
+        cuisine: 'Japanese Omakase',
+        rating: 5.0,
+        reviews: 298,
+        distance: '1.2 mi',
+        time: '25-35 min',
+        fee: '£1.99',
+        priceTier: '£££',
+        dishImage: '/images/orders/order_japanese_sushi.png',
+        popularDish: 'Otoro Nigiri & Uni Tasting Box',
+        badge: '⭐ Michelin Trained',
+        isPromoted: true,
+    },
+    {
+        id: 'kitchen-pierre',
+        chefId: 'pierre-dubois',
+        name: 'Le Bistro Dubois',
+        chefName: 'Chef Pierre Dubois',
+        chefPhoto: '/images/chefs/chef_pierre_dubois.png',
+        cuisine: 'French Haute Cuisine',
+        rating: 4.8,
+        reviews: 215,
+        distance: '1.5 mi',
+        time: '30-40 min',
+        fee: '£2.49',
+        priceTier: '£££',
+        dishImage: '/images/orders/order_french_haute.png',
+        popularDish: 'Pan-Seared Duck Breast with Spiced Figs',
+        badge: '🍷 Wine Pairing Ready',
+    },
+    {
+        id: 'kitchen-marcus',
+        chefId: 'marcus-vance',
+        name: 'Vance Smokehouse & Grill',
+        chefName: 'Chef Marcus Vance',
+        chefPhoto: '/images/chefs/chef_marcus_vance.png',
+        cuisine: 'American Contemporary',
+        rating: 4.9,
+        reviews: 184,
+        distance: '1.1 mi',
+        time: '25-35 min',
+        fee: 'Free delivery',
+        priceTier: '££',
+        dishImage: '/images/orders/order_italian_pasta.png',
+        popularDish: 'Hudson Valley Prime Ribeye & Smoked Mash',
+        badge: '🪵 Wood-Fired',
+    },
+    {
+        id: 'kitchen-wei',
+        chefId: 'wei-zhang',
+        name: 'Imperial Dim Sum House',
+        chefName: 'Chef Wei Zhang',
+        chefPhoto: '/images/chefs/chef_wei_zhang.png',
+        cuisine: 'Cantonese & Dim Sum',
+        rating: 5.0,
+        reviews: 267,
+        distance: '0.9 mi',
+        time: '20-30 min',
+        fee: 'Free delivery',
+        priceTier: '££',
+        dishImage: '/images/orders/order_japanese_sushi.png',
+        popularDish: 'Artisanal Xiao Long Bao & Truffle Siu Mai',
+        badge: '🥟 Handmade Daily',
+    },
+    {
+        id: 'kitchen-aisha',
+        chefId: 'aisha-okafor',
+        name: 'Okafor Spice Kitchen',
+        chefName: 'Chef Aisha Okafor',
+        chefPhoto: '/images/chefs/chef_aisha_okafor.png',
+        cuisine: 'West African Gourmet',
+        rating: 4.9,
+        reviews: 310,
+        distance: '1.4 mi',
+        time: '25-35 min',
+        fee: 'Free delivery',
+        priceTier: '£',
+        dishImage: '/images/orders/order_italian_pasta.png',
+        popularDish: 'Smoky Firewood Jollof Rice with Jumbo Prawns',
+        badge: '🌶️ Signature Blend',
+    },
+    {
+        id: 'kitchen-henrik',
+        chefId: 'henrik-lindqvist',
+        name: 'Nordic Fjord Gastronomy',
+        chefName: 'Chef Henrik Lindqvist',
+        chefPhoto: '/images/chefs/chef_henrik_lindqvist.png',
+        cuisine: 'New Nordic',
+        rating: 4.9,
+        reviews: 142,
+        distance: '1.7 mi',
+        time: '30-45 min',
+        fee: '£2.99',
+        priceTier: '£££',
+        dishImage: '/images/orders/order_french_haute.png',
+        popularDish: 'Cold-Smoked Arctic Salmon & Pickled Chanterelles',
+        badge: '🌿 Wild Foraged',
+    },
+    {
+        id: 'kitchen-minjun',
+        chefId: 'min-jun-park',
+        name: 'Hansik Modern Kitchen',
+        chefName: 'Chef Min-Jun Park',
+        chefPhoto: '/images/chefs/chef_min_jun_park.png',
+        cuisine: 'Modern Korean',
+        rating: 4.9,
+        reviews: 195,
+        distance: '1.3 mi',
+        time: '25-35 min',
+        fee: 'Free delivery',
+        priceTier: '££',
+        dishImage: '/images/orders/order_japanese_sushi.png',
+        popularDish: 'Galbi Short Ribs with 10-Yr Aged Doenjang',
+        badge: '🔥 Korean BBQ',
+    },
+]
+
+const FARM_PRODUCE = [
+    {
+        id: 'farm-1',
+        name: 'Green Valley Organic Estate',
+        location: 'Hertfordshire, UK',
+        specialty: 'Heritage Vegetables & Microgreens',
+        deliveryTime: 'Tomorrow Morning',
+        badge: '100% Organic',
+        image: '/images/marketplace/marketplace_olive_oil.png',
+    },
+    {
+        id: 'farm-2',
+        name: 'Kent Artisanal Orchards',
+        location: 'Kent, UK',
+        specialty: 'Seasonal Truffles & Wild Mushrooms',
+        deliveryTime: 'Same Day Delivery',
+        badge: 'Locally Foraged',
+        image: '/images/marketplace/marketplace_truffle_oil.png',
+    },
+    {
+        id: 'farm-3',
+        name: 'Highland Pure Dairy Co.',
+        location: 'Surrey, UK',
+        specialty: 'Grass-Fed Cheeses & Farm Butter',
+        deliveryTime: 'Tomorrow Morning',
+        badge: 'Pasture Raised',
+        image: '/images/marketplace/marketplace_black_garlic.png',
+    },
+]
+
 export default function OrderPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin">⏳</div>
-      </div>
-    }>
-      <OrderHubContent />
-    </Suspense>
-  )
+    const [selectedCuisine, setSelectedCuisine] = useState<string | null>(null)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [deliveryMode, setDeliveryMode] = useState<'delivery' | 'pickup'>('delivery')
+    const [locationInput, setLocationInput] = useState('London, Mayfair W1K')
+    const [activeFilter, setActiveFilter] = useState<string>('all')
+
+    const filteredKitchens = CHEF_KITCHENS.filter((k) => {
+        const matchesCuisine =
+            !selectedCuisine ||
+            k.cuisine.toLowerCase().includes(selectedCuisine) ||
+            (selectedCuisine === 'farm' && k.badge?.includes('Organic'))
+        const matchesSearch =
+            !searchQuery ||
+            k.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            k.chefName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            k.cuisine.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            k.popularDish.toLowerCase().includes(searchQuery.toLowerCase())
+        const matchesFilter =
+            activeFilter === 'all' ||
+            (activeFilter === 'free' && k.fee.toLowerCase().includes('free')) ||
+            (activeFilter === 'fast' && parseInt(k.time) <= 25) ||
+            (activeFilter === 'top' && k.rating >= 4.9)
+        return matchesCuisine && matchesSearch && matchesFilter
+    })
+
+    return (
+        <>
+            <Navbar />
+            <main className="min-h-screen bg-stone-50 dark:bg-stone-950 pb-20">
+                {/* Active Live Order Floating Banner */}
+                <div className="bg-stone-900 text-white px-4 py-2.5 text-xs font-medium flex items-center justify-between border-b border-stone-800">
+                    <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                            <span>Live Order #CF892 is on its way with driver Ahmed (ETA 12 mins)</span>
+                        </div>
+                        <Link
+                            href="/order/tracking/11111111-1111-1111-1111-111111111111"
+                            className="inline-flex items-center gap-1 text-terracotta hover:text-terracotta/80 font-bold ml-2 underline underline-offset-2"
+                        >
+                            <Navigation className="w-3.5 h-3.5" />
+                            Live GPS Map Tracking →
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Uber-Style Top Navigation & Address Bar */}
+                <section className="bg-white dark:bg-stone-900 border-b border-border shadow-xs sticky top-0 z-30">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                        {/* Delivery / Pickup Pill Toggle */}
+                        <div className="flex items-center bg-stone-100 dark:bg-stone-800 p-1 rounded-full border border-border shrink-0">
+                            <button
+                                onClick={() => setDeliveryMode('delivery')}
+                                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all ${
+                                    deliveryMode === 'delivery'
+                                        ? 'bg-black dark:bg-white text-white dark:text-black shadow-sm'
+                                        : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                            >
+                                <Bike className="w-4 h-4" />
+                                Delivery
+                            </button>
+                            <button
+                                onClick={() => setDeliveryMode('pickup')}
+                                className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all ${
+                                    deliveryMode === 'pickup'
+                                        ? 'bg-black dark:bg-white text-white dark:text-black shadow-sm'
+                                        : 'text-muted-foreground hover:text-foreground'
+                                }`}
+                            >
+                                <ShoppingBag className="w-4 h-4" />
+                                Pickup
+                            </button>
+                        </div>
+
+                        {/* Address & ETA Selector */}
+                        <div className="flex-1 w-full max-w-lg flex items-center bg-stone-100 dark:bg-stone-800/80 rounded-2xl px-3.5 py-2 border border-border">
+                            <MapPin className="w-4 h-4 text-terracotta shrink-0 mr-2" />
+                            <input
+                                type="text"
+                                value={locationInput}
+                                onChange={(e) => setLocationInput(e.target.value)}
+                                className="bg-transparent border-none outline-none text-xs sm:text-sm text-foreground font-medium flex-1 truncate"
+                                placeholder="Enter your delivery address..."
+                            />
+                            <span className="hidden sm:inline-block px-2 py-0.5 bg-terracotta/10 text-terracotta rounded-md text-[11px] font-bold shrink-0 ml-2">
+                                20-30 min
+                            </span>
+                        </div>
+
+                        {/* Search bar */}
+                        <div className="w-full md:w-72 flex items-center bg-stone-100 dark:bg-stone-800/80 rounded-2xl px-3.5 py-2 border border-border">
+                            <Search className="w-4 h-4 text-muted-foreground shrink-0 mr-2" />
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Search dishes, chefs..."
+                                className="bg-transparent border-none outline-none text-xs sm:text-sm text-foreground flex-1"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Uber-Style Category Ribbon */}
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 overflow-x-auto no-scrollbar flex items-center gap-2 border-t border-border/40">
+                        <button
+                            onClick={() => setSelectedCuisine(null)}
+                            className={`px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all border ${
+                                selectedCuisine === null
+                                    ? 'bg-terracotta text-white border-terracotta'
+                                    : 'bg-white dark:bg-stone-800 border-border text-foreground hover:border-terracotta/50'
+                            }`}
+                        >
+                            All Cuisines
+                        </button>
+                        {CUISINES.map((item) => (
+                            <button
+                                key={item.id}
+                                onClick={() => setSelectedCuisine(selectedCuisine === item.id ? null : item.id)}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium shrink-0 transition-all border ${
+                                    selectedCuisine === item.id
+                                        ? 'bg-terracotta text-white border-terracotta'
+                                        : 'bg-white dark:bg-stone-800 border-border text-foreground hover:border-terracotta/50'
+                                }`}
+                            >
+                                <span>{item.emoji}</span>
+                                <span>{item.label}</span>
+                            </button>
+                        ))}
+                    </div>
+                </section>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-10">
+                    {/* Uber Promo Hero Carousel */}
+                    <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {PROMO_BANNERS.map((promo, idx) => (
+                            <div
+                                key={idx}
+                                className={`relative rounded-3xl overflow-hidden bg-gradient-to-r ${promo.bg} text-white p-6 sm:p-8 flex items-center justify-between min-h-[190px] shadow-lg`}
+                            >
+                                <div className="relative z-10 max-w-[65%] space-y-2">
+                                    <span className="inline-block px-2.5 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold tracking-wide">
+                                        {promo.badge}
+                                    </span>
+                                    <h2 className="text-xl sm:text-2xl font-serif font-bold leading-tight">
+                                        {promo.title}
+                                    </h2>
+                                    <p className="text-white/80 text-xs sm:text-sm line-clamp-2">
+                                        {promo.subtitle}
+                                    </p>
+                                    <div className="pt-2">
+                                        <button
+                                            onClick={() => setSelectedCuisine(idx === 0 ? 'italian' : 'japanese')}
+                                            className="px-4 py-2 bg-white text-black font-bold text-xs rounded-full hover:bg-white/90 shadow-sm transition-all"
+                                        >
+                                            {promo.cta} →
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="absolute right-0 bottom-0 w-48 h-48 rounded-full overflow-hidden opacity-90 border-4 border-white/20 translate-x-6 translate-y-4">
+                                    <Image
+                                        src={promo.image}
+                                        alt={promo.title}
+                                        fill
+                                        unoptimized
+                                        className="object-cover"
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </section>
+
+                    {/* Quick Filters */}
+                    <section className="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pb-1">
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider mr-1">
+                                Filter:
+                            </span>
+                            {[
+                                { id: 'all', label: 'All Places' },
+                                { id: 'free', label: 'Free Delivery' },
+                                { id: 'fast', label: '⚡ Under 25 mins' },
+                                { id: 'top', label: '⭐ Top Rated (4.9+)' },
+                            ].map((f) => (
+                                <button
+                                    key={f.id}
+                                    onClick={() => setActiveFilter(f.id)}
+                                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all border ${
+                                        activeFilter === f.id
+                                            ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white'
+                                            : 'bg-white dark:bg-stone-800 border-border text-foreground hover:bg-stone-100'
+                                    }`}
+                                >
+                                    {f.label}
+                                </button>
+                            ))}
+                        </div>
+                        <span className="text-xs text-muted-foreground font-medium shrink-0">
+                            {filteredKitchens.length} chef kitchens available
+                        </span>
+                    </section>
+
+                    {/* Featured Chef Kitchens (Uber Eats Cards) */}
+                    <section className="space-y-4">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h2 className="text-2xl font-serif font-bold text-foreground">
+                                    Featured Private Chef Kitchens
+                                </h2>
+                                <p className="text-xs sm:text-sm text-muted-foreground">
+                                    Fresh gourmet dishes cooked on-demand by world-class culinary artists
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {filteredKitchens.map((kitchen) => (
+                                <Link
+                                    key={kitchen.id}
+                                    href={`/order/${kitchen.chefId}`}
+                                    className="group flex flex-col bg-white dark:bg-stone-900 border border-border/80 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:border-terracotta/60 transition-all duration-300"
+                                >
+                                    {/* Dish Hero Image with Chef Floating Avatar */}
+                                    <div className="relative h-48 w-full bg-stone-100 dark:bg-stone-800 overflow-hidden">
+                                        <Image
+                                            src={kitchen.dishImage}
+                                            alt={kitchen.name}
+                                            fill
+                                            unoptimized
+                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+
+                                        {/* Floating Badge */}
+                                        {kitchen.badge && (
+                                            <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/10">
+                                                {kitchen.badge}
+                                            </div>
+                                        )}
+
+                                        {/* Delivery Time & Fee Pills */}
+                                        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs font-semibold">
+                                            <span className="bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-lg">
+                                                {kitchen.time}
+                                            </span>
+                                            <span className="bg-emerald-600/90 backdrop-blur-md px-2.5 py-1 rounded-lg">
+                                                {kitchen.fee}
+                                            </span>
+                                        </div>
+
+                                        {/* Floating Chef Portrait */}
+                                        <div className="absolute -bottom-3 right-4 w-12 h-12 rounded-full overflow-hidden border-2 border-white dark:border-stone-900 shadow-md">
+                                            <Image
+                                                src={kitchen.chefPhoto}
+                                                alt={kitchen.chefName}
+                                                fill
+                                                unoptimized
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Card Content */}
+                                    <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                                        <div>
+                                            <div className="flex items-center justify-between gap-1 mb-1">
+                                                <h3 className="font-bold text-base text-foreground group-hover:text-terracotta transition-colors truncate">
+                                                    {kitchen.name}
+                                                </h3>
+                                                <div className="flex items-center gap-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-md text-xs font-bold shrink-0">
+                                                    <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                                                    {kitchen.rating}
+                                                </div>
+                                            </div>
+
+                                            <p className="text-xs text-muted-foreground font-medium mb-1">
+                                                {kitchen.chefName} • {kitchen.cuisine}
+                                            </p>
+                                            <p className="text-xs text-foreground/80 font-medium line-clamp-1 italic">
+                                                &quot;{kitchen.popularDish}&quot;
+                                            </p>
+                                        </div>
+
+                                        <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs text-muted-foreground font-medium">
+                                            <span>{kitchen.distance} away</span>
+                                            <span className="text-terracotta font-bold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                                                View Menu →
+                                            </span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Fresh From Farmers Marketplace Section */}
+                    <section className="bg-gradient-to-r from-emerald-900 to-teal-950 rounded-3xl p-6 sm:p-10 text-white space-y-6">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div>
+                                <span className="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-bold mb-2">
+                                    🌱 Farm-to-Table Marketplace
+                                </span>
+                                <h2 className="text-2xl sm:text-3xl font-serif font-bold">
+                                    Order Fresh Organic Ingredients
+                                </h2>
+                                <p className="text-emerald-200/80 text-xs sm:text-sm">
+                                    Direct harvest from certified local farmers and regenerative growers
+                                </p>
+                            </div>
+                            <Link
+                                href="/order/farmers"
+                                className="px-5 py-2.5 bg-white text-emerald-950 font-bold text-xs rounded-full hover:bg-emerald-50 transition-all shrink-0"
+                            >
+                                Explore All Farms →
+                            </Link>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            {FARM_PRODUCE.map((farm) => (
+                                <div
+                                    key={farm.id}
+                                    className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/15 flex items-center gap-4 hover:bg-white/15 transition-all"
+                                >
+                                    <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-white/20 border border-white/20">
+                                        <Image
+                                            src={farm.image}
+                                            alt={farm.name}
+                                            fill
+                                            unoptimized
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-300">
+                                            {farm.badge}
+                                        </span>
+                                        <h4 className="text-sm font-bold text-white truncate">{farm.name}</h4>
+                                        <p className="text-xs text-emerald-100/70 truncate">{farm.specialty}</p>
+                                        <span className="text-[11px] font-medium text-emerald-300">
+                                            ⚡ {farm.deliveryTime}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                </div>
+            </main>
+            <Footer />
+        </>
+    )
 }
