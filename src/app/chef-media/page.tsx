@@ -514,9 +514,9 @@ function UploadModal({ onClose, onUploaded }: { onClose: () => void; onUploaded?
 
 /* ── Single Video Card ───────────────────────────────────────── */
 function VideoCard({
-    item, index, active, muted, onMuteToggle,
+    item, index, active, activeIdx, muted, onMuteToggle,
 }: {
-    item: MediaItem; index: number; active: boolean; muted: boolean; onMuteToggle: () => void
+    item: MediaItem; index: number; active: boolean; activeIdx: number; muted: boolean; onMuteToggle: () => void
 }) {
     const { user } = useAuth()
     const router = useRouter()
@@ -530,6 +530,9 @@ function VideoCard({
     const [showHeart, setShowHeart] = useState(false)
     const [comments, setComments] = useState(false)
     const lastTapRef = useRef(0)
+
+    // Virtualization: only load heavy video when user is within 1 card of it
+    const shouldMountVideo = Math.abs(index - activeIdx) <= 1
 
     const showToast = (msg: string) => {
         setToastMessage(msg)
@@ -635,16 +638,25 @@ function VideoCard({
         <div className="relative w-full snap-start flex-shrink-0" style={{ height: '100dvh' }}>
             {/* Video / Thumbnail */}
             <div className="absolute inset-0 bg-black" onClick={handleTap}>
-                <video
-                    ref={videoRef}
-                    src={item.video_url}
-                    poster={item.thumbnail_url ?? undefined}
-                    loop
-                    playsInline
-                    muted={muted}
-                    preload={index < 2 ? 'auto' : 'none'}
-                    className="w-full h-full object-cover"
-                />
+                {shouldMountVideo ? (
+                    <video
+                        ref={videoRef}
+                        src={item.video_url}
+                        poster={item.thumbnail_url ?? undefined}
+                        loop
+                        playsInline
+                        muted={muted}
+                        preload={active ? 'auto' : 'metadata'}
+                        className="w-full h-full object-cover"
+                    />
+                ) : (
+                    <img
+                        src={item.thumbnail_url ?? '/images/hero_bg.jpg'}
+                        alt={item.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover opacity-90"
+                    />
+                )}
                 {/* Gradient overlays */}
                 <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
                 <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
@@ -705,8 +717,12 @@ function VideoCard({
                 </button>
                 {/* Chef avatar + follow */}
                 <div className="flex flex-col items-center gap-1">
-                    <div className="w-11 h-11 rounded-full gradient-brand text-white font-bold text-sm flex items-center justify-center shadow-lg border-2 border-white">
-                        {chefInitials}
+                    <div className="w-11 h-11 rounded-full gradient-brand text-white font-bold text-sm flex items-center justify-center shadow-lg border-2 border-white overflow-hidden">
+                        {item.chef?.avatar_url ? (
+                            <img src={item.chef.avatar_url} alt={item.chef.full_name || 'Chef'} className="w-full h-full object-cover" />
+                        ) : (
+                            <span>{chefInitials}</span>
+                        )}
                     </div>
                     <button
                         onClick={handleFollow}
@@ -767,8 +783,8 @@ const TABS = ['For You', 'Following', 'Trending', 'Near Me']
 
 export default function ChefMediaPage() {
     const { user, profile } = useAuth()
-    const [feed, setFeed] = useState<MediaItem[]>([])
-    const [loading, setLoading] = useState(true)
+    const [feed, setFeed] = useState<MediaItem[]>(() => scoreItems(SEED))
+    const [loading, setLoading] = useState(false)
     const [tab, setTab] = useState('For You')
     const [activeIdx, setActive] = useState(0)
     const [muted, setMuted] = useState(true)
@@ -777,7 +793,7 @@ export default function ChefMediaPage() {
     const [searchQ, setSearchQ] = useState('')
     const containerRef = useRef<HTMLDivElement>(null)
 
-    /* ── Load feed ─────────────────────────────────────────────── */
+    /* ── Load dynamic feed in background ─────────────────────────────── */
     useEffect(() => {
         const load = async () => {
             try {
@@ -792,8 +808,8 @@ export default function ChefMediaPage() {
                         const d = docSnap.data()
                         return {
                             id: docSnap.id,
-                            chef_id: d.chef_id || 'chef_1',
-                            video_url: d.video_url || '',
+                            chef_id: d.chef_id || 'marco-rossi',
+                            video_url: d.video_url || '/videos/pasta.webm',
                             thumbnail_url: d.thumbnail_url || null,
                             title: d.title || 'Chef Special',
                             description: d.description || null,
@@ -806,12 +822,9 @@ export default function ChefMediaPage() {
                             chef: { full_name: 'ChefMii Creator', avatar_url: null },
                         }
                     })
-                    setFeed(scoreItems(items))
-                } else {
-                    setFeed(scoreItems(SEED))
+                    setFeed(prev => scoreItems([...items, ...SEED.filter(s => !items.some(it => it.id === s.id))]))
                 }
             } catch {
-                setFeed(scoreItems(SEED))
             } finally {
                 setLoading(false)
             }
@@ -913,6 +926,7 @@ export default function ChefMediaPage() {
                             item={item}
                             index={i}
                             active={i === activeIdx}
+                            activeIdx={activeIdx}
                             muted={muted}
                             onMuteToggle={() => setMuted(m => !m)}
                         />
