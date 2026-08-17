@@ -1,13 +1,17 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { ChatbotWidget } from '@/components/chatbot/chatbot-widget'
-import { Star, MapPin, Clock, Users, ChefHat, Heart, Share2, MessageCircle, ShoppingBag } from 'lucide-react'
+import { Star, MapPin, Clock, Users, ChefHat, Heart, Share2, MessageCircle, ShoppingBag, CheckCircle2, ShieldCheck } from 'lucide-react'
+import { useCurrency } from '@/context/currency-context'
+import { useToast } from '@/context/toast-context'
 
 // Mock chef data
 interface ChefProfile {
@@ -32,7 +36,7 @@ interface ChefProfile {
 const CHEFS_DATA: Record<string, ChefProfile> = {
     'marco-rossi': {
         name: 'Chef Marco Rossi',
-        cuisine: 'Italian',
+        cuisine: 'Italian Fine Dining',
         rate: 150,
         rating: 4.9,
         reviews: 128,
@@ -41,7 +45,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         bio: 'Award-winning Italian chef with 15 years experience in Michelin-starred restaurants.',
         photo: '/images/chefs/chef_marco_rossi.png',
         description: 'I specialize in authentic Italian cuisine with a modern twist. My menus are crafted using the finest ingredients, many imported directly from Italy. I have cooked for celebrities, politicians, and royalty.',
-        specialties: ['Italian', 'Mediterranean', 'Fine Dining', 'Pasta', 'Risotto'],
+        specialties: ['Handmade Pasta', 'Black Truffle Tagliatelle', 'Carnaroli Risotto', 'Italian Fine Dining'],
         availability: 'Available weekends and select weekdays',
         minHours: 4,
         maxGuests: 50,
@@ -57,7 +61,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'yuki-tanaka': {
         name: 'Chef Yuki Tanaka',
-        cuisine: 'Japanese',
+        cuisine: 'Japanese Omakase',
         rate: 200,
         rating: 5.0,
         reviews: 67,
@@ -66,12 +70,13 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         bio: 'Japanese cuisine expert trained in Tokyo. Specialising in omakase and sushi.',
         photo: '/images/chefs/chef_yuki_tanaka.png',
         description: 'Trained at 3-Michelin-star restaurants in Tokyo, I bring authentic Japanese culinary traditions to your table. Specializing in omakase experiences and contemporary Japanese cuisine.',
-        specialties: ['Japanese', 'Sushi', 'Omakase', 'Kaiseki', 'Tempura'],
+        specialties: ['Otoro Sushi', 'Hokkaido Uni', 'Omakase', 'Kaiseki', 'Tempura'],
         availability: 'Available year-round',
         minHours: 3,
         maxGuests: 30,
         portfolio: [
             '/images/orders/order_japanese_sushi.png',
+            '/images/orders/order_korean_bbq.png',
         ],
         reviews_list: [
             { author: 'Michael T.', rating: 5, text: 'Best omakase experience outside of Tokyo!' },
@@ -80,7 +85,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'pierre-dubois': {
         name: 'Chef Pierre Dubois',
-        cuisine: 'French',
+        cuisine: 'French Haute Cuisine',
         rate: 180,
         rating: 4.7,
         reviews: 212,
@@ -89,12 +94,13 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         bio: 'Former executive chef at Hôtel de Crillon, Paris.',
         photo: '/images/chefs/chef_pierre_dubois.png',
         description: 'Classic French haute cuisine elevated with contemporary molecular gastronomy techniques and vintage wine pairings.',
-        specialties: ['French Haute Cuisine', 'Wine Pairing', 'Duck Confit', 'Soufflé'],
+        specialties: ['French Haute Cuisine', 'Pan-Seared Duck', 'Wine Pairing', 'Duck Confit', 'Soufflé'],
         availability: 'Available by advance booking',
         minHours: 4,
         maxGuests: 40,
         portfolio: [
             '/images/orders/order_french_haute.png',
+            '/images/orders/order_canadian_duck.png',
         ],
         reviews_list: [
             { author: 'Jean-Luc R.', rating: 5, text: 'Extraordinaire! The pan-seared duck was Michelin caliber.' },
@@ -102,7 +108,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'marcus-vance': {
         name: 'Chef Marcus Vance',
-        cuisine: 'American Contemporary',
+        cuisine: 'American Contemporary BBQ',
         rate: 160,
         rating: 4.9,
         reviews: 142,
@@ -117,6 +123,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 60,
         portfolio: [
             '/images/orders/order_american_bbq.png',
+            '/images/orders/order_pan_african_suya.png',
         ],
         reviews_list: [
             { author: 'David K.', rating: 5, text: 'The brisket was pure perfection. Smoked to tender melt-in-the-mouth perfection.' },
@@ -124,7 +131,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'wei-zhang': {
         name: 'Chef Wei Zhang',
-        cuisine: 'Chinese',
+        cuisine: 'Cantonese & Dim Sum',
         rate: 175,
         rating: 5.0,
         reviews: 184,
@@ -139,6 +146,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 80,
         portfolio: [
             '/images/orders/order_chinese_dimsum.png',
+            '/images/orders/order_japanese_sushi.png',
         ],
         reviews_list: [
             { author: 'Lin W.', rating: 5, text: 'The most authentic Xiao Long Bao outside of Shanghai. Extraordinary technique.' },
@@ -146,7 +154,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'aisha-okafor': {
         name: 'Chef Aisha Okafor',
-        cuisine: 'West African',
+        cuisine: 'West African Gourmet',
         rate: 80,
         rating: 4.8,
         reviews: 94,
@@ -161,6 +169,8 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 100,
         portfolio: [
             '/images/orders/order_west_african_jollof.png',
+            '/images/orders/order_pan_african_tilapia.png',
+            '/images/orders/order_pan_african_suya.png',
         ],
         reviews_list: [
             { author: 'Tunde B.', rating: 5, text: 'The smoky firewood jollof is the real deal! Everyone at the party was raving.' },
@@ -168,7 +178,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'henrik-lindqvist': {
         name: 'Chef Henrik Lindqvist',
-        cuisine: 'Nordic',
+        cuisine: 'New Nordic',
         rate: 190,
         rating: 4.9,
         reviews: 87,
@@ -183,6 +193,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 35,
         portfolio: [
             '/images/orders/order_nordic_salmon.png',
+            '/images/orders/order_ukrainian_varenyky.png',
         ],
         reviews_list: [
             { author: 'Astrid N.', rating: 5, text: 'Pure art on a plate. The cold-smoked salmon and dill cream were heavenly.' },
@@ -190,7 +201,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'min-jun-park': {
         name: 'Chef Min-Jun Park',
-        cuisine: 'Korean',
+        cuisine: 'Modern Korean',
         rate: 165,
         rating: 4.9,
         reviews: 126,
@@ -205,6 +216,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 40,
         portfolio: [
             '/images/orders/order_korean_bbq.png',
+            '/images/orders/order_chinese_dimsum.png',
         ],
         reviews_list: [
             { author: 'Chloe S.', rating: 5, text: 'Unbelievable Korean fine dining! The Galbi short ribs were unmatched.' },
@@ -212,7 +224,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'sofia-mendez': {
         name: 'Chef Sofía Mendez',
-        cuisine: 'Spanish',
+        cuisine: 'Spanish Gastronomy',
         rate: 120,
         rating: 4.9,
         reviews: 89,
@@ -227,6 +239,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 60,
         portfolio: [
             '/images/orders/order_spanish_paella.png',
+            '/images/orders/order_italian_pasta.png',
         ],
         reviews_list: [
             { author: 'Mateo C.', rating: 5, text: 'Best paella I have ever tasted outside of Valencia. The socarrat was crispy gold.' },
@@ -234,7 +247,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'meera-patel': {
         name: 'Chef Meera Patel',
-        cuisine: 'Indian',
+        cuisine: 'Royal Indian',
         rate: 95,
         rating: 4.9,
         reviews: 203,
@@ -249,6 +262,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 75,
         portfolio: [
             '/images/orders/order_indian_biryani.png',
+            '/images/orders/order_middle_eastern_lamb.png',
         ],
         reviews_list: [
             { author: 'Priya R.', rating: 5, text: 'The dum biryani was pure poetry. The aroma filled the whole house!' },
@@ -256,7 +270,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'tariq-al-ghamdi': {
         name: 'Chef Tariq Al-Ghamdi',
-        cuisine: 'Middle Eastern',
+        cuisine: 'Middle Eastern Royal',
         rate: 195,
         rating: 4.9,
         reviews: 109,
@@ -271,6 +285,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 120,
         portfolio: [
             '/images/orders/order_middle_eastern_lamb.png',
+            '/images/orders/order_indian_biryani.png',
         ],
         reviews_list: [
             { author: 'Sultan A.', rating: 5, text: 'A truly royal feast. The lamb shank was meltingly tender and flavorful.' },
@@ -293,6 +308,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 40,
         portfolio: [
             '/images/orders/order_canadian_duck.png',
+            '/images/orders/order_french_haute.png',
         ],
         reviews_list: [
             { author: 'Marc D.', rating: 5, text: 'Superb flavors and plating. The duck breast paired with wild berries was unforgettable.' },
@@ -300,7 +316,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'olena-kovalenko': {
         name: 'Chef Olena Kovalenko',
-        cuisine: 'Ukrainian',
+        cuisine: 'Modern Ukrainian',
         rate: 110,
         rating: 4.9,
         reviews: 115,
@@ -315,6 +331,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 50,
         portfolio: [
             '/images/orders/order_ukrainian_varenyky.png',
+            '/images/orders/order_nordic_salmon.png',
         ],
         reviews_list: [
             { author: 'Kateryna S.', rating: 5, text: 'Tears of joy at the dinner table. The varenyky were so delicate and flavorful.' },
@@ -322,7 +339,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'carlos-garcia': {
         name: 'Chef Carlos Garcia',
-        cuisine: 'Mexican',
+        cuisine: 'Modern Mexican',
         rate: 85,
         rating: 4.7,
         reviews: 71,
@@ -337,6 +354,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 60,
         portfolio: [
             '/images/orders/order_mexican_birria.png',
+            '/images/orders/order_spanish_paella.png',
         ],
         reviews_list: [
             { author: 'Alejandro G.', rating: 5, text: 'Incredible birria and authentic flavors presented like a 5-star restaurant dish.' },
@@ -344,7 +362,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'james-osei': {
         name: 'Chef James Osei',
-        cuisine: 'Pan-African',
+        cuisine: 'Pan-African Fusion',
         rate: 70,
         rating: 4.8,
         reviews: 156,
@@ -352,8 +370,8 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         badge: 'Events Specialist',
         bio: 'Creates vibrant Pan-African feasts, suya spiced grills, and festive banquets for weddings and parties.',
         photo: '/images/chefs/chef_james_osei.png',
-        description: 'Charcoal-grilled suya-spiced French lamb chops, sweet plantain purée, and festive Pan-African banqueting.',
-        specialties: ['Suya Lamb Chops', 'Pan-African Banquets', 'Plantain Purée', 'Charcoal Grills'],
+        description: 'Charcoal-grilled suya-spiced French lamb chops, sweet plantain purée, whole spiced Ghanaian tilapia, and festive Pan-African banqueting.',
+        specialties: ['Suya Lamb Chops', 'Charcoal Tilapia', 'Plantain Purée', 'Pan-African Banquets'],
         availability: 'Available for events and private dinners',
         minHours: 4,
         maxGuests: 150,
@@ -369,7 +387,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
     },
     'kenji-sato': {
         name: 'Chef Kenji Sato',
-        cuisine: 'Japanese',
+        cuisine: 'Kyoto Kaiseki',
         rate: 220,
         rating: 5.0,
         reviews: 153,
@@ -384,6 +402,7 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 20,
         portfolio: [
             '/images/orders/order_japanese_sushi.png',
+            '/images/orders/order_korean_bbq.png',
         ],
         reviews_list: [
             { author: 'Kenichi M.', rating: 5, text: 'A true Kyoto Kaiseki master. The harmony of flavours and seasonal aesthetic is unmatched.' },
@@ -393,6 +412,9 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
 
 export default function ChefProfilePage() {
     const params = useParams()
+    const router = useRouter()
+    const { formatPrice } = useCurrency()
+    const { showToast } = useToast()
     const chefId = params.id as string
     const chef = CHEFS_DATA[chefId]
     const [liked, setLiked] = useState(false)
@@ -401,7 +423,7 @@ export default function ChefProfilePage() {
         return (
             <>
                 <Navbar />
-                <main className="min-h-screen flex items-center justify-center">
+                <main className="min-h-screen flex items-center justify-center pt-24">
                     <div className="text-center">
                         <p className="text-5xl mb-4">👨‍🍳</p>
                         <h1 className="text-2xl font-bold mb-2">Chef not found</h1>
@@ -416,12 +438,24 @@ export default function ChefProfilePage() {
         )
     }
 
+    const handleShare = () => {
+        if (typeof window !== 'undefined') {
+            navigator.clipboard.writeText(window.location.href)
+            showToast('Chef profile link copied to clipboard!', 'info')
+        }
+    }
+
+    const handleToggleLike = () => {
+        setLiked(!liked)
+        showToast(!liked ? 'Chef added to your favorites ❤️' : 'Chef removed from favorites', 'success')
+    }
+
     return (
         <>
             <Navbar />
-            <main className="min-h-screen">
+            <main className="min-h-screen pt-20 sm:pt-24 bg-stone-50 dark:bg-stone-950 font-sans text-foreground pb-20">
                 {/* Hero section with photo */}
-                <div className="relative h-96 bg-muted overflow-hidden">
+                <div className="relative h-80 sm:h-96 bg-muted overflow-hidden">
                     <Image
                         src={chef.photo}
                         alt={chef.name}
@@ -429,38 +463,49 @@ export default function ChefProfilePage() {
                         className="object-cover"
                         priority
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-900/90 via-stone-900/40 to-transparent" />
+                    
+                    <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
+                        <span className="px-3.5 py-1.5 bg-black/60 backdrop-blur-md text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg">
+                            <ShieldCheck className="w-3.5 h-3.5" />
+                            100% DBS & Health Vetted
+                        </span>
+                    </div>
                 </div>
 
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
                     {/* Header with actions */}
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8 -mt-20 relative z-10">
-                        <div>
-                            <h1 className="text-4xl sm:text-5xl font-serif font-bold mb-2">{chef.name}&apos;s Profile</h1>
-                            <div className="flex flex-wrap items-center gap-4 text-sm">
+                        <div className="bg-card/90 dark:bg-stone-900/90 backdrop-blur-xl border border-border p-6 rounded-3xl shadow-xl flex-1">
+                            <h1 className="text-3xl sm:text-4xl font-serif font-black mb-2 text-foreground">{chef.name}</h1>
+                            <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
                                 <div className="flex items-center gap-1">
-                                    <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                                    <span className="font-bold">{chef.rating}</span>
-                                    <span className="text-muted-foreground">({chef.reviews} reviews)</span>
+                                    <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                                    <span className="font-black text-foreground">{chef.rating}</span>
+                                    <span className="text-muted-foreground font-medium">({chef.reviews} verified reviews)</span>
                                 </div>
-                                <div className="flex items-center gap-1 text-muted-foreground">
-                                    <MapPin className="w-4 h-4" />{chef.location}
+                                <div className="flex items-center gap-1 text-muted-foreground font-semibold">
+                                    <MapPin className="w-4 h-4 text-terracotta" />{chef.location}
                                 </div>
-                                <span className="px-3 py-1 bg-terracotta/10 text-terracotta rounded-full text-xs font-semibold">
+                                <span className="px-3 py-1 bg-terracotta/10 text-terracotta rounded-full text-xs font-bold border border-terracotta/20">
                                     {chef.badge}
                                 </span>
                             </div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 self-end sm:self-center">
                             <button
-                                onClick={() => setLiked(!liked)}
-                                className="p-3 border border-border rounded-xl hover:bg-muted transition-colors"
+                                onClick={handleToggleLike}
+                                className="p-3 bg-card border border-border rounded-2xl hover:bg-muted shadow-sm transition-all"
                                 aria-label="Like"
                             >
-                                <Heart className={`w-5 h-5 ${liked ? 'fill-red-500 text-red-500' : 'text-foreground/60'}`} />
+                                <Heart className={`w-5 h-5 ${liked ? 'fill-red-500 text-red-500' : 'text-foreground/70'}`} />
                             </button>
-                            <button className="p-3 border border-border rounded-xl hover:bg-muted transition-colors" aria-label="Share">
-                                <Share2 className="w-5 h-5 text-foreground/60" />
+                            <button
+                                onClick={handleShare}
+                                className="p-3 bg-card border border-border rounded-2xl hover:bg-muted shadow-sm transition-all"
+                                aria-label="Share"
+                            >
+                                <Share2 className="w-5 h-5 text-foreground/70" />
                             </button>
                         </div>
                     </div>
@@ -468,53 +513,59 @@ export default function ChefProfilePage() {
                     {/* Main content grid */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Left column */}
-                        <div className="lg:col-span-2">
+                        <div className="lg:col-span-2 space-y-8">
                             {/* About */}
-                            <section className="mb-12">
-                                <h2 className="text-2xl font-serif font-bold mb-4">About</h2>
-                                <p className="text-muted-foreground leading-relaxed mb-6">{chef.description}</p>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                                    <div className="bg-card border border-border rounded-xl p-4 text-center">
-                                        <Clock className="w-5 h-5 mx-auto mb-2 text-terracotta" />
-                                        <p className="text-xs text-muted-foreground">Min Hours</p>
-                                        <p className="font-bold text-lg">{chef.minHours}h</p>
+                            <section className="bg-card border border-border rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
+                                <h2 className="text-xl font-serif font-bold text-foreground">Culinary Philosophy & Bio</h2>
+                                <p className="text-muted-foreground leading-relaxed text-sm">{chef.description}</p>
+                                
+                                <div className="grid grid-cols-3 gap-3 pt-2">
+                                    <div className="bg-muted/40 border border-border rounded-2xl p-4 text-center">
+                                        <Clock className="w-5 h-5 mx-auto mb-1 text-terracotta" />
+                                        <p className="text-[10px] text-muted-foreground uppercase font-bold">Min Booking</p>
+                                        <p className="font-black text-base text-foreground">{chef.minHours} Hours</p>
                                     </div>
-                                    <div className="bg-card border border-border rounded-xl p-4 text-center">
-                                        <Users className="w-5 h-5 mx-auto mb-2 text-terracotta" />
-                                        <p className="text-xs text-muted-foreground">Max Guests</p>
-                                        <p className="font-bold text-lg">{chef.maxGuests}</p>
+                                    <div className="bg-muted/40 border border-border rounded-2xl p-4 text-center">
+                                        <Users className="w-5 h-5 mx-auto mb-1 text-terracotta" />
+                                        <p className="text-[10px] text-muted-foreground uppercase font-bold">Max Capacity</p>
+                                        <p className="font-black text-base text-foreground">{chef.maxGuests} Guests</p>
                                     </div>
-                                    <div className="bg-card border border-border rounded-xl p-4 text-center">
-                                        <ChefHat className="w-5 h-5 mx-auto mb-2 text-terracotta" />
-                                        <p className="text-xs text-muted-foreground">Rate</p>
-                                        <p className="font-bold text-lg">£{chef.rate}</p>
+                                    <div className="bg-muted/40 border border-border rounded-2xl p-4 text-center">
+                                        <ChefHat className="w-5 h-5 mx-auto mb-1 text-terracotta" />
+                                        <p className="text-[10px] text-muted-foreground uppercase font-bold">Hourly Rate</p>
+                                        <p className="font-black text-base text-terracotta">{formatPrice(chef.rate)}</p>
                                     </div>
                                 </div>
                             </section>
 
                             {/* Specialties */}
-                            <section className="mb-12">
-                                <h2 className="text-2xl font-serif font-bold mb-4">Specialties</h2>
+                            <section className="bg-card border border-border rounded-3xl p-6 sm:p-8 space-y-4 shadow-xs">
+                                <h2 className="text-xl font-serif font-bold text-foreground">Signature Culinary Specialties</h2>
                                 <div className="flex flex-wrap gap-2">
                                     {chef.specialties.map((spec) => (
-                                        <span key={spec} className="px-4 py-2 bg-muted rounded-full text-sm font-medium">
+                                        <span key={spec} className="px-3.5 py-1.5 bg-muted/60 text-foreground border border-border/80 rounded-xl text-xs font-bold flex items-center gap-1.5">
+                                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
                                             {spec}
                                         </span>
                                     ))}
                                 </div>
                             </section>
 
-                            {/* Portfolio */}
-                            <section className="mb-12">
-                                <h2 className="text-2xl font-serif font-bold mb-4">Portfolio</h2>
+                            {/* Portfolio Gallery */}
+                            <section className="bg-card border border-border rounded-3xl p-6 sm:p-8 space-y-4 shadow-xs">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-xl font-serif font-bold text-foreground">Authentic Signature Dish Portfolio</h2>
+                                    <span className="text-xs text-muted-foreground font-semibold">{chef.portfolio.length} Dishes</span>
+                                </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     {chef.portfolio.map((image, i) => (
-                                        <div key={i} className="relative h-48 rounded-xl overflow-hidden">
+                                        <div key={i} className="relative h-52 rounded-2xl overflow-hidden border border-border shadow-xs group">
                                             <Image
                                                 src={image}
-                                                alt={`Portfolio ${i + 1}`}
+                                                alt={`Signature Dish ${i + 1}`}
                                                 fill
-                                                className="object-cover hover:scale-105 transition-transform duration-300"
+                                                unoptimized
+                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
                                             />
                                         </div>
                                     ))}
@@ -522,23 +573,28 @@ export default function ChefProfilePage() {
                             </section>
 
                             {/* Reviews */}
-                            <section>
-                                <h2 className="text-2xl font-serif font-bold mb-4">Reviews</h2>
-                                <div className="space-y-4">
+                            <section className="bg-card border border-border rounded-3xl p-6 sm:p-8 space-y-4 shadow-xs">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-xl font-serif font-bold text-foreground">Verified Client Reviews</h2>
+                                    <Link href="/reviews" className="text-xs font-bold text-terracotta hover:underline">
+                                        View All Reviews →
+                                    </Link>
+                                </div>
+                                <div className="space-y-3">
                                     {chef.reviews_list.map((review, i) => (
-                                        <div key={i} className="bg-card border border-border rounded-xl p-5">
-                                            <div className="flex items-center justify-between mb-2">
-                                                <p className="font-semibold">{review.author}</p>
+                                        <div key={i} className="bg-muted/30 border border-border/70 rounded-2xl p-4 space-y-2">
+                                            <div className="flex items-center justify-between">
+                                                <p className="font-bold text-xs text-foreground">{review.author}</p>
                                                 <div className="flex items-center gap-1">
                                                     {[...Array(5)].map((_, j) => (
                                                         <Star
                                                             key={j}
-                                                            className={`w-4 h-4 ${j < Math.floor(review.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground'}`}
+                                                            className={`w-3.5 h-3.5 ${j < Math.floor(review.rating) ? 'text-amber-400 fill-amber-400' : 'text-stone-300'}`}
                                                         />
                                                     ))}
                                                 </div>
                                             </div>
-                                            <p className="text-sm text-muted-foreground">{review.text}</p>
+                                            <p className="text-xs text-muted-foreground italic leading-relaxed">&ldquo;{review.text}&rdquo;</p>
                                         </div>
                                     ))}
                                 </div>
@@ -547,41 +603,57 @@ export default function ChefProfilePage() {
 
                         {/* Right sidebar */}
                         <div>
-                            <div className="sticky top-20 bg-card border border-border rounded-2xl p-6 space-y-4">
-                                <div>
-                                    <p className="text-sm text-muted-foreground mb-1">Hourly Rate</p>
-                                    <p className="text-4xl font-black text-terracotta">£{chef.rate}</p>
+                            <div className="sticky top-24 bg-card border border-border rounded-3xl p-6 sm:p-7 space-y-5 shadow-xl">
+                                <div className="border-b border-border pb-4">
+                                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold mb-1">Standard Rate</p>
+                                    <p className="text-3xl font-black text-terracotta">
+                                        {formatPrice(chef.rate)} <span className="text-xs text-muted-foreground font-normal">/ hour</span>
+                                    </p>
                                 </div>
-                                <div>
-                                    <p className="text-sm text-muted-foreground mb-1">Availability</p>
-                                    <p className="font-semibold">{chef.availability}</p>
+                                
+                                <div className="space-y-2 text-xs">
+                                    <div className="flex justify-between py-1 border-b border-border/50">
+                                        <span className="text-muted-foreground font-medium">Availability</span>
+                                        <span className="font-bold text-foreground text-right">{chef.availability}</span>
+                                    </div>
+                                    <div className="flex justify-between py-1 border-b border-border/50">
+                                        <span className="text-muted-foreground font-medium">Payment Protection</span>
+                                        <span className="font-bold text-emerald-600 dark:text-emerald-400">100% Escrow</span>
+                                    </div>
+                                    <div className="flex justify-between py-1">
+                                        <span className="text-muted-foreground font-medium">Deposit to Reserve</span>
+                                        <span className="font-bold text-foreground">20% Advance</span>
+                                    </div>
                                 </div>
-                                <div className="space-y-3">
+
+                                <div className="space-y-2.5 pt-2">
                                     <Link
                                         href={`/book/${chefId}`}
-                                        className="w-full py-3 gradient-brand text-white font-bold rounded-xl text-center hover:opacity-90 transition-opacity block"
+                                        className="w-full py-3.5 gradient-brand text-white font-bold rounded-2xl text-center hover:opacity-90 shadow-md transition-opacity block text-xs"
                                     >
-                                        📅 Book for Event
+                                        📅 Book Master Chef for Event
                                     </Link>
                                     <Link
                                         href={`/order/${chefId}`}
-                                        className="w-full py-3 bg-green-600 text-white font-bold rounded-xl text-center hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                                        className="w-full py-3.5 bg-stone-900 dark:bg-stone-100 text-white dark:text-black font-bold rounded-2xl text-center hover:opacity-90 transition-opacity flex items-center justify-center gap-2 text-xs"
                                     >
                                         <ShoppingBag className="w-4 h-4" />
-                                        🍽️ Order Food
+                                        🍽️ Order Chef Delivery Menu
                                     </Link>
+                                    <button
+                                        onClick={() => router.push(`/book/${chefId}`)}
+                                        className="w-full py-3 border border-border bg-card hover:bg-muted text-foreground font-bold rounded-2xl transition-colors flex items-center justify-center gap-2 text-xs"
+                                    >
+                                        <MessageCircle className="w-4 h-4 text-terracotta" />
+                                        Chat with Chef
+                                    </button>
                                 </div>
-                                <button className="w-full py-3 border border-border rounded-xl font-semibold hover:bg-muted transition-colors flex items-center justify-center gap-2">
-                                    <MessageCircle className="w-4 h-4" />
-                                    Message Chef
-                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </main>
             <Footer />
-            <ChatbotWidget />
         </>
     )
 }
