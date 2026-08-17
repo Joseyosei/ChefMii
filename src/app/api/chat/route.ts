@@ -1,20 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '')
+export const dynamic = 'force-dynamic'
 
-const SYSTEM_PROMPT = `You are ChefMii Assistant, a helpful AI for the ChefMii private chef booking platform.
-ChefMii connects clients with professional private chefs for any occasion — from home dinners to corporate events.
+const SYSTEM_PROMPT = `You are ChefMii Assistant, a helpful AI concierge for the ChefMii private chef booking platform.
+ChefMii connects clients with world-class private chefs for intimate dinner parties, date nights, corporate dining, weddings, and family masterclasses.
 
-You help users:
-- Find the right chef for their event
-- Understand pricing and packages
-- Learn about cuisines and menu options
-- Navigate the booking process
-- Answer questions about ChefMii services
+You help clients and chefs:
+- Recommend the best chef based on cuisine, guest count, and city (London, New York, Paris, Dubai, Shanghai, etc.)
+- Explain pricing (starting from £70 - £220/hr, with 20% advance deposit option and 100% escrow protection)
+- Guide users to join the VIP early access waitlist at /waitlist
+- Answer questions about chef booking, dietary menus, and full kitchen cleanup.
 
-Be friendly, concise, and professional. Keep responses under 3 sentences unless more detail is needed.
-Always suggest booking a chef when appropriate.`
+Be friendly, concise, warm, and sophisticated. Keep responses under 3-4 sentences unless detailed recommendations are requested.`
 
 export async function POST(request: NextRequest) {
     try {
@@ -24,10 +22,32 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Message required' }, { status: 400 })
         }
 
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+        const apiKey = process.env.GEMINI_API_KEY
+        if (!apiKey) {
+            return NextResponse.json({
+                reply: "Welcome to ChefMii! You can explore our roster of verified private chefs on the Find Chefs page or reserve your spot on our VIP waitlist.",
+            })
+        }
 
-        const result = await model.generateContent([SYSTEM_PROMPT, message])
-        const reply = result.response.text()
+        const genAI = new GoogleGenerativeAI(apiKey)
+        let reply = ''
+
+        const modelsToTry = ['gemini-3.5-flash', 'gemini-3.7-flash', 'gemini-3-flash-preview', 'gemini-flash-latest']
+
+        for (const modelName of modelsToTry) {
+            try {
+                const model = genAI.getGenerativeModel({ model: modelName })
+                const result = await model.generateContent([SYSTEM_PROMPT, message])
+                reply = result.response.text()
+                if (reply) break
+            } catch (err) {
+                console.warn(`Model ${modelName} failed, attempting next:`, err)
+            }
+        }
+
+        if (!reply) {
+            reply = "Welcome to ChefMii! You can explore our roster of verified private chefs on the Find Chefs page or reserve your spot on our VIP waitlist."
+        }
 
         return NextResponse.json({ reply })
     } catch (error) {
