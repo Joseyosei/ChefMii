@@ -33,6 +33,15 @@ export const metadata: Metadata = {
         siteName: 'ChefMii',
     },
     robots: { index: true, follow: true },
+    icons: {
+        icon: [
+            { url: '/icon.svg', type: 'image/svg+xml' },
+            { url: '/icon.png', type: 'image/png' },
+            { url: '/favicon.ico', sizes: 'any' },
+        ],
+        shortcut: '/icon.png',
+        apple: '/apple-icon.png',
+    },
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

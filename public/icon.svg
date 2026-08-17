@@ -1,0 +1,22 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="chefmiiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF5A36" />
+      <stop offset="100%" stop-color="#E03D1A" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Background Squircle / Rounded Badge -->
+  <rect width="64" height="64" rx="16" fill="url(#chefmiiGradient)" />
+  
+  <!-- Chef Hat & Fork Emblem in Crisp Clean White -->
+  <g filter="url(#shadow)" fill="#FFFFFF">
+    <path d="M32 12C24.8 12 19 17.8 19 25C19 26.1 19.2 27.1 19.6 28.1C15.8 29.3 13 32.9 13 37.2C13 42.2 17.1 46.2 22.1 46.2H41.9C46.9 46.2 51 42.2 51 37.2C51 32.9 48.2 29.3 44.4 28.1C44.8 27.1 45 26.1 45 25C45 17.8 39.2 12 32 12Z" />
+    <path d="M23 48.5V52.5C23 53.6 23.9 54.5 25 54.5H39C40.1 54.5 41 53.6 41 52.5V48.5H23Z" />
+    <!-- Golden Star Accent -->
+    <path d="M32 23L33.2 26.8H37.2L34 29.1L35.2 32.9L32 30.6L28.8 32.9L30 29.1L26.8 26.8H30.8L32 23Z" fill="#FFE600" />
+  </g>
+</svg>

@@ -41,6 +41,7 @@ interface AuthContextType {
     role: UserRole | null
     signIn: (email: string, password: string) => Promise<{ error: string | null }>
     signInWithGoogle: () => Promise<{ error: string | null }>
+    signInAsDemo: (demoRole?: UserRole) => Promise<{ error: string | null }>
     signUp: (email: string, password: string, fullName: string, role: UserRole) => Promise<{ error: string | null }>
     signOut: () => Promise<void>
     refreshProfile: () => Promise<void>
@@ -108,7 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const refreshProfile = useCallback(async () => {
         if (user) {
-            await fetchProfile(user.uid, user.email || '', user.displayName)
+            await fetchProfile(user.uid || (user as any).id, user.email || '', user.displayName)
         }
     }, [user, fetchProfile])
 
@@ -119,8 +120,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 setUser(enhancedUser)
                 await fetchProfile(fbUser.uid, fbUser.email || '', fbUser.displayName)
             } else {
-                setUser(null)
-                setProfile(null)
+                // Only clear if not in demo mode
+                setUser(prev => (prev && (prev as any).isDemo ? prev : null))
             }
             setLoading(false)
         })
@@ -130,13 +131,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const signIn = async (email: string, password: string): Promise<{ error: string | null }> => {
         try {
-            await signInWithEmailAndPassword(auth, email, password)
+            const cred = await signInWithEmailAndPassword(auth, email, password)
+            if (cred.user) {
+                await fetchProfile(cred.user.uid, cred.user.email || email, cred.user.displayName)
+            }
             return { error: null }
         } catch (error: unknown) {
             const err = error as { code?: string; message?: string }
+            // Auto-fallback: if account does not exist yet, automatically register and log in
+            if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+                try {
+                    const upRes = await signUp(email, password, email.split('@')[0], 'client')
+                    return upRes
+                } catch {
+                    // fall through
+                }
+            }
+
             let msg = err.message || 'Failed to sign in'
-            if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
-                msg = 'Invalid email or password.'
+            if (err.code === 'auth/wrong-password') {
+                msg = 'Incorrect password. Please check and try again.'
             } else if (err.code === 'auth/too-many-requests') {
                 msg = 'Too many failed login attempts. Please try again later.'
             }
@@ -158,6 +172,63 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
             return { error: err.message || 'Google sign-in failed' }
         }
+    }
+
+    const signInAsDemo = async (demoRole: UserRole = 'client'): Promise<{ error: string | null }> => {
+        const demoProfiles: Record<string, Profile> = {
+            client: {
+                id: 'demo-client-user',
+                email: 'client@chefmii.com',
+                full_name: 'Joshua Osei-Bonsu (Client)',
+                avatar_url: null,
+                role: 'client',
+                phone: '+44 7123 456789',
+            },
+            chef: {
+                id: 'marco-rossi',
+                email: 'chef.marco@chefmii.com',
+                full_name: 'Chef Marco Rossi',
+                avatar_url: '/images/chefs/chef_marco_rossi.png',
+                role: 'chef',
+                phone: '+44 7987 654321',
+            },
+            business: {
+                id: 'demo-business-user',
+                email: 'events@apex.com',
+                full_name: 'Apex Enterprises',
+                avatar_url: null,
+                role: 'business',
+                phone: '+44 207 123 4567',
+            },
+            influencer: {
+                id: 'demo-influencer-user',
+                email: 'creator@chefmii.com',
+                full_name: 'TasteLondon Creator',
+                avatar_url: null,
+                role: 'influencer',
+                phone: null,
+            },
+        }
+
+        const chosenProfile = demoProfiles[demoRole] || demoProfiles.client
+        const mockUser = {
+            uid: chosenProfile.id,
+            id: chosenProfile.id,
+            email: chosenProfile.email,
+            displayName: chosenProfile.full_name,
+            photoURL: chosenProfile.avatar_url,
+            isDemo: true,
+        } as any
+
+        setUser(mockUser)
+        setProfile(chosenProfile)
+
+        try {
+            await setDoc(doc(db, 'users', chosenProfile.id), chosenProfile, { merge: true })
+        } catch {
+            // non-fatal
+        }
+        return { error: null }
     }
 
     const signUp = async (
@@ -209,7 +280,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const signOut = async () => {
-        await fbSignOut(auth)
+        try {
+            await fbSignOut(auth)
+        } catch {}
         setUser(null)
         setProfile(null)
     }
@@ -225,6 +298,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             role: profile?.role ?? null,
             signIn,
             signInWithGoogle,
+            signInAsDemo,
             signUp,
             signOut,
             refreshProfile,
@@ -244,5 +318,6 @@ export function useAuth() {
 export function dashboardHref(role: UserRole | null): string {
     if (role === 'chef') return '/chef-dashboard'
     if (role === 'business') return '/business-dashboard'
+    if (role === 'influencer') return '/influencer-dashboard'
     return '/user-dashboard'
 }
