@@ -35,7 +35,12 @@ export default function RegisterPage() {
         setLoading(true)
         try {
             const fullName = `${firstName} ${lastName}`.trim()
-            await signUp(email, password, fullName, role)
+            const res = await signUp(email, password, fullName, role)
+            if (res.error) {
+                setError(res.error)
+                setLoading(false)
+                return
+            }
             setSuccess(true)
             setTimeout(() => {
                 const map: Record<UserRole, string> = {
@@ -48,7 +53,7 @@ export default function RegisterPage() {
                     farmer: '/marketplace',
                 }
                 router.push(map[role] || '/user-dashboard')
-            }, 1200)
+            }, 800)
         } catch (err: unknown) {
             const msg = err instanceof Error ? err.message : 'Registration failed. Please try again.'
             setError(msg)
