@@ -44,12 +44,15 @@ export const metadata: Metadata = {
     },
 }
 
+import { CookieBanner } from '@/components/layout/cookie-banner'
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" className={`${roboto.variable} ${caslon.variable}`}>
             <body className="min-h-screen bg-background font-sans antialiased">
                 <AuthProvider>
                     {children}
+                    <CookieBanner />
                 </AuthProvider>
             </body>
         </html>
