@@ -163,6 +163,72 @@ export async function POST(request: NextRequest) {
                 break
             }
 
+            // ── 6. Subscription Created / Updated (ChefMii Plus, Pro, Business) ──
+            case 'customer.subscription.created':
+            case 'customer.subscription.updated': {
+                const sub = event.data.object as Stripe.Subscription
+                const userId = sub.metadata?.userId
+                const planId = sub.metadata?.planId
+
+                try {
+                    if (userId && userId !== 'anonymous') {
+                        await adminDb.collection('users').doc(userId).set({
+                            subscription_status: sub.status,
+                            subscription_id: sub.id,
+                            subscription_plan: planId || 'plus-monthly',
+                            subscription_current_period_end: (sub as any).current_period_end ? new Date((sub as any).current_period_end * 1000) : new Date(),
+                            updated_at: FieldValue.serverTimestamp(),
+                        }, { merge: true })
+                    }
+                } catch (dbErr) {
+                    console.warn('Firestore update warning in webhook subscription update:', dbErr)
+                }
+                break
+            }
+
+            // ── 7. Subscription Cancelled / Deleted ──
+            case 'customer.subscription.deleted': {
+                const sub = event.data.object as Stripe.Subscription
+                const userId = sub.metadata?.userId
+
+                try {
+                    if (userId && userId !== 'anonymous') {
+                        await adminDb.collection('users').doc(userId).set({
+                            subscription_status: 'cancelled',
+                            subscription_cancelled_at: FieldValue.serverTimestamp(),
+                            updated_at: FieldValue.serverTimestamp(),
+                        }, { merge: true })
+                    }
+                } catch (dbErr) {
+                    console.warn('Firestore update warning in webhook subscription delete:', dbErr)
+                }
+                break
+            }
+
+            // ── 8. Recurring Invoice Payment Succeeded ──
+            case 'invoice.payment_succeeded': {
+                const invoice = event.data.object as Stripe.Invoice
+                const subId = typeof (invoice as any).subscription === 'string' ? (invoice as any).subscription : null
+                try {
+                    if (subId) {
+                        const snaps = await adminDb.collection('subscriptions')
+                            .where('stripe_subscription_id', '==', subId)
+                            .limit(1)
+                            .get()
+                        if (!snaps.empty) {
+                            await snaps.docs[0].ref.update({
+                                status: 'active',
+                                last_payment_date: FieldValue.serverTimestamp(),
+                                updated_at: FieldValue.serverTimestamp(),
+                            })
+                        }
+                    }
+                } catch (dbErr) {
+                    console.warn('Firestore invoice update warning:', dbErr)
+                }
+                break
+            }
+
             default:
                 break
         }

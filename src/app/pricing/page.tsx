@@ -241,6 +241,41 @@ const FAQS = [
 // --- Components ---
 
 function PlanCard({ plan }: { plan: any }) {
+  const [loading, setLoading] = useState(false)
+
+  const handleSubscribe = async () => {
+    if (plan.price === '£0' || plan.name === 'FREE' || plan.name?.includes('STARTER')) {
+      window.location.href = '/find-chefs'
+      return
+    }
+
+    let planId = 'plus-monthly'
+    if (plan.name?.includes('PLUS')) planId = 'plus-monthly'
+    else if (plan.name?.includes('BUSINESS')) planId = 'business-monthly'
+    else if (plan.name?.includes('PRO')) planId = 'chef-pro-monthly'
+    else if (plan.name?.includes('ENTERPRISE') || plan.name?.includes('MASTER')) planId = 'chef-enterprise-monthly'
+
+    setLoading(true)
+    try {
+      const res = await fetch('/api/stripe/subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId }),
+      })
+      const data = await res.json()
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        alert(data.error || 'Failed to start subscription. Please try again.')
+      }
+    } catch (e) {
+      console.error(e)
+      alert('Subscription error. Please check your connection.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className={`relative flex flex-col bg-card rounded-[12px] border p-6 shadow-sm hover:shadow-md transition-all duration-200 ${plan.border} ${plan.popular ? 'bg-orange-50/30 dark:bg-orange-950/10' : ''}`}>
       {plan.badge && (
@@ -282,12 +317,16 @@ function PlanCard({ plan }: { plan: any }) {
       )}
 
       <div className="space-y-2">
-        <button className={`w-full py-3 rounded-[999px] font-bold text-sm transition-all ${
-          plan.buttonVariant === 'filled' ? 'bg-[#E8520A] text-white hover:opacity-90' :
-          plan.buttonVariant === 'dark' ? 'bg-[#1A1A1A] text-white hover:bg-black' :
-          'border-2 border-[#E8520A] text-[#E8520A] hover:bg-[#E8520A]/5'
-        }`}>
-          {plan.button}
+        <button
+          onClick={handleSubscribe}
+          disabled={loading}
+          className={`w-full py-3 rounded-[999px] font-bold text-sm transition-all disabled:opacity-50 ${
+            plan.buttonVariant === 'filled' ? 'bg-[#E8520A] text-white hover:opacity-90' :
+            plan.buttonVariant === 'dark' ? 'bg-[#1A1A1A] text-white hover:bg-black' :
+            'border-2 border-[#E8520A] text-[#E8520A] hover:bg-[#E8520A]/5'
+          }`}
+        >
+          {loading ? 'Connecting to Stripe...' : plan.button}
         </button>
         {plan.smallText && <p className="text-[10px] text-center text-muted-foreground">{plan.smallText}</p>}
       </div>
