@@ -55,11 +55,11 @@ interface Comment {
 }
 
 /* ── Seed data (shown when DB empty) ────────────────────────── */
-/* ── Seed data (16 International Chefs with 10s Cinematic Culinary Videos) ── */
+/* ── Seed data (16 International Master Chefs Proprietary Culinary Showcases) ── */
 const SEED: MediaItem[] = [
     {
         id: 's1', chef_id: 'marco-rossi',
-        video_url: '/videos/pasta.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_marco_rossi.png',
         title: 'Authentic Roman Carbonara with Guanciale 🍝',
         description: 'Tossed in pecorino and rich egg yolk emulsion. No cream needed, pure Italian technique!',
@@ -70,7 +70,7 @@ const SEED: MediaItem[] = [
     },
     {
         id: 's2', chef_id: 'yuki-tanaka',
-        video_url: '/videos/sushi.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_yuki_tanaka.png',
         title: 'Omakase Nigiri Slicing & Torched Otoro 🍣',
         description: '14-course Toyosu Market fresh bluefin tuna, sea urchin, and A5 Wagyu nigiri.',
@@ -81,7 +81,7 @@ const SEED: MediaItem[] = [
     },
     {
         id: 's3', chef_id: 'marcus-vance',
-        video_url: '/videos/chef_kitchen.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_marcus_vance.png',
         title: '18-Hour Hickory Smoked Prime Brisket 🔥🥩',
         description: 'Deep mahogany smoke ring, caramelized bark, and melted collagen tenderness.',
@@ -92,7 +92,7 @@ const SEED: MediaItem[] = [
     },
     {
         id: 's4', chef_id: 'aisha-okafor',
-        video_url: '/videos/pasta.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_aisha_okafor.png',
         title: 'Smoky Firewood Party Jollof & Dodo 🌍🍛',
         description: 'Simmered in habanero-bell pepper reduction with chargrilled tiger prawns.',
@@ -103,7 +103,7 @@ const SEED: MediaItem[] = [
     },
     {
         id: 's5', chef_id: 'pierre-dubois',
-        video_url: '/videos/chef_kitchen.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_pierre_dubois.png',
         title: 'Crispy Duck Breast with Orange Blossom Glaze 🦆',
         description: 'Classic French haute cuisine reduction served with pomme purée.',
@@ -114,7 +114,7 @@ const SEED: MediaItem[] = [
     },
     {
         id: 's6', chef_id: 'sofia-mendez',
-        video_url: '/videos/pasta.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_sofia_mendez.png',
         title: 'Valencian Giant Carabineros Paella with Socarrat 🥘',
         description: 'Saffron bomba rice with crispy bottom crust and Mediterranean wild langoustines.',
@@ -125,7 +125,7 @@ const SEED: MediaItem[] = [
     },
     {
         id: 's7', chef_id: 'wei-zhang',
-        video_url: '/videos/sushi.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_wei_zhang.png',
         title: 'Handcrafted Xiao Long Bao Soup Dumplings 🥟',
         description: 'Delicate 18-fold pleating with rich gelatinous broth and Berkshire pork.',
@@ -136,7 +136,7 @@ const SEED: MediaItem[] = [
     },
     {
         id: 's8', chef_id: 'meera-patel',
-        video_url: '/videos/pasta.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_meera_patel.png',
         title: 'Royal Awadhi Dum Biryani Sealed in Clay Handi 🍲',
         description: 'Slow cooked over charcoal with aged basmati, saffron milk, and rose water.',
@@ -147,7 +147,7 @@ const SEED: MediaItem[] = [
     },
     {
         id: 's9', chef_id: 'elena-beauchamp',
-        video_url: '/videos/chef_kitchen.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_elena_beauchamp.png',
         title: 'Quebec Duck Breast with Wild Blueberry Demi-Glace 🍁',
         description: 'Laurentian forest foraged mushrooms with maple glazed seasonal root vegetables.',
@@ -158,7 +158,7 @@ const SEED: MediaItem[] = [
     },
     {
         id: 's10', chef_id: 'henrik-lindqvist',
-        video_url: '/videos/sushi.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_henrik_lindqvist.png',
         title: 'Nordic Cold-Smoked Arctic Trout with Dill Emulsion 🌲',
         description: 'Stockholm archipelago cured fish with juniper smoke and pickled sea buckthorn.',
@@ -169,7 +169,7 @@ const SEED: MediaItem[] = [
     },
     {
         id: 's11', chef_id: 'min-jun-park',
-        video_url: '/videos/chef_kitchen.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_min_jun_park.png',
         title: 'Sizzling 1++ Hanwoo Ribeye with Aged Kimchi & Perilla 🥩',
         description: 'Charcoal grilled table-side with 5-year aged doenjang paste and banchan.',
@@ -180,7 +180,7 @@ const SEED: MediaItem[] = [
     },
     {
         id: 's12', chef_id: 'tariq-al-ghamdi',
-        video_url: '/videos/pasta.webm',
+        video_url: '',
         thumbnail_url: '/images/chefs/chef_tariq_al_ghamdi.png',
         title: 'Royal Najdi Lamb Shank with Saffron Cardamom Rice 🍚',
         description: 'Tender fall-off-the-bone lamb shank garnished with golden pine nuts and raisins.',
@@ -637,8 +637,8 @@ function VideoCard({
     return (
         <div className="relative w-full snap-start flex-shrink-0" style={{ height: '100dvh' }}>
             {/* Video / Thumbnail */}
-            <div className="absolute inset-0 bg-black" onClick={handleTap}>
-                {shouldMountVideo ? (
+            <div className="absolute inset-0 bg-black overflow-hidden" onClick={handleTap}>
+                {item.video_url && shouldMountVideo ? (
                     <video
                         ref={videoRef}
                         src={item.video_url}
@@ -650,16 +650,22 @@ function VideoCard({
                         className="w-full h-full object-cover"
                     />
                 ) : (
-                    <img
-                        src={item.thumbnail_url ?? '/images/hero_bg.jpg'}
-                        alt={item.title}
-                        loading="lazy"
-                        className="w-full h-full object-cover opacity-90"
-                    />
+                    <div className="w-full h-full relative overflow-hidden flex items-center justify-center bg-zinc-950">
+                        <img
+                            src={item.thumbnail_url ?? '/images/hero_bg.jpg'}
+                            alt={item.title}
+                            loading={index === 0 ? 'eager' : 'lazy'}
+                            className={`w-full h-full object-cover transition-transform duration-[8000ms] ease-out ${
+                                active ? 'scale-110 translate-y-[-2%]' : 'scale-100'
+                            }`}
+                        />
+                        {/* Ambient subtle vignette */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/40 pointer-events-none" />
+                    </div>
                 )}
                 {/* Gradient overlays */}
-                <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
-                <div className="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
+                <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/70 to-transparent pointer-events-none" />
+                <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-black/90 via-black/50 to-transparent pointer-events-none" />
             </div>
 
             {/* Double-tap heart burst */}
@@ -809,7 +815,7 @@ export default function ChefMediaPage() {
                         return {
                             id: docSnap.id,
                             chef_id: d.chef_id || 'marco-rossi',
-                            video_url: d.video_url || '/videos/pasta.webm',
+                            video_url: d.video_url || '',
                             thumbnail_url: d.thumbnail_url || null,
                             title: d.title || 'Chef Special',
                             description: d.description || null,

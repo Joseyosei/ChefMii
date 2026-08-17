@@ -78,8 +78,8 @@ const CUSTOMER_PLANS = [
       { text: 'Volume booking discounts', included: true },
       { text: 'Quarterly business review', included: true },
     ],
-    button: 'Contact Sales →',
-    buttonVariant: 'dark',
+    button: 'Start Business →',
+    buttonVariant: 'filled',
   },
 ]
 
