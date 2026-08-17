@@ -22,7 +22,7 @@ function getAdminApp(): App {
     }
 
     return initializeApp({
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'chefmii-demo',
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'project-c5daea85-d002-4d77-a3f',
     })
 }
 
