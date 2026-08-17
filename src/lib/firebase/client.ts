@@ -11,7 +11,7 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '1:193892859007:web:chefmiiclientapp',
 }
 
-const app: FirebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp()
+const app: FirebaseApp = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig)
 const auth: Auth = getAuth(app)
 const db: Firestore = getFirestore(app)
 const googleProvider = new GoogleAuthProvider()

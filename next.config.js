@@ -15,6 +15,9 @@ const nextConfig = {
     typescript: {
         ignoreBuildErrors: false,
     },
+    experimental: {
+        serverComponentsExternalPackages: ['firebase-admin', 'stripe'],
+    },
     poweredByHeader: false,
 }
 
