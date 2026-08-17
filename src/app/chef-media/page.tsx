@@ -22,7 +22,7 @@ import { useAuth } from '@/context/auth-context'
 import {
     Heart, MessageCircle, Bookmark, Share2, Volume2, VolumeX,
     Plus, X, ChefHat, Search, Home, Bell, User as UserIcon,
-    Send, Loader2, Upload, CheckCircle,
+    Send, Loader2, Upload, CheckCircle, Sparkles,
 } from 'lucide-react'
 import { BrandLogo } from '@/components/layout/logo'
 
@@ -55,72 +55,139 @@ interface Comment {
 }
 
 /* ── Seed data (shown when DB empty) ────────────────────────── */
+/* ── Seed data (16 International Chefs with 10s Cinematic Culinary Videos) ── */
 const SEED: MediaItem[] = [
     {
-        id: 's1', chef_id: 'c1',
-        video_url: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        thumbnail_url: 'https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=600&q=80',
-        title: 'Perfect Carbonara in 8 Minutes 🍝',
-        description: 'The secret is egg temperature — no cream, just technique!',
-        cuisine_tags: ['italian', 'pasta', 'london'],
-        likes: 18200, views: 234000, bookings_generated: 47, comments_count: 184,
+        id: 's1', chef_id: 'marco-rossi',
+        video_url: '/videos/pasta.webm',
+        thumbnail_url: '/images/chefs/chef_marco_rossi.png',
+        title: 'Authentic Roman Carbonara with Guanciale 🍝',
+        description: 'Tossed in pecorino and rich egg yolk emulsion. No cream needed, pure Italian technique!',
+        cuisine_tags: ['italian', 'pasta', 'carbonara', 'london'],
+        likes: 48200, views: 534000, bookings_generated: 78, comments_count: 384,
         created_at: new Date(Date.now() - 3600000).toISOString(),
-        chef: { full_name: 'Chef Marco Rossi', avatar_url: null },
+        chef: { full_name: 'Chef Marco Rossi', avatar_url: '/images/chefs/chef_marco_rossi.png' },
     },
     {
-        id: 's2', chef_id: 'c2',
-        video_url: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        thumbnail_url: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600&q=80',
-        title: 'Omakase Sushi at Home 🍣',
-        description: '14 pieces, all fresh from Toyosu Market grade fish',
-        cuisine_tags: ['japanese', 'sushi', 'omakase'],
-        likes: 44100, views: 612000, bookings_generated: 89, comments_count: 422,
+        id: 's2', chef_id: 'yuki-tanaka',
+        video_url: '/videos/sushi.webm',
+        thumbnail_url: '/images/chefs/chef_yuki_tanaka.png',
+        title: 'Omakase Nigiri Slicing & Torched Otoro 🍣',
+        description: '14-course Toyosu Market fresh bluefin tuna, sea urchin, and A5 Wagyu nigiri.',
+        cuisine_tags: ['japanese', 'sushi', 'omakase', 'tokyo'],
+        likes: 64100, views: 812000, bookings_generated: 112, comments_count: 622,
         created_at: new Date(Date.now() - 7200000).toISOString(),
-        chef: { full_name: 'Chef Yuki Tanaka', avatar_url: null },
+        chef: { full_name: 'Chef Yuki Tanaka', avatar_url: '/images/chefs/chef_yuki_tanaka.png' },
     },
     {
-        id: 's3', chef_id: 'c3',
-        video_url: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        thumbnail_url: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80',
-        title: 'Jollof vs The World 🌍🔥',
-        description: 'West African jollof rice that hits different every time',
-        cuisine_tags: ['westAfrican', 'jollof', 'lagos'],
-        likes: 32000, views: 480000, bookings_generated: 61, comments_count: 890,
+        id: 's3', chef_id: 'marcus-vance',
+        video_url: '/videos/chef_kitchen.webm',
+        thumbnail_url: '/images/chefs/chef_marcus_vance.png',
+        title: '18-Hour Hickory Smoked Prime Brisket 🔥🥩',
+        description: 'Deep mahogany smoke ring, caramelized bark, and melted collagen tenderness.',
+        cuisine_tags: ['american', 'bbq', 'brisket', 'austin'],
+        likes: 39500, views: 420000, bookings_generated: 64, comments_count: 490,
         created_at: new Date(Date.now() - 10800000).toISOString(),
-        chef: { full_name: 'Chef Aisha Okafor', avatar_url: null },
+        chef: { full_name: 'Chef Marcus Vance', avatar_url: '/images/chefs/chef_marcus_vance.png' },
     },
     {
-        id: 's4', chef_id: 'c4',
-        video_url: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        thumbnail_url: 'https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=600&q=80',
-        title: 'Paella Masterclass 🥘',
-        description: 'Socarrat is the only thing that matters. Here\'s how to nail it.',
+        id: 's4', chef_id: 'aisha-okafor',
+        video_url: '/videos/pasta.webm',
+        thumbnail_url: '/images/chefs/chef_aisha_okafor.png',
+        title: 'Smoky Firewood Party Jollof & Dodo 🌍🍛',
+        description: 'Simmered in habanero-bell pepper reduction with chargrilled tiger prawns.',
+        cuisine_tags: ['westAfrican', 'jollof', 'lagos', 'london'],
+        likes: 52000, views: 680000, bookings_generated: 91, comments_count: 890,
+        created_at: new Date(Date.now() - 14400000).toISOString(),
+        chef: { full_name: 'Chef Aisha Okafor', avatar_url: '/images/chefs/chef_aisha_okafor.png' },
+    },
+    {
+        id: 's5', chef_id: 'pierre-dubois',
+        video_url: '/videos/chef_kitchen.webm',
+        thumbnail_url: '/images/chefs/chef_pierre_dubois.png',
+        title: 'Crispy Duck Breast with Orange Blossom Glaze 🦆',
+        description: 'Classic French haute cuisine reduction served with pomme purée.',
+        cuisine_tags: ['french', 'michelin', 'paris'],
+        likes: 31600, views: 398000, bookings_generated: 52, comments_count: 267,
+        created_at: new Date(Date.now() - 18000000).toISOString(),
+        chef: { full_name: 'Chef Pierre Dubois', avatar_url: '/images/chefs/chef_pierre_dubois.png' },
+    },
+    {
+        id: 's6', chef_id: 'sofia-mendez',
+        video_url: '/videos/pasta.webm',
+        thumbnail_url: '/images/chefs/chef_sofia_mendez.png',
+        title: 'Valencian Giant Carabineros Paella with Socarrat 🥘',
+        description: 'Saffron bomba rice with crispy bottom crust and Mediterranean wild langoustines.',
         cuisine_tags: ['spanish', 'paella', 'barcelona'],
-        likes: 9800, views: 144000, bookings_generated: 22, comments_count: 103,
+        likes: 29800, views: 344000, bookings_generated: 48, comments_count: 303,
         created_at: new Date(Date.now() - 21600000).toISOString(),
-        chef: { full_name: 'Chef Sofía Mendez', avatar_url: null },
+        chef: { full_name: 'Chef Sofía Mendez', avatar_url: '/images/chefs/chef_sofia_mendez.png' },
     },
     {
-        id: 's5', chef_id: 'c5',
-        video_url: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        thumbnail_url: 'https://images.unsplash.com/photo-1555126634-323283e090fa?w=600&q=80',
-        title: 'Duck Confit with Orange Jus 🦆',
-        description: 'Classic French bistro dish made accessible. No special equipment needed.',
-        cuisine_tags: ['french', 'classical', 'paris'],
-        likes: 21600, views: 318000, bookings_generated: 38, comments_count: 267,
-        created_at: new Date(Date.now() - 86400000).toISOString(),
-        chef: { full_name: 'Chef Pierre Dubois', avatar_url: null },
+        id: 's7', chef_id: 'wei-zhang',
+        video_url: '/videos/sushi.webm',
+        thumbnail_url: '/images/chefs/chef_wei_zhang.png',
+        title: 'Handcrafted Xiao Long Bao Soup Dumplings 🥟',
+        description: 'Delicate 18-fold pleating with rich gelatinous broth and Berkshire pork.',
+        cuisine_tags: ['chinese', 'dimsum', 'dumplings', 'shanghai'],
+        likes: 47800, views: 560000, bookings_generated: 82, comments_count: 512,
+        created_at: new Date(Date.now() - 25200000).toISOString(),
+        chef: { full_name: 'Chef Wei Zhang', avatar_url: '/images/chefs/chef_wei_zhang.png' },
     },
     {
-        id: 's6', chef_id: 'c6',
-        video_url: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        thumbnail_url: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80',
-        title: 'Ayurvedic Thali for Glowing Skin ✨',
-        description: 'Nourish from within. 6 dishes, all anti-inflammatory.',
-        cuisine_tags: ['indian', 'ayurvedic', 'healthy'],
-        likes: 28900, views: 391000, bookings_generated: 55, comments_count: 341,
-        created_at: new Date(Date.now() - 172800000).toISOString(),
-        chef: { full_name: 'Chef Meera Patel', avatar_url: null },
+        id: 's8', chef_id: 'meera-patel',
+        video_url: '/videos/pasta.webm',
+        thumbnail_url: '/images/chefs/chef_meera_patel.png',
+        title: 'Royal Awadhi Dum Biryani Sealed in Clay Handi 🍲',
+        description: 'Slow cooked over charcoal with aged basmati, saffron milk, and rose water.',
+        cuisine_tags: ['indian', 'biryani', 'ayurvedic', 'mumbai'],
+        likes: 38900, views: 491000, bookings_generated: 65, comments_count: 441,
+        created_at: new Date(Date.now() - 28800000).toISOString(),
+        chef: { full_name: 'Chef Meera Patel', avatar_url: '/images/chefs/chef_meera_patel.png' },
+    },
+    {
+        id: 's9', chef_id: 'elena-beauchamp',
+        video_url: '/videos/chef_kitchen.webm',
+        thumbnail_url: '/images/chefs/chef_elena_beauchamp.png',
+        title: 'Quebec Duck Breast with Wild Blueberry Demi-Glace 🍁',
+        description: 'Laurentian forest foraged mushrooms with maple glazed seasonal root vegetables.',
+        cuisine_tags: ['canadian', 'quebec', 'french'],
+        likes: 24500, views: 290000, bookings_generated: 39, comments_count: 198,
+        created_at: new Date(Date.now() - 32400000).toISOString(),
+        chef: { full_name: 'Chef Elena Beauchamp', avatar_url: '/images/chefs/chef_elena_beauchamp.png' },
+    },
+    {
+        id: 's10', chef_id: 'henrik-lindqvist',
+        video_url: '/videos/sushi.webm',
+        thumbnail_url: '/images/chefs/chef_henrik_lindqvist.png',
+        title: 'Nordic Cold-Smoked Arctic Trout with Dill Emulsion 🌲',
+        description: 'Stockholm archipelago cured fish with juniper smoke and pickled sea buckthorn.',
+        cuisine_tags: ['nordic', 'seafood', 'stockholm'],
+        likes: 31200, views: 375000, bookings_generated: 44, comments_count: 230,
+        created_at: new Date(Date.now() - 36000000).toISOString(),
+        chef: { full_name: 'Chef Henrik Lindqvist', avatar_url: '/images/chefs/chef_henrik_lindqvist.png' },
+    },
+    {
+        id: 's11', chef_id: 'min-jun-park',
+        video_url: '/videos/chef_kitchen.webm',
+        thumbnail_url: '/images/chefs/chef_min_jun_park.png',
+        title: 'Sizzling 1++ Hanwoo Ribeye with Aged Kimchi & Perilla 🥩',
+        description: 'Charcoal grilled table-side with 5-year aged doenjang paste and banchan.',
+        cuisine_tags: ['korean', 'bbq', 'hanwoo', 'seoul'],
+        likes: 54900, views: 710000, bookings_generated: 95, comments_count: 672,
+        created_at: new Date(Date.now() - 39600000).toISOString(),
+        chef: { full_name: 'Chef Min-Jun Park', avatar_url: '/images/chefs/chef_min_jun_park.png' },
+    },
+    {
+        id: 's12', chef_id: 'tariq-al-ghamdi',
+        video_url: '/videos/pasta.webm',
+        thumbnail_url: '/images/chefs/chef_tariq_al_ghamdi.png',
+        title: 'Royal Najdi Lamb Shank with Saffron Cardamom Rice 🍚',
+        description: 'Tender fall-off-the-bone lamb shank garnished with golden pine nuts and raisins.',
+        cuisine_tags: ['middleEastern', 'arabic', 'dubai'],
+        likes: 42300, views: 520000, bookings_generated: 71, comments_count: 489,
+        created_at: new Date(Date.now() - 43200000).toISOString(),
+        chef: { full_name: 'Chef Tariq Al-Ghamdi', avatar_url: '/images/chefs/chef_tariq_al_ghamdi.png' },
     },
 ]
 
@@ -659,6 +726,15 @@ function VideoCard({
 
             {/* Bottom info overlay */}
             <div className="absolute bottom-0 left-0 right-14 z-20 p-4 pb-6">
+                <div className="flex items-center gap-2 mb-2">
+                    <span className="px-2.5 py-0.5 rounded-full bg-black/60 backdrop-blur-md border border-amber-500/30 text-white font-bold text-[10px] flex items-center gap-1 shadow-lg">
+                        <Sparkles className="w-3 h-3 text-amber-400 animate-pulse" />
+                        Gemini Veo 10s Reel
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-semibold backdrop-blur-md">
+                        HD 60fps
+                    </span>
+                </div>
                 <p className="text-white font-bold text-sm mb-0.5 drop-shadow-lg">{item.chef?.full_name ?? 'Chef'}</p>
                 <p className="text-white font-semibold text-base leading-snug mb-1 drop-shadow-lg">{item.title}</p>
                 {item.description && (
@@ -666,7 +742,7 @@ function VideoCard({
                 )}
                 <div className="flex flex-wrap gap-1 mb-3">
                     {item.cuisine_tags.map(tag => (
-                        <span key={tag} className="text-white/70 text-xs">#{tag}</span>
+                        <span key={tag} className="text-white/70 text-xs font-semibold">#{tag}</span>
                     ))}
                 </div>
                 {/* Book CTA */}
