@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { adminAuth, adminDb } from '@/lib/firebase/admin'
 import { FieldValue } from 'firebase-admin/firestore'
 
+export const dynamic = 'force-dynamic'
+
 async function getUserIdFromRequest(request: NextRequest): Promise<string | null> {
     const authHeader = request.headers.get('Authorization')
     if (authHeader && authHeader.startsWith('Bearer ')) {

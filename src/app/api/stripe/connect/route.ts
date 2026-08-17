@@ -3,6 +3,8 @@ import { stripe } from '@/lib/stripe/server'
 import { adminAuth, adminDb } from '@/lib/firebase/admin'
 import { FieldValue } from 'firebase-admin/firestore'
 
+export const dynamic = 'force-dynamic'
+
 // POST: Create or retrieve Stripe Connect Express Account & Onboarding Link
 export async function POST(request: NextRequest) {
     try {

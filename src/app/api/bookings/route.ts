@@ -4,6 +4,8 @@ import { adminAuth, adminDb } from '@/lib/firebase/admin'
 import { FieldValue } from 'firebase-admin/firestore'
 import { calculatePlatformFee } from '@/lib/utils'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
     try {
         let userId: string | null = null
