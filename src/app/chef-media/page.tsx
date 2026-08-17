@@ -430,10 +430,17 @@ function VideoCard({
     const [liked, setLiked] = useState(item.isLiked ?? false)
     const [likes, setLikes] = useState(item.likes)
     const [saved, setSaved] = useState(item.isSaved ?? false)
+    const [followed, setFollowed] = useState(false)
+    const [toastMessage, setToastMessage] = useState<string | null>(null)
     const [playing, setPlaying] = useState(false)
     const [showHeart, setShowHeart] = useState(false)
     const [comments, setComments] = useState(false)
     const lastTapRef = useRef(0)
+
+    const showToast = (msg: string) => {
+        setToastMessage(msg)
+        setTimeout(() => setToastMessage(null), 2500)
+    }
 
     // Autoplay / pause when scrolling
     useEffect(() => {
@@ -479,33 +486,52 @@ function VideoCard({
     }
 
     const handleLike = async () => {
-        if (!user) { router.push('/login'); return }
         if (liked) {
             setLiked(false); setLikes(l => l - 1)
-            try {
-                await deleteDoc(doc(db, 'users', user.id, 'likes', item.id))
-            } catch {
-                // ignore
+            showToast('Removed from liked videos')
+            if (user) {
+                try {
+                    await deleteDoc(doc(db, 'users', user.id, 'likes', item.id))
+                } catch {}
             }
         } else {
             setLiked(true); setLikes(l => l + 1)
-            try {
-                await setDoc(doc(db, 'users', user.id, 'likes', item.id), {
-                    media_id: item.id,
-                    createdAt: serverTimestamp(),
-                }, { merge: true })
-            } catch {
-                // ignore
+            showToast('Added to liked videos ❤️')
+            if (user) {
+                try {
+                    await setDoc(doc(db, 'users', user.id, 'likes', item.id), {
+                        media_id: item.id,
+                        createdAt: serverTimestamp(),
+                    }, { merge: true })
+                } catch {}
             }
         }
     }
 
-    const handleShare = async () => {
-        if (navigator.share) {
-            await navigator.share({ title: item.title, url: window.location.href })
+    const handleFollow = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        if (followed) {
+            setFollowed(false)
+            showToast(`Unfollowed ${item.chef?.full_name || 'Chef'}`)
         } else {
-            await navigator.clipboard.writeText(window.location.href)
-            alert('Link copied!')
+            setFollowed(true)
+            showToast(`Following ${item.chef?.full_name || 'Chef'}! ⭐`)
+        }
+    }
+
+    const handleShare = async () => {
+        const shareUrl = typeof window !== 'undefined' ? window.location.href : 'https://chefmii.com/chef-media'
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: item.title, url: shareUrl })
+            } catch {}
+        } else {
+            try {
+                await navigator.clipboard.writeText(shareUrl)
+                showToast('Video link copied to clipboard! 📋')
+            } catch {
+                showToast('Video link copied!')
+            }
         }
     }
 
@@ -534,6 +560,13 @@ function VideoCard({
             {showHeart && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
                     <Heart className="w-28 h-28 text-red-500 fill-red-500 animate-ping opacity-80" />
+                </div>
+            )}
+
+            {/* Floating Toast Notification */}
+            {toastMessage && (
+                <div className="absolute top-20 left-1/2 -translate-x-1/2 z-30 bg-black/80 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full border border-white/20 shadow-xl animate-fade-in">
+                    {toastMessage}
                 </div>
             )}
 
@@ -567,7 +600,7 @@ function VideoCard({
                     <span className="text-white text-xs font-semibold drop-shadow">{fmt(item.comments_count)}</span>
                 </button>
                 {/* Save */}
-                <button onClick={e => { e.stopPropagation(); setSaved(s => !s) }} className="flex flex-col items-center gap-1">
+                <button onClick={e => { e.stopPropagation(); setSaved(s => { const next = !s; showToast(next ? 'Saved to bookmarks' : 'Removed bookmark'); return next; }) }} className="flex flex-col items-center gap-1">
                     <Bookmark className={`w-7 h-7 drop-shadow-lg ${saved ? 'fill-white text-white' : 'text-white'}`} />
                     <span className="text-white text-xs font-semibold drop-shadow">{saved ? 'Saved' : 'Save'}</span>
                 </button>
@@ -582,10 +615,13 @@ function VideoCard({
                         {chefInitials}
                     </div>
                     <button
-                        onClick={e => { e.stopPropagation(); if (!user) router.push('/login') }}
-                        className="w-5 h-5 -mt-3 rounded-full gradient-brand text-white flex items-center justify-center shadow-md text-xs font-bold"
+                        onClick={handleFollow}
+                        className={`w-6 h-6 -mt-3 rounded-full flex items-center justify-center shadow-md text-xs font-bold transition-all ${
+                            followed ? 'bg-emerald-500 text-white' : 'gradient-brand text-white'
+                        }`}
+                        title={followed ? 'Following' : 'Follow Chef'}
                     >
-                        +
+                        {followed ? '✓' : '+'}
                     </button>
                 </div>
                 {/* TikTok style spinning record */}
