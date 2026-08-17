@@ -113,7 +113,7 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <span className="p-2 rounded-xl bg-terracotta/10 text-terracotta">
-                                <Sparkles className="w-5 h-5" />
+                                <ChefHat className="w-5 h-5" />
                             </span>
                             <div>
                                 <h2 className="text-xl font-serif font-bold text-foreground">
@@ -481,10 +481,7 @@ export function WaitlistModal({ isOpen, onClose, defaultRole = 'chef' }: Waitlis
                                         <span>Reserving Your VIP Spot…</span>
                                     </>
                                 ) : (
-                                    <>
-                                        <Sparkles className="w-4 h-4" />
-                                        <span>Join {activeRoleInfo.label} Priority Waitlist</span>
-                                    </>
+                                    <span>Join {activeRoleInfo.label} Priority Waitlist</span>
                                 )}
                             </button>
                         </form>

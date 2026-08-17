@@ -143,12 +143,12 @@ export function Navbar() {
                         </div>
 
                         {/* Waitlist Highlight Pill */}
-                        <button
-                            onClick={() => setWaitlistOpen(true)}
-                            className="flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-terracotta/10 text-terracotta border border-terracotta/30 text-xs font-bold hover:bg-terracotta hover:text-white transition-all shadow-sm ml-1"
+                        <Link
+                            href="/waitlist"
+                            className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-terracotta/10 text-terracotta border border-terracotta/30 text-xs font-bold hover:bg-terracotta hover:text-white transition-all shadow-sm ml-1"
                         >
-                            <Sparkles className="w-3.5 h-3.5" />✨ Waitlist
-                        </button>
+                            Waitlist
+                        </Link>
                     </nav>
 
                     {/* Right Actions (Theme, Messages, User Profile) */}
@@ -274,12 +274,13 @@ export function Navbar() {
                                 <ChefHat className="w-4 h-4" />Find Chefs
                             </Link>
 
-                            <button
-                                onClick={() => { setMobileOpen(false); setWaitlistOpen(true) }}
-                                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-terracotta/15 text-terracotta font-bold text-sm border border-terracotta/30"
+                            <Link
+                                href="/waitlist"
+                                onClick={() => setMobileOpen(false)}
+                                className="w-full flex items-center justify-center px-4 py-3 rounded-2xl bg-terracotta/15 text-terracotta font-bold text-sm border border-terracotta/30"
                             >
-                                ✨ Join Waitlist
-                            </button>
+                                Join Waitlist
+                            </Link>
 
                             <div className="grid grid-cols-2 gap-2 pt-2">
                                 <Link href="/chef-media" onClick={() => setMobileOpen(false)} className="p-3 bg-muted/60 rounded-xl text-xs font-bold text-center block">

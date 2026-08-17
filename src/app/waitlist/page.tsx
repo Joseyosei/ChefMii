@@ -374,10 +374,7 @@ export default function DedicatedWaitlistPage() {
                                                 <span>Reserving Your VIP Spot…</span>
                                             </>
                                         ) : (
-                                            <>
-                                                <Sparkles className="w-5 h-5" />
-                                                <span>Reserve Priority VIP Spot</span>
-                                            </>
+                                            <span>Reserve Priority VIP Spot</span>
                                         )}
                                     </button>
                                 </form>

@@ -62,7 +62,7 @@ const HOW_IT_WORKS = [
         step: '03',
         title: 'Dine, Relax & Enjoy',
         desc: 'Your chef brings fresh ingredients, cooks in your kitchen, serves restaurant-grade courses, and leaves your kitchen spotless.',
-        icon: Sparkles,
+        icon: Utensils,
     },
 ]
 
@@ -448,9 +448,8 @@ export default function HomePage() {
                         <div className="flex flex-wrap items-center justify-center gap-4">
                             <Link
                                 href="/waitlist"
-                                className="px-8 py-4 gradient-brand text-white font-bold text-base rounded-2xl hover:opacity-90 transition-opacity shadow-lg shadow-terracotta/20 flex items-center gap-2"
+                                className="px-8 py-4 gradient-brand text-white font-bold text-base rounded-2xl hover:opacity-90 transition-opacity shadow-lg shadow-terracotta/20 flex items-center justify-center gap-2"
                             >
-                                <Sparkles className="w-5 h-5" />
                                 <span>Join Official Waitlist</span>
                             </Link>
                             <Link

@@ -57,7 +57,7 @@ export function Hero() {
                         📅 Book a Chef
                     </button>
                     <button onClick={() => router.push('/waitlist')} className="px-4 sm:px-6 py-2 bg-[#FF5A36] text-white font-bold rounded-full text-xs sm:text-sm hover:opacity-90 transition-opacity shadow-lg">
-                        ✨ Join Waitlist
+                        Join Waitlist
                     </button>
                     <button onClick={() => router.push('/order')} className="px-4 sm:px-6 py-2 bg-white/20 border border-white/40 text-white font-bold rounded-full text-xs sm:text-sm hover:bg-white/30 transition-colors">
                         🍽️ Order Food
