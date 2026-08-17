@@ -66,12 +66,12 @@ const CHEFS: Record<string, any> = {
         media: []
     },
     'james-osei': {
-        id: 'james-osei', name: 'Chef James Osei', cuisine: 'Pan-African', rate: 70, rating: 4.8, reviews: 156, badge: 'Events Specialist', verified: false,
+        id: 'james-osei', name: 'Chef James Osei', cuisine: 'Pan-African', rate: 70, rating: 4.8, reviews: 156, badge: 'Events Specialist', verified: true,
         location: 'Accra, Ghana',
         bio: 'Specializing in large format dynamic events and weddings. Chef James creates vibrant Pan-African feasts that fuse tradition with modern culinary techniques.',
         image: CHEF_IMAGES['chef-james-osei'] || '/images/chefs/chef_james_osei.png',
-        menus: ['Ghanaian Royal Feast', 'West African Fusion Banquet', 'Afro-Modern Canapés'],
-        menuImages: ['https://images.unsplash.com/photo-1626844131082-256783844137?w=400&q=80', 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80', 'https://images.unsplash.com/photo-1598866594230-a4fcfa46a838?w=400&q=80'],
+        menus: ['Ghanaian Royal Tilapia Feast', 'Suya Lamb Banquet', 'Afro-Modern Fusion Canapés'],
+        menuImages: ['/images/orders/order_pan_african_tilapia.png', '/images/orders/order_pan_african_suya.png', '/images/orders/order_west_african_jollof.png'],
         media: []
     },
     'meera-patel': {

@@ -359,9 +359,12 @@ const CHEFS_DATA: Record<string, ChefProfile> = {
         maxGuests: 150,
         portfolio: [
             '/images/orders/order_pan_african_suya.png',
+            '/images/orders/order_pan_african_tilapia.png',
+            '/images/orders/order_west_african_jollof.png',
         ],
         reviews_list: [
-            { author: 'Kwame A.', rating: 5, text: 'James catered our 50-person anniversary dinner. The suya lamb chops stole the show!' },
+            { author: 'Kwame A.', rating: 5, text: 'James catered our 50-person anniversary dinner. The suya lamb chops and grilled tilapia stole the show!' },
+            { author: 'Ama D.', rating: 5, text: 'The most flavorful Pan-African banquet in Accra. Perfectly spiced kelewele and tender lamb.' },
         ]
     },
     'kenji-sato': {

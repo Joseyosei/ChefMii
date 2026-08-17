@@ -365,6 +365,54 @@ const DEFAULT_CHEF_DATA: Record<string, ChefDetail> = {
             },
         ],
     },
+    'james-osei': {
+        name: 'Osei Pan-African Banquet Kitchen',
+        chefPhoto: '/images/chefs/chef_james_osei.png',
+        cuisine: 'Pan-African Fusion',
+        rating: 4.8,
+        reviews: 156,
+        distance: '1.4 mi',
+        time: '25-40 mins',
+        image: '/images/orders/order_pan_african_suya.png',
+        tagline: 'Charcoal-grilled suya lamb chops, whole spiced tilapia, and sweet plantain purée',
+        badge: '🔥 Suya & Tilapia Feast',
+        deliveryFee: 'Free delivery',
+        menu: [
+            {
+                id: '1',
+                category: 'Suya & Flame Grills',
+                items: [
+                    {
+                        id: 'item-jo1',
+                        name: 'Suya Spiced French Lamb Chops & Plantain Purée',
+                        description: 'Charcoal grilled tender French lamb chops crusted with aromatic suya kankankan spices, smooth caramelized plantain purée, and spicy ginger glaze.',
+                        price: 26.50,
+                        image: '/images/orders/order_pan_african_suya.png',
+                        badge: 'Chef Signature',
+                        likes: 198,
+                    },
+                    {
+                        id: 'item-jo2',
+                        name: 'Charcoal Grilled Whole Tilapia & Kelewele',
+                        description: 'Crisp seasoned whole Ghanaian tilapia scored with ginger, scotch bonnet, and aromatic African spices, served with golden spicy plantains and fresh lime.',
+                        price: 28.00,
+                        image: '/images/orders/order_pan_african_tilapia.png',
+                        badge: 'Must Try',
+                        likes: 245,
+                    },
+                    {
+                        id: 'item-jo3',
+                        name: 'Smoky Jollof Feast with Jumbo Tiger Prawns',
+                        description: 'Slow-simmered basmati rice infused with firewood smoke, jumbo grilled prawns, dodo, and spiced pepper salsa.',
+                        price: 24.00,
+                        image: '/images/orders/order_west_african_jollof.png',
+                        badge: 'Popular',
+                        likes: 182,
+                    },
+                ],
+            },
+        ],
+    },
 }
 
 interface CartItem {
