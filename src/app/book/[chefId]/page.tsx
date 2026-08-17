@@ -9,6 +9,8 @@ import Image from 'next/image'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { useAuth } from '@/context/auth-context'
+import { useCurrency } from '@/context/currency-context'
+import { useToast } from '@/context/toast-context'
 import { CHEF_IMAGES, CHEF_FALLBACKS } from '@/lib/images'
 import {
     Calendar, Users, MapPin, Clock, ChefHat, Loader2, CheckCircle,
@@ -170,6 +172,8 @@ export default function ChefProfileAndBooking() {
     const params = useParams()
     const router = useRouter()
     const { user } = useAuth()
+    const { formatPrice, currency } = useCurrency()
+    const { showToast } = useToast()
     const chefId = typeof params.chefId === 'string' ? params.chefId : ''
     const chef = CHEFS[chefId]
 
@@ -180,18 +184,24 @@ export default function ChefProfileAndBooking() {
     // Booking state
     const [date, setDate] = useState('')
     const [time, setTime] = useState('19:00')
-    const [guests, setGuests] = useState(4)
-    const [event, setEvent] = useState(EVENT_TYPES[0])
+    const [hours, setHours] = useState(4)
+    const [guests, setGuests] = useState(6)
+    const [event, setEvent] = useState('Dinner Party')
     const [location, setLocation] = useState('')
     const [notes, setNotes] = useState('')
-    const [hours, setHours] = useState(3)
-    const [isDeposit, setIsDeposit] = useState(false)
+    const [selectedMenu, setSelectedMenu] = useState(0)
+    const [isDeposit, setIsDeposit] = useState(true)
+    const [wineTier, setWineTier] = useState<'none' | 'reserve' | 'prestige'>('none')
+
+    // UI state
     const [loading, setLoading] = useState(false)
     const [bookingComplete, setBookingComplete] = useState(false)
+    const [activeImageIndex, setActiveImageIndex] = useState(0)
+    const [isSaved, setIsSaved] = useState(false)
 
     // Chat state
-    const [messages, setMessages] = useState<{ id: number, text: string, sender: 'user' | 'chef' }[]>([
-        { id: 1, text: `Hello! I'm ${chef?.name.split(' ')[1] || 'the chef'}. I'd love to cook for your next event. Let me know if you have any questions!`, sender: 'chef' }
+    const [messages, setMessages] = useState<Array<{ id: number; text: string; sender: 'user' | 'chef' }>>([
+        { id: 1, text: "Hello! I'm happy to customize our menu for any dietary preferences or occasions. What are you planning?", sender: 'chef' }
     ])
     const [chatInput, setChatInput] = useState('')
     const [isTyping, setIsTyping] = useState(false)
@@ -214,7 +224,9 @@ export default function ChefProfileAndBooking() {
         )
     }
 
-    const subtotal = chef.rate * hours
+    const wineRate = wineTier === 'reserve' ? 35 : wineTier === 'prestige' ? 75 : 0
+    const wineTotal = wineRate * guests
+    const subtotal = (chef.rate * hours) + wineTotal
     const serviceFee = Math.round(subtotal * 0.1)
     const total = subtotal + serviceFee
     const depositAmount = Math.round(total * 0.2)
@@ -536,11 +548,51 @@ export default function ChefProfileAndBooking() {
                             {/* Chef rate header */}
                             <div className="flex items-center justify-between mb-6 pb-6 border-b border-border">
                                 <div>
-                                    <span className="text-3xl font-black text-foreground">£{chef.rate}</span>
+                                    <span className="text-3xl font-black text-foreground">{formatPrice(chef.rate)}</span>
                                     <span className="text-muted-foreground text-sm font-medium uppercase tracking-wider ml-1">/ hour</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 font-bold">
                                     <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" /> {chef.rating}
+                                </div>
+                            </div>
+
+                            {/* Sommelier Wine Pairing Add-on */}
+                            <div className="mb-6 p-4 rounded-2xl bg-muted/40 border border-border space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-xs font-bold uppercase tracking-wider text-foreground flex items-center gap-1">
+                                        🍷 Sommelier Wine Pairing
+                                    </span>
+                                    <span className="text-[10px] font-bold text-terracotta bg-terracotta/10 px-2 py-0.5 rounded-full">
+                                        Optional
+                                    </span>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer text-xs transition-all ${wineTier === 'none' ? 'border-terracotta bg-terracotta/5 font-bold' : 'border-border bg-card'}`}>
+                                        <input type="radio" name="wine" checked={wineTier === 'none'} onChange={() => setWineTier('none')} className="mt-0.5 accent-terracotta" />
+                                        <div className="flex-1">
+                                            <p className="text-foreground">No Wine Pairing</p>
+                                            <p className="text-[10px] text-muted-foreground">BYO or soft drinks only</p>
+                                        </div>
+                                        <span className="text-muted-foreground">+£0</span>
+                                    </label>
+
+                                    <label className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer text-xs transition-all ${wineTier === 'reserve' ? 'border-terracotta bg-terracotta/5 font-bold' : 'border-border bg-card'}`}>
+                                        <input type="radio" name="wine" checked={wineTier === 'reserve'} onChange={() => setWineTier('reserve')} className="mt-0.5 accent-terracotta" />
+                                        <div className="flex-1">
+                                            <p className="text-foreground">Sommelier Reserve</p>
+                                            <p className="text-[10px] text-muted-foreground">Biodynamic & vintage European pairings</p>
+                                        </div>
+                                        <span className="text-terracotta font-bold">+{formatPrice(35)}/guest</span>
+                                    </label>
+
+                                    <label className={`flex items-start gap-2.5 p-2.5 rounded-xl border cursor-pointer text-xs transition-all ${wineTier === 'prestige' ? 'border-terracotta bg-terracotta/5 font-bold' : 'border-border bg-card'}`}>
+                                        <input type="radio" name="wine" checked={wineTier === 'prestige'} onChange={() => setWineTier('prestige')} className="mt-0.5 accent-terracotta" />
+                                        <div className="flex-1">
+                                            <p className="text-foreground">Grand Cru Prestige</p>
+                                            <p className="text-[10px] text-muted-foreground">Rare vintage Champagne & Bordeaux</p>
+                                        </div>
+                                        <span className="text-terracotta font-bold">+{formatPrice(75)}/guest</span>
+                                    </label>
                                 </div>
                             </div>
 
@@ -559,7 +611,7 @@ export default function ChefProfileAndBooking() {
                                             className="mt-1 accent-terracotta"
                                         />
                                         <div className="text-xs">
-                                            <p className="font-bold text-foreground">Pay in Full Today (£{total})</p>
+                                            <p className="font-bold text-foreground">Pay in Full Today ({formatPrice(total)})</p>
                                             <p className="text-muted-foreground">Held securely in platform escrow until after event</p>
                                         </div>
                                     </label>
@@ -573,26 +625,32 @@ export default function ChefProfileAndBooking() {
                                             className="mt-1 accent-terracotta"
                                         />
                                         <div className="text-xs">
-                                            <p className="font-bold text-terracotta">Pay 20% Deposit (£{depositAmount})</p>
-                                            <p className="text-muted-foreground">Remaining £{total - depositAmount} charged automatically 14 days prior</p>
+                                            <p className="font-bold text-terracotta">Pay 20% Deposit ({formatPrice(depositAmount)})</p>
+                                            <p className="text-muted-foreground">Remaining {formatPrice(total - depositAmount)} charged automatically 14 days prior</p>
                                         </div>
                                     </label>
                                 </div>
                             </div>
 
                             {/* Cost Breakdown */}
-                            <div className="space-y-3 mb-6 text-base font-medium">
+                            <div className="space-y-3 mb-6 text-sm font-medium">
                                 <div className="flex justify-between items-center text-muted-foreground">
-                                    <span>Chef fee ({hours}h × £{chef.rate})</span>
-                                    <span className="text-foreground">£{subtotal}</span>
+                                    <span>Chef fee ({hours}h × {formatPrice(chef.rate)})</span>
+                                    <span className="text-foreground font-semibold">{formatPrice(chef.rate * hours)}</span>
                                 </div>
+                                {wineTotal > 0 && (
+                                    <div className="flex justify-between items-center text-muted-foreground">
+                                        <span>Wine pairing ({guests} guests)</span>
+                                        <span className="text-terracotta font-semibold">+{formatPrice(wineTotal)}</span>
+                                    </div>
+                                )}
                                 <div className="flex justify-between items-center text-muted-foreground">
-                                    <span>Service & Insurance (10%)</span>
-                                    <span className="text-foreground">£{serviceFee}</span>
+                                    <span>Service & Escrow Insurance (10%)</span>
+                                    <span className="text-foreground font-semibold">{formatPrice(serviceFee)}</span>
                                 </div>
                                 <div className="pt-4 mt-2 border-t border-border flex justify-between items-center text-xl font-bold">
                                     <span>Due Today</span>
-                                    <span className="text-[#FF5A36]">£{isDeposit ? depositAmount : total}</span>
+                                    <span className="text-[#FF5A36]">{formatPrice(isDeposit ? depositAmount : total)}</span>
                                 </div>
                             </div>
 
@@ -605,7 +663,7 @@ export default function ChefProfileAndBooking() {
                                             disabled={loading}
                                             className="w-full py-4 bg-[#FF5A36] text-white font-bold text-lg rounded-2xl hover:opacity-90 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#FF5A36]/20"
                                         >
-                                            {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : view === 'book' ? `Pay £${isDeposit ? depositAmount : total} via Stripe` : 'Book Chef'}
+                                            {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : view === 'book' ? `Pay ${formatPrice(isDeposit ? depositAmount : total)} via Stripe` : 'Book Chef'}
                                         </button>
                                         <button
                                             onClick={() => setIsChatOpen(true)}

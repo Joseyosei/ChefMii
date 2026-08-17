@@ -1,6 +1,10 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Roboto, Libre_Caslon_Text } from 'next/font/google'
 import { AuthProvider } from '@/context/auth-context'
+import { CurrencyProvider } from '@/context/currency-context'
+import { ToastProvider } from '@/context/toast-context'
+import { CookieBanner } from '@/components/layout/cookie-banner'
+import { ChatbotWidget } from '@/components/chatbot/chatbot-widget'
 import './globals.css'
 
 const roboto = Roboto({
@@ -17,17 +21,25 @@ const caslon = Libre_Caslon_Text({
     display: 'swap',
 })
 
+export const viewport: Viewport = {
+    themeColor: '#FF5A36',
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+}
+
 export const metadata: Metadata = {
     title: {
         template: '%s | ChefMii',
-        default: 'ChefMii – Hire a Chef for Any Occasion',
+        default: 'ChefMii – Hire a Master Private Chef Worldwide',
     },
-    description: 'ChefMii connects you with top private chefs globally. From home dinners to presidential banquets.',
-    keywords: ['private chef', 'chef booking', 'personal chef', 'chef marketplace'],
-    authors: [{ name: 'ChefMii' }],
+    description: 'ChefMii connects you with Michelin-trained private chefs globally. 100% Stripe Escrow Protection, split-billing, and ChefTV culinary streaming.',
+    keywords: ['private chef', 'chef booking', 'personal chef', 'chef marketplace', 'escrow dining', 'michelin chef hire'],
+    authors: [{ name: 'ChefMii Global' }],
+    manifest: '/manifest.json',
     openGraph: {
-        title: 'ChefMii – Hire a Chef for Any Occasion',
-        description: 'Connect with top chefs globally for any event.',
+        title: 'ChefMii – Hire a Master Private Chef Worldwide',
+        description: 'Connect with verified master chefs globally with 100% Escrow Protection.',
         type: 'website',
         locale: 'en_US',
         siteName: 'ChefMii',
@@ -44,15 +56,50 @@ export const metadata: Metadata = {
     },
 }
 
-import { CookieBanner } from '@/components/layout/cookie-banner'
+const JSON_LD = {
+    '@context': 'https://schema.org',
+    '@graph': [
+        {
+            '@type': 'Organization',
+            '@id': 'https://chefmii.com/#organization',
+            'name': 'ChefMii',
+            'url': 'https://chefmii.com',
+            'logo': 'https://chefmii.com/icon.png',
+            'description': 'Global luxury private chef booking marketplace with Stripe Escrow protection.',
+            'sameAs': [
+                'https://twitter.com/chefmii',
+                'https://instagram.com/chefmii',
+                'https://linkedin.com/company/chefmii'
+            ]
+        },
+        {
+            '@type': 'WebSite',
+            '@id': 'https://chefmii.com/#website',
+            'url': 'https://chefmii.com',
+            'name': 'ChefMii',
+            'publisher': { '@id': 'https://chefmii.com/#organization' }
+        }
+    ]
+}
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" className={`${roboto.variable} ${caslon.variable}`}>
+            <head>
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+                />
+            </head>
             <body className="min-h-screen bg-background font-sans antialiased">
                 <AuthProvider>
-                    {children}
-                    <CookieBanner />
+                    <CurrencyProvider>
+                        <ToastProvider>
+                            {children}
+                            <CookieBanner />
+                            <ChatbotWidget />
+                        </ToastProvider>
+                    </CurrencyProvider>
                 </AuthProvider>
             </body>
         </html>

@@ -12,17 +12,21 @@ import {
 
 import { WaitlistModal } from '@/components/waitlist/waitlist-modal'
 import { BrandLogo } from '@/components/layout/logo'
+import { useCurrency, CURRENCIES, CurrencyCode } from '@/context/currency-context'
 
 export function Navbar() {
     const router = useRouter()
     const { user, profile, role, signOut, signInWithGoogle, loading } = useAuth()
+    const { currency, setCurrencyCode } = useCurrency()
 
     const dropdownRef = useRef<HTMLDivElement>(null)
     const exploreRef = useRef<HTMLDivElement>(null)
+    const currencyRef = useRef<HTMLDivElement>(null)
 
     const [mobileOpen, setMobileOpen] = useState(false)
     const [userOpen, setUserOpen] = useState(false)
     const [exploreOpen, setExploreOpen] = useState(false)
+    const [currencyOpen, setCurrencyOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
     const [dark, setDark] = useState(false)
     const [signingOut, setSigningOut] = useState(false)
@@ -38,6 +42,7 @@ export function Navbar() {
         const handler = (e: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) setUserOpen(false)
             if (exploreRef.current && !exploreRef.current.contains(e.target as Node)) setExploreOpen(false)
+            if (currencyRef.current && !currencyRef.current.contains(e.target as Node)) setCurrencyOpen(false)
         }
         document.addEventListener('mousedown', handler)
         return () => document.removeEventListener('mousedown', handler)
@@ -145,8 +150,49 @@ export function Navbar() {
                         </Link>
                     </nav>
 
-                    {/* Right Actions (Theme, Messages, User Profile) */}
+                    {/* Right Actions (Currency, Theme, Messages, User Profile) */}
                     <div className="flex items-center gap-1.5">
+                        {/* Currency Selector */}
+                        <div className="relative" ref={currencyRef}>
+                            <button
+                                onClick={() => setCurrencyOpen(!currencyOpen)}
+                                className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-muted/60 hover:bg-muted text-foreground border border-border/60 transition-colors"
+                                aria-label="Select currency"
+                            >
+                                <span>{currency.flag}</span>
+                                <span>{currency.code}</span>
+                                <ChevronDown className={`w-3 h-3 text-muted-foreground transition-transform ${currencyOpen ? 'rotate-180' : ''}`} />
+                            </button>
+
+                            {currencyOpen && (
+                                <div className="absolute top-full right-0 mt-3 w-44 bg-card border border-border rounded-2xl shadow-2xl z-50 p-1.5 space-y-0.5 animate-in fade-in zoom-in-95 duration-150">
+                                    {(Object.keys(CURRENCIES) as CurrencyCode[]).map((code) => {
+                                        const c = CURRENCIES[code]
+                                        return (
+                                            <button
+                                                key={code}
+                                                onClick={() => {
+                                                    setCurrencyCode(code)
+                                                    setCurrencyOpen(false)
+                                                }}
+                                                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
+                                                    currency.code === code
+                                                        ? 'gradient-brand text-white'
+                                                        : 'hover:bg-muted text-foreground'
+                                                }`}
+                                            >
+                                                <span className="flex items-center gap-2">
+                                                    <span>{c.flag}</span>
+                                                    <span>{c.code}</span>
+                                                </span>
+                                                <span className="text-[11px] opacity-80">{c.symbol}</span>
+                                            </button>
+                                        )
+                                    })}
+                                </div>
+                            )}
+                        </div>
+
                         {/* Dark mode */}
                         <button
                             onClick={toggleTheme}
