@@ -28,18 +28,18 @@ export function BrandLogo({
 
     const content = (
         <div className={`flex items-center gap-2 select-none group transition-transform ${className}`}>
-            <div className="relative flex items-center justify-center overflow-hidden rounded-xl">
+            <div className="relative flex items-center justify-center">
                 <Image
                     src="/images/logo.png"
                     alt="ChefMii Logo"
                     width={dimensions.width}
                     height={dimensions.height}
                     priority={priority}
+                    unoptimized
                     className="object-contain transition-transform duration-300 group-hover:scale-105"
                     style={{
                         height: dimensions.height,
                         width: 'auto',
-                        maxHeight: dimensions.height * 1.3,
                     }}
                 />
             </div>

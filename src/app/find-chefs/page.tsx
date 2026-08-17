@@ -142,7 +142,7 @@ function FindChefsContent() {
                                 {/* Photo */}
                                 <div className="h-40 sm:h-48 relative overflow-hidden bg-muted">
                                     {chef.photo ? (
-                                        <Image src={chef.photo} alt={chef.name} fill className="object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                                        <Image src={chef.photo} alt={chef.name} fill unoptimized className="object-cover object-top group-hover:scale-105 transition-transform duration-500" />
                                     ) : (
                                         <div className="h-full gradient-brand flex items-center justify-center">
                                             <span className="text-4xl sm:text-5xl font-black text-white/40">

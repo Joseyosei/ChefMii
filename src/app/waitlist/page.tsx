@@ -146,6 +146,52 @@ export default function WaitlistPage() {
                     </div>
                 </section>
 
+                {/* Verified Chefs Spotlight Section */}
+                <section className="py-20 bg-card border-t border-border">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center max-w-3xl mx-auto mb-16">
+                            <span className="text-xs font-bold text-terracotta uppercase tracking-widest mb-2 block">Culinary Talent</span>
+                            <h2 className="text-3xl sm:text-5xl font-serif font-bold text-foreground mb-4">
+                                World-Class Chefs on ChefMii
+                            </h2>
+                            <p className="text-muted-foreground text-base sm:text-lg">
+                                From Michelin-starred masters to bespoke private dining innovators.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {[
+                                { name: 'Chef Yuki Tanaka', cuisine: 'Japanese Omakase', location: 'Dubai, UAE', badge: 'Omakase Master', rate: 200, photo: '/images/chefs/chef_yuki_tanaka.png' },
+                                { name: 'Chef Marco Rossi', cuisine: 'Modern Italian', location: 'London, UK', badge: 'Fine Dining', rate: 150, photo: '/images/chefs/chef_marco_rossi.png' },
+                                { name: 'Chef Sofía Mendez', cuisine: 'Spanish Tapas', location: 'Barcelona, Spain', badge: 'Tapas & Paella', rate: 120, photo: '/images/chefs/chef_sofia_mendez.png' },
+                                { name: 'Chef Pierre Dubois', cuisine: 'French Haute Cuisine', location: 'Paris, France', badge: 'Haute Cuisine', rate: 180, photo: '/images/chefs/chef_pierre_dubois.png' },
+                            ].map((chef, idx) => (
+                                <div key={idx} className="bg-background rounded-3xl overflow-hidden border border-border group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                    <div className="relative h-64 w-full overflow-hidden bg-muted">
+                                        <img
+                                            src={chef.photo}
+                                            alt={chef.name}
+                                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                                        <span className="absolute top-3 right-3 text-xs px-2.5 py-1 bg-black/60 text-white rounded-full font-bold backdrop-blur-md border border-white/10">
+                                            {chef.badge}
+                                        </span>
+                                        <div className="absolute bottom-3 left-3 right-3 text-white">
+                                            <h4 className="font-bold text-lg">{chef.name}</h4>
+                                            <p className="text-xs text-white/80">{chef.location}</p>
+                                        </div>
+                                    </div>
+                                    <div className="p-4 flex items-center justify-between border-t border-border">
+                                        <span className="text-xs font-semibold text-muted-foreground">{chef.cuisine}</span>
+                                        <span className="text-sm font-black text-terracotta">£{chef.rate}/hr</span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
                 {/* Live Social Proof Banner */}
                 <section className="py-16 bg-muted/40 border-y border-border">
                     <div className="max-w-7xl mx-auto px-4 text-center">

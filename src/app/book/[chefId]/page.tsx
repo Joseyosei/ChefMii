@@ -215,6 +215,7 @@ export default function ChefProfileAndBooking() {
                     src={chef.image}
                     alt={chef.name}
                     fill
+                    unoptimized
                     className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
@@ -222,7 +223,7 @@ export default function ChefProfileAndBooking() {
                     <div className="flex items-end gap-6 relative z-10">
                         {/* Avatar */}
                         <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-background overflow-hidden relative shadow-xl">
-                            <Image src={chef.image} alt={chef.name} fill className="object-cover" />
+                            <Image src={chef.image} alt={chef.name} fill unoptimized className="object-cover" />
                         </div>
                         <div className="flex-1 pb-2">
                             <div className="flex flex-wrap items-center gap-3 mb-2">
