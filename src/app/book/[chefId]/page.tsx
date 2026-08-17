@@ -79,6 +79,78 @@ const CHEFS: Record<string, any> = {
         menuImages: ['https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&q=80', 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80', 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80'],
         media: ['https://www.w3schools.com/html/mov_bbb.mp4']
     },
+    'marcus-vance': {
+        id: 'marcus-vance', name: 'Chef Marcus Vance', cuisine: 'American', rate: 160, rating: 4.9, reviews: 142, badge: 'Farm-to-Table', verified: true,
+        location: 'New York, USA',
+        bio: 'James Beard nominee specializing in modern American farm-to-table tasting menus and wood-fired gastronomy in Manhattan.',
+        image: CHEF_IMAGES['chef-marcus-vance'] || '/images/chefs/chef_marcus_vance.png',
+        menus: ['Hudson Valley Tasting Menu', 'Wood-Fired Prime Ribeye Feast', 'Brooklyn Artisanal 5-Course'],
+        menuImages: ['https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80', 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80', 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80'],
+        media: []
+    },
+    'elena-beauchamp': {
+        id: 'elena-beauchamp', name: 'Chef Éléna Beauchamp', cuisine: 'French-Canadian', rate: 140, rating: 4.8, reviews: 98, badge: 'Nordic-French', verified: true,
+        location: 'Montreal, Canada',
+        bio: 'Crafts refined Quebecois-French fusion menus featuring wild foraged herbs, artisanal cheeses, and Atlantic seafood.',
+        image: CHEF_IMAGES['chef-elena-beauchamp'] || '/images/chefs/chef_elena_beauchamp.png',
+        menus: ['St. Lawrence Fjord Seafood', 'Quebecois Forest Foraged Feast', 'Montreal Modern Bistro'],
+        menuImages: ['https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=400&q=80', 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=400&q=80', 'https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=400&q=80'],
+        media: []
+    },
+    'wei-zhang': {
+        id: 'wei-zhang', name: 'Chef Wei Zhang', cuisine: 'Chinese', rate: 175, rating: 5.0, reviews: 184, badge: 'Dim Sum & Wok Master', verified: true,
+        location: 'Shanghai, China',
+        bio: '20 years mastering imperial Cantonese banquet dining, handmade dim sum, and precision wok artistry.',
+        image: CHEF_IMAGES['chef-wei-zhang'] || '/images/chefs/chef_wei_zhang.png',
+        menus: ['Imperial Cantonese 8-Course', 'Handmade Artisan Dim Sum Banquet', 'Sichuan Peppercorn Tasting'],
+        menuImages: ['https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&q=80', 'https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?w=400&q=80', 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&q=80'],
+        media: []
+    },
+    'olena-kovalenko': {
+        id: 'olena-kovalenko', name: 'Chef Olena Kovalenko', cuisine: 'Ukrainian', rate: 110, rating: 4.9, reviews: 115, badge: 'Heritage Cuisine', verified: true,
+        location: 'Kyiv, Ukraine',
+        bio: 'Reimagining Eastern European heritage cooking with modern fermentation techniques, delicate borscht reductions, and smoked delicacies.',
+        image: CHEF_IMAGES['chef-olena-kovalenko'] || '/images/chefs/chef_olena_kovalenko.png',
+        menus: ['Kyiv Modern Heritage 6-Course', 'Carpathian Forest Mushroom Feast', 'Artisanal Varenyky & Duck Tasting'],
+        menuImages: ['https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80', 'https://images.unsplash.com/photo-1555126634-323283e090fa?w=400&q=80', 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80'],
+        media: []
+    },
+    'henrik-lindqvist': {
+        id: 'henrik-lindqvist', name: 'Chef Henrik Lindqvist', cuisine: 'Nordic', rate: 190, rating: 4.9, reviews: 87, badge: 'Michelin Nordic', verified: true,
+        location: 'Oslo, Norway',
+        bio: 'Former head chef at leading Scandinavian fine dining establishments; specialized in cold-smoked fjord salmon and reindeer tartare.',
+        image: CHEF_IMAGES['chef-henrik-lindqvist'] || '/images/chefs/chef_henrik_lindqvist.png',
+        menus: ['Fjord to Table 7-Course', 'Nordic Foraging & Cloudberry Dinner', 'Arctic Char & Birch Smoke Tasting'],
+        menuImages: ['https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&q=80', 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80', 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400&q=80'],
+        media: []
+    },
+    'kenji-sato': {
+        id: 'kenji-sato', name: 'Chef Kenji Sato', cuisine: 'Japanese', rate: 220, rating: 5.0, reviews: 153, badge: 'Kaiseki Master', verified: true,
+        location: 'Kyoto, Japan',
+        bio: 'Trained in Gion Kyoto, specializing in traditional seasonal Kaiseki multicourse banquets and Wagyu A5 preparations.',
+        image: CHEF_IMAGES['chef-kenji-sato'] || '/images/chefs/chef_kenji_sato.png',
+        menus: ['Kyoto Gion Seasonal Kaiseki (9 Courses)', 'Wagyu A5 & Truffle Tasting', 'Zen Garden Tea Ceremony Dinner'],
+        menuImages: ['https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400&q=80', 'https://images.unsplash.com/photo-1553621042-f6e147245754?w=400&q=80', 'https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=400&q=80'],
+        media: []
+    },
+    'min-jun-park': {
+        id: 'min-jun-park', name: 'Chef Min-Jun Park', cuisine: 'Korean', rate: 165, rating: 4.9, reviews: 126, badge: 'K-Fine Dining', verified: true,
+        location: 'Seoul, South Korea',
+        bio: 'Pioneering modernist Korean fine dining with 10-year aged jang sauces, Hanwoo beef pairing, and royal court banquets.',
+        image: CHEF_IMAGES['chef-min-jun-park'] || '/images/chefs/chef_min_jun_park.png',
+        menus: ['Joseon Royal Court Banquet', 'Hanwoo Beef & Aged Fermentation', 'Modern Seoul Gastronomy 7-Course'],
+        menuImages: ['https://images.unsplash.com/photo-1583394293214-d4e8a3a959b1?w=400&q=80', 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400&q=80', 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80'],
+        media: []
+    },
+    'tariq-al-ghamdi': {
+        id: 'tariq-al-ghamdi', name: 'Chef Tariq Al-Ghamdi', cuisine: 'Middle Eastern', rate: 195, rating: 4.9, reviews: 109, badge: 'Royal Banquet', verified: true,
+        location: 'Riyadh, Saudi Arabia',
+        bio: 'Specializes in royal banquet hospitality, slow-cooked Najdi lamb, saffron-cardamom infusions, and luxury private dining.',
+        image: CHEF_IMAGES['chef-tariq-al-ghamdi'] || '/images/chefs/chef_tariq_al_ghamdi.png',
+        menus: ['Najdi Royal Lamb Feast', 'Arabian Peninsula Saffron Journey', 'Modern Khaleeji Seafood Night'],
+        menuImages: ['https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80', 'https://images.unsplash.com/photo-1555126634-323283e090fa?w=400&q=80', 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&q=80'],
+        media: []
+    },
     'carlos-garcia': {
         id: 'carlos-garcia', name: 'Chef Carlos Garcia', cuisine: 'Mexican', rate: 85, rating: 4.7, reviews: 71, badge: 'Street Food Expert', verified: true,
         location: 'Mexico City',

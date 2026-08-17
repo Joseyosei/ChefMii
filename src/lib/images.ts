@@ -13,6 +13,14 @@ export const CHEF_IMAGES: Record<string, string> = {
     'chef-meera-patel': '/images/chefs/chef_meera_patel.png',
     'chef-james-osei': '/images/chefs/chef_james_osei.png',
     'chef-carlos-garcia': '/images/chefs/chef_carlos_garcia.png',
+    'chef-marcus-vance': '/images/chefs/chef_marcus_vance.png',
+    'chef-elena-beauchamp': '/images/chefs/chef_elena_beauchamp.png',
+    'chef-wei-zhang': '/images/chefs/chef_wei_zhang.png',
+    'chef-olena-kovalenko': '/images/chefs/chef_olena_kovalenko.png',
+    'chef-henrik-lindqvist': '/images/chefs/chef_henrik_lindqvist.png',
+    'chef-kenji-sato': '/images/chefs/chef_kenji_sato.png',
+    'chef-min-jun-park': '/images/chefs/chef_min_jun_park.png',
+    'chef-tariq-al-ghamdi': '/images/chefs/chef_tariq_al_ghamdi.png',
 }
 
 export const MARKETPLACE_IMAGES: Record<string, string> = {
